@@ -3,11 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: natalierh <natalierh@student.42.fr>        +#+  +:+       +#+         #
+#    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/08 11:14:10 by aschenk           #+#    #+#              #
-#    Updated: 2024/05/29 11:29:52 by aschenk          ###   ########.fr        #
-#
+#    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
+#    Updated: 2024/09/03 15:32:30 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,69 +32,10 @@ HDRS_FILES := 	philo.h
 
 HDRS :=			$(addprefix $(HDRS_DIR)/, $(HDRS_FILES))
 
-# LIBFT
-LIBFT_DIR :=	libft
-LIBFT_LIST :=	libft.h \
-				ft_isalpha.c \
-				ft_isdigit.c \
-				ft_isalnum.c \
-				ft_isascii.c \
-				ft_isprint.c \
-				ft_strlen.c \
-				ft_toupper.c \
-				ft_tolower.c \
-				ft_strncmp.c \
-				ft_strlcpy.c \
-				ft_strlcat.c \
-				ft_strchr.c \
-				ft_strrchr.c \
-				ft_strnstr.c \
-				ft_memset.c \
-				ft_memchr.c \
-				ft_memcpy.c \
-				ft_memcmp.c \
-				ft_memmove.c \
-				ft_bzero.c \
-				ft_atoi.c \
-				ft_strdup.c \
-				ft_calloc.c \
-				ft_substr.c \
-				ft_strjoin.c \
-				ft_strtrim.c \
-				ft_split.c \
-				ft_itoa.c \
-				ft_strmapi.c \
-				ft_striteri.c \
-				ft_putchar_fd.c \
-				ft_putstr_fd.c \
-				ft_putendl_fd.c \
-				ft_putnbr_fd.c \
-				ft_lstnew.c \
-				ft_lstadd_front.c \
-				ft_lstsize.c \
-				ft_lstlast.c \
-				ft_lstadd_back.c \
-				ft_lstdelone.c \
-				ft_lstclear.c \
-				ft_lstiter.c \
-				ft_lstmap.c \
-				ft_strcmp.c \
-				ft_isbinary.c \
-				get_next_line_bonus.c \
-				ft_printf_utils.c \
-				ft_printf.c \
-				ft_atoi_base.c
-
-LIBFT_FILES := $(addprefix $(LIBFT_DIR)/, $(LIBFT_LIST))
-LIBFT :=		$(LIBFT_DIR)/libft.a
-
-# LINKING LIBS
-LIB_FLAGS  :=	-L$(LIBFT_DIR) -lft -lreadline -lhistory
-
 # COMPILER
 CC :=			cc
-CFLAGS := 		-I$(HDRS_DIR) -I$(LIBFT_DIR)
-CFLAGS :=		-Werror -Wextra -Wall -I$(HDRS_DIR) -I$(LIBFT_DIR)
+CFLAGS := 		-I$(HDRS_DIR)
+CFLAGS :=		-Werror -Wextra -Wall -I$(HDRS_DIR)
 CFLAGS +=		-Wpedantic -g
 # CFLAGS +=		-fsanitize=address
 
@@ -116,20 +56,42 @@ L_RED :=		\033[91m
 ###########
 
 # Default target
-all:		$(LIBFT) $(NAME)
+all:		$(NAME)
 
-# Build libft library by calling 'make' in LIBFT_DIR.
-# This target will be executed if libft.a is missing or
-# if any of the listed .c or .h files in LIBFT_DIR are modified.
-$(LIBFT):	$(LIBFT_FILES)
-	@make -s -C $(LIBFT_DIR)
-	@echo ""
-
-# Target $(NAME) depends on object files $(OBJS) and the libft library.
-$(NAME):	$(OBJS) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIB_FLAGS) -o $(NAME)
+# Target $(NAME) depends on object files $(OBJS)
+$(NAME):	$(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 	@echo "$(BOLD)$(YELLOW)\n$(NAME) successfully compiled.$(RESET)"
-	@echo "\nUsage: './philo nr_philo t_die t_eat t_sleep [min_eat]'"
+	@echo -n "$(BOLD)$(GREEN)"
+	@echo "$(L_RED)             _____"
+	@echo "            /      \\"
+	@echo "           (____/\\  )"
+	@echo "$(GREEN)            |___  $(L_RED)U$(GREEN)?$(L_RED)($(GREEN)____"
+	@echo "            _\\L.   |      \\"
+	@echo "           / /\"\"\"\\ /.-'    |"
+	@echo "          ( /  _/u     |    \\"
+	@echo "           \\|  \\\\       /   /|"
+	@echo "            |   \\\\     /   / |"
+	@echo "            |    )  _/   /  )"
+	@echo "            _\\__/.-'    /__("
+	@echo "         _/  __________/    \\"
+	@echo "        //  / (             )"
+	@echo "       ( \\__|_$(L_RED)_$(GREEN)\\    \\_____ /"
+	@echo "        \\    $(L_RED)(___$(GREEN)\\   |$(L_RED)______)"
+	@echo "$(GREEN)         \\   |$(L_RED)\\   $(GREEN)\\  \\     $(L_RED)/"
+	@echo "$(GREEN)          \\  | $(L_RED)\\__ $(GREEN))  )$(L_RED)___/"
+	@echo "$(GREEN)           \\  \\  $(L_RED))$(GREEN)/  /$(L_RED)__("
+	@echo "$(GREEN)           |  / $(L_RED)/$(GREEN)/___|   $(L_RED)\\"
+	@echo "$(GREEN)         _/  ( $(L_RED)/$(GREEN) OUuuu    $(L_RED)\\"
+	@echo "$(GREEN)        \`----'$(L_RED)(____________)"
+	@echo -n "$(RESET)"
+
+	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep (nr_meals)'$(RESET)"
+	@echo "$(BOLD)\n- nr_philo (number_of_philosophers):$(RESET) The number of philosophers and also the number of forks."
+	@echo "$(BOLD)- t_die (time_to_die) [in ms]:$(RESET) If a philosopher did not start eating in 't_die' since the beginning of their last meal or the beginning of the simulation, they die."
+	@echo "$(BOLD)- t_eat (time_to_eat) [in ms]:$(RESET) The time it takes for a philosopher to eat. During that time, they will need to hold two forks."
+	@echo "$(BOLD)- t_sleep (time_to_sleep) [in ms]:$(RESET) The time a philosopher will spend sleeping."
+	@echo "$(BOLD)- nr_meals (number_of_times_each_philosopher_must_eat) (optional argument):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops. If not specified, the simulation stops when a philosopher dies.\n"
 
 # COMPILATION PROGRESS BAR
 # Rule to define how to generate object files (%.o) from corresponding
@@ -167,13 +129,4 @@ fclean:	clean
 # and then rebuild the program.
 re:	fclean all
 
-# x_all: also removes/recompiles libft
-clean_all: clean
-	@make -s -C $(LIBFT_DIR) clean
-
-fclean_all: clean fclean
-	@make -s -C $(LIBFT_DIR) fclean
-
-re_all:	fclean_all all
-
-.PHONY: all clean fclean re clean_all fclean_all
+.PHONY: all clean fclean re
