@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/03 15:32:30 by aschenk          ###   ########.fr        #
+#    Updated: 2024/09/05 17:59:57 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,9 @@ NAME :=			philo
 
 # SOURCE FILES
 SRCS_DIR :=		src
-SRCS_FILES :=	main.c
+SRCS_FILES :=	main.c \
+				utils/libft.c \
+				utils/init.c
 
 SRCS :=			$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 
@@ -28,14 +30,15 @@ OBJS :=			$(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 # HEADER FILES
 HDRS_DIR :=		include
-HDRS_FILES := 	philo.h
+HDRS_FILES := 	philo.h \
+				errors.h
 
 HDRS :=			$(addprefix $(HDRS_DIR)/, $(HDRS_FILES))
 
 # COMPILER
 CC :=			cc
 CFLAGS := 		-I$(HDRS_DIR)
-CFLAGS :=		-Werror -Wextra -Wall -I$(HDRS_DIR)
+CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR)
 CFLAGS +=		-Wpedantic -g
 # CFLAGS +=		-fsanitize=address
 
