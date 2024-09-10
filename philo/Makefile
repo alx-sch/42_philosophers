@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/05 17:59:57 by aschenk          ###   ########.fr        #
+#    Updated: 2024/09/10 17:06:17 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ NAME :=			philo
 SRCS_DIR :=		src
 SRCS_FILES :=	main.c \
 				utils/libft.c \
+				utils/check_args.c \
 				utils/init.c
 
 SRCS :=			$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
