@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/10 17:46:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/18 13:22:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ is passed).
 If the string represents a valid integer value >= 0, the function returns the
 converted integer value.
 
+There is no overflow detection, so it's the user's responsibility to ensure
+that only numbers up to `INT_MAX` are used
+
  @param str 	The input string to be validated and converted to an integer.
 
  @return		Returns the converted integer value if valid.
@@ -89,6 +92,12 @@ static void	print_err_msg(char *msg, char *color, int newline)
 /**
 Used in check_args().
 
+Prints the correct usage information for the program, including details about
+each argument expected. It provides formatted error messages and explains the
+purpose of each command-line argument.
+
+Each message is printed with optional ANSI escape code formatting for emphasis
+and clarity, using the `print_err_msg()` function to handle the details.
 */
 static void	print_usage(void)
 {
@@ -113,11 +122,25 @@ time, they will need to hold two forks.",
 the simulation stops. If not specified, the simulation stops when a \
 philosopher dies.", NULL, 1);
 }
+
 /**
- 0 fails
+Validates the command-line arguments passed to the program.
 
+Checks if the number of passed arguments is valid (either 4 or 5). If the
+number of arguments is incorrect, it prints an error message and usage
+instructions.
+
+For each argument provided, it validates whether the argument is acceptable
+by calling `is_valid_arg()`. If an invalid argument is found (not int >= 0),
+it prints an error message and usage instructions.
+
+ @param argc 		The number of command-line arguments.
+ @param argv 		An array of command-line argument strings.
+
+ @return 			Returns `1` if all arguments are valid,
+ 					`0` if there is an error in the argument count or
+					if any argument is invalid.
 */
-
 int	check_args(int argc, char **argv)
 {
 	int	i;
