@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/18 18:07:35 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/19 19:34:01 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ void	*routine(void *arg)
 	t_data	*data_t;
 
 	data_t = (t_data *)arg;
-	pthread_mutex_lock(&data_t->mtx);
+	mtx_act(&data_t->mtx_a, LOCK);
 	philo_nr++;
 	printf("Hello from philo %d.\n", philo_nr);
-	pthread_mutex_unlock(&data_t->mtx);
+	mtx_act(&data_t->mtx_a, UNLOCK);
 	return (NULL);
 }
 
@@ -40,15 +40,17 @@ int	main(int argc, char **argv)
 	(void)argv;
 	i = 0;
 
-	init_data_struct(&data, argc, argv);
+	if (init_data_struct(&data, argc, argv))
+		return (1);
 
 	while (i < 4)
 	{
 		if (pthread_create(&philo[i], NULL, &routine, &data))
 		{
-			print_err_msg(ERR_TR_CREATE, ERR_COLOR, 1);
+			print_err_msg(ERR_TR_CREATE, ERR_COLOR, 1, &data.mtx_pr);
 			return (1);
 		}
+
 		i++;
 	}
 
@@ -57,16 +59,19 @@ int	main(int argc, char **argv)
 	{
 		if (pthread_join(philo[i], NULL))
 		{
-			print_err_msg(ERR_TR_JOIN, ERR_COLOR, 1);
-			return (2);
+			print_err_msg(ERR_TR_JOIN, ERR_COLOR, 1, &data.mtx_pr);
+			return (1);
 		}
-		pthread_mutex_lock(&data.mtx);
+		if (mtx_act(&data.mtx_a, LOCK) || mtx_act(&data.mtx_pr, LOCK))
+			return (1);
 		printf("philo thread %d has finished\n", i + 1);
-		pthread_mutex_unlock(&data.mtx);
 		i++;
+		if (mtx_act(&data.mtx_pr, UNLOCK) || mtx_act(&data.mtx_a, UNLOCK))
+			return (1);
 	}
 
-	pthread_mutex_destroy(&data.mtx);
+	mtx_act(&data.mtx_a, DESTROY);
+	mtx_act(&data.mtx_pr, DESTROY);
 
-	return (EXIT_SUCCESS);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/18 18:09:27 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/19 17:49:48 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,25 +85,25 @@ and clarity, using the `print_err_msg()` function to handle the details.
 static void	print_usage(void)
 {
 	print_err_msg("Usage: './philo nr_philo t_die t_eat t_sleep (nr_meals)'\n",
-		YELLOW, 1);
-	print_err_msg("- nr_philo (number_of_philosophers): ", BOLD, 0);
+		YELLOW, 1, NULL);
+	print_err_msg("- nr_philo (number_of_philosophers): ", BOLD, 0, NULL);
 	print_err_msg("The number of philosophers and also the number of forks.",
-		NULL, 1);
-	print_err_msg("- t_die (time_to_die) [in ms]: ", BOLD, 0);
+		NULL, 1, NULL);
+	print_err_msg("- t_die (time_to_die) [in ms]: ", BOLD, 0, NULL);
 	print_err_msg("If a philosopher did not start eating in 't_die' since the \
 beginning of their last meal or the beginning of the simulation, they die.",
-		NULL, 1);
-	print_err_msg("- t_eat (time_to_eat) [in ms]: ", BOLD, 0);
+		NULL, 1, NULL);
+	print_err_msg("- t_eat (time_to_eat) [in ms]: ", BOLD, 0, NULL);
 	print_err_msg("The time it takes for a philosopher to eat. During that \
 time, they will need to hold two forks.",
-		NULL, 1);
-	print_err_msg("- t_sleep (time_to_sleep) [in ms]: ", BOLD, 0);
-	print_err_msg("The time a philosopher will spend sleeping.", NULL, 1);
+		NULL, 1, NULL);
+	print_err_msg("- t_sleep (time_to_sleep) [in ms]: ", BOLD, 0, NULL);
+	print_err_msg("The time a philosopher will spend sleeping.", NULL, 1, NULL);
 	print_err_msg("- nr_meals (number_of_times_each_philosopher_must_eat) \
-(optional argument): ", BOLD, 0);
+(optional argument): ", BOLD, 0, NULL);
 	print_err_msg("If all philosophers have eaten at least 'nr_meals' times, \
 the simulation stops. If not specified, the simulation stops when a \
-philosopher dies.", NULL, 1);
+philosopher dies.", NULL, 1, NULL);
 }
 
 /**
@@ -120,8 +120,8 @@ it prints an error message and usage instructions.
  @param argc 		The number of command-line arguments.
  @param argv 		An array of command-line argument strings.
 
- @return 			Returns `1` if all arguments are valid,
- 					`0` if there is an error in the argument count or
+ @return 			Returns `0` if all arguments are valid,
+ 					`1` if there is an error in the argument count or
 					if any argument is invalid.
 */
 int	check_args(int argc, char **argv)
@@ -130,20 +130,20 @@ int	check_args(int argc, char **argv)
 
 	if (!(argc == 5 || argc == 6))
 	{
-		print_err_msg(ERR_ARGS_NR, ERR_COLOR, 1);
+		print_err_msg(ERR_ARGS_NR, ERR_COLOR, 1, NULL);
 		print_usage();
-		return (0);
+		return (1);
 	}
 	i = 1;
 	while (i <= (argc - 1))
 	{
 		if (is_valid_arg(argv[i]) < 0)
 		{
-			print_err_msg(ERR_ARGS_VAL, ERR_COLOR, 1);
+			print_err_msg(ERR_ARGS_VAL, ERR_COLOR, 1, NULL);
 			print_usage();
-			return (0);
+			return (1);
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }

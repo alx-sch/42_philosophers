@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/18 18:11:34 by aschenk          ###   ########.fr        #
+#    Updated: 2024/09/19 17:23:35 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRCS_FILES :=	main.c \
 				utils/libft.c \
 				utils/check_args.c \
 				utils/free.c \
+				utils/mutex.c \
 				utils/init.c
 
 SRCS :=			$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
@@ -33,7 +34,8 @@ OBJS :=			$(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 # HEADER FILES
 HDRS_DIR :=		include
 HDRS_FILES := 	philo.h \
-				errors.h
+				types.h \
+				errors.h \
 
 HDRS :=			$(addprefix $(HDRS_DIR)/, $(HDRS_FILES))
 

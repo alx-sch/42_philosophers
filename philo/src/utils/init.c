@@ -6,16 +6,16 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/18 16:24:51 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/19 19:39:08 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	init_args(t_data *data, int argc, char **argv)
+static int	init_args(t_data *data, int argc, char **argv)
 {
-	if (!check_args(argc, argv))
-		exit(EXIT_FAILURE);
+	if (check_args(argc, argv))
+		return (1);
 	data->nr_philo = ft_atoi(argv[1]);
 	data->t_die = ft_atoi(argv[2]);
 	data->t_eat = ft_atoi(argv[3]);
@@ -30,12 +30,13 @@ static void	init_args(t_data *data, int argc, char **argv)
 		data->nr_meals_set = 0;
 		data->nr_meals = -1;
 	}
+	return (0);
 }
 
-void	init_data_struct(t_data *data, int argc, char **argv)
+int	init_data_struct(t_data *data, int argc, char **argv)
 {
-	//struct	timeval tv;
-
-	init_args(data, argc, argv);
-	pthread_mutex_init(&data->mtx, NULL);
+	if (init_args(data, argc, argv) || mtx_act(&data->mtx_pr, INIT)
+		|| mtx_act(&data->mtx_a, INIT))
+		return (1);
+	return (0);
 }
