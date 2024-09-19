@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/19 18:57:49 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/19 22:53:53 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ void	ft_putstr_fd(char *s, int fd);
 // utils/check_args.c
 
 int		check_args(int argc, char **argv);
-void	print_err_msg(char *msg, char *color, int nl ,pthread_mutex_t *mtx);
 
-int		init_data_struct(t_data *data, int argc, char **argv);
+void	print_usage(void);
+void	print_err_msg(char *msg, t_data *data);
 
-int		mtx_act(pthread_mutex_t *mutex, t_mutex_action action);
+int		init(t_data *data, int argc, char **argv);
+
+int		mtx_act(t_mtx *mutex, t_mtx_act action);
 
 #endif

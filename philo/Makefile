@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/19 17:23:35 by aschenk          ###   ########.fr        #
+#    Updated: 2024/09/19 22:34:20 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,11 +19,12 @@ NAME :=			philo
 # SOURCE FILES
 SRCS_DIR :=		src
 SRCS_FILES :=	main.c \
-				utils/libft.c \
-				utils/check_args.c \
+				1_check_args.c \
+				2_init.c \
+				utils/0_libft.c \
+				utils/1_print.c \
+				utils/2_mutex.c \
 				utils/free.c \
-				utils/mutex.c \
-				utils/init.c
 
 SRCS :=			$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 
@@ -44,7 +45,7 @@ CC :=			cc
 CFLAGS := 		-I$(HDRS_DIR)
 CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR)
 CFLAGS +=		-Wpedantic -g
-# CFLAGS +=		-fsanitize=address
+#CFLAGS +=		-fsanitize=thread
 
 # Used for progress bar
 TOTAL_SRCS :=	$(words $(SRCS))
@@ -93,7 +94,7 @@ $(NAME):	$(OBJS)
 	@echo "$(GREEN)        \`----'$(L_RED)(____________)"
 	@echo -n "$(RESET)"
 
-	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep (nr_meals)'$(RESET)"
+	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep [nr_meals]'$(RESET)"
 	@echo "$(BOLD)\n- nr_philo (number_of_philosophers):$(RESET) The number of philosophers and also the number of forks."
 	@echo "$(BOLD)- t_die (time_to_die) [in ms]:$(RESET) If a philosopher did not start eating in 't_die' since the beginning of their last meal or the beginning of the simulation, they die."
 	@echo "$(BOLD)- t_eat (time_to_eat) [in ms]:$(RESET) The time it takes for a philosopher to eat. During that time, they will need to hold two forks."

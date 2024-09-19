@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/19 18:58:39 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/19 20:31:33 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // IN FILE:
 
-int	mtx_act(pthread_mutex_t *mutex, t_mutex_action action);
+int	mtx_act(t_mtx *mutex, t_mtx_act action);
 
 /**
 Performs an action on a mutex based on the specified action.
@@ -30,7 +30,7 @@ Performs an action on a mutex based on the specified action.
  @return 	`0` on success;
 			`1` on failure (if the corresponding pthread operation fails).
  */
-int	mtx_act(pthread_mutex_t *mutex, t_mutex_action action)
+int	mtx_act(t_mtx *mutex, t_mtx_act action)
 {
 	if (action == INIT)
 	{
