@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/19 22:53:53 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 18:51:11 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,24 @@ TBD
 # include "errors.h"
 # include "types.h" // all data structure types, e.g. 't_data'
 
-int		ft_strcmp(const char *s1, const char *s2);
+// utils/libft.c
+
 int		ft_atoi(const char *str);
+int		ft_strcmp(const char *s1, const char *s2);
 void	ft_putstr_fd(char *s, int fd);
+void	*ft_calloc(size_t nmemb, size_t size);
 
 // utils/check_args.c
 
 int		check_args(int argc, char **argv);
 
 void	print_usage(void);
-void	print_err_msg(char *msg, t_data *data);
+void	print_err_msg(char *msg, t_sim *sim);
 
-int		init(t_data *data, int argc, char **argv);
+int		init_simulation(t_sim *sim, int argc, char **argv);
 
-int		mtx_act(t_mtx *mutex, t_mtx_act action);
+int		mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim);
+
+void	free_data(t_sim *sim);
 
 #endif

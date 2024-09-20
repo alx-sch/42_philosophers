@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/19 23:02:49 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 18:35:50 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <pthread.h> // thread fcts, like pthread_create()
 
 typedef pthread_mutex_t	t_mtx;
-typedef struct s_data	t_data;
+typedef struct s_sim	t_sim;
 
 /**
 TBD
@@ -38,9 +38,13 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	t_data		*data;
+	t_sim		*sim;
 	int			id;
 	pthread_t	thread_id;
+	int			t_die;
+	int			t_eat;
+	int			t_sleep;
+	int			max_meals;
 	long		meals_eaten;
 	int			done_eating;
 	long		t_last_meal;
@@ -48,18 +52,18 @@ typedef struct s_philo
 	t_fork		*right_fork;
 }	t_philo;
 
-typedef struct s_data
+typedef struct s_sim
 {
 	int		nr_philo;
 	int		t_die;
 	int		t_eat;
 	int		t_sleep;
 	int		max_meals;
-	long	t_start;
+	long	t_start_simulation;
 	int		end_simulation;
 	t_fork	*forks;
 	t_philo	*philos;
 	t_mtx	mtx_pr;
-}	t_data;
+}	t_sim;
 
 #endif

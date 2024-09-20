@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/19 22:34:20 by aschenk          ###   ########.fr        #
+#    Updated: 2024/09/20 19:26:33 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,11 +95,11 @@ $(NAME):	$(OBJS)
 	@echo -n "$(RESET)"
 
 	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep [nr_meals]'$(RESET)"
-	@echo "$(BOLD)\n- nr_philo (number_of_philosophers):$(RESET) The number of philosophers and also the number of forks."
-	@echo "$(BOLD)- t_die (time_to_die) [in ms]:$(RESET) If a philosopher did not start eating in 't_die' since the beginning of their last meal or the beginning of the simulation, they die."
-	@echo "$(BOLD)- t_eat (time_to_eat) [in ms]:$(RESET) The time it takes for a philosopher to eat. During that time, they will need to hold two forks."
-	@echo "$(BOLD)- t_sleep (time_to_sleep) [in ms]:$(RESET) The time a philosopher will spend sleeping."
-	@echo "$(BOLD)- nr_meals (number_of_times_each_philosopher_must_eat) (optional argument):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops. If not specified, the simulation stops when a philosopher dies.\n"
+	@echo "$(BOLD)\n- nr_philo:$(RESET) The number of philosophers and also the number of forks."
+	@echo "$(BOLD)- t_die [ms]:$(RESET) If a philosopher did not start eating in 't_die' since the beginning of their last meal, they die."
+	@echo "$(BOLD)- t_eat [ms]:$(RESET) The time it takes for a philosopher to eat. During that time, they will need to hold two forks."
+	@echo "$(BOLD)- t_sleep [ms]:$(RESET) The time a philosopher will spend sleeping."
+	@echo "$(BOLD)- nr_meals (optional argument):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops.\n"
 
 # COMPILATION PROGRESS BAR
 # Rule to define how to generate object files (%.o) from corresponding

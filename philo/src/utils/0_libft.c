@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.c                                            :+:      :+:    :+:   */
+/*   0_libft.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:56:47 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/05 17:26:10 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 18:50:33 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,13 @@ Includes general-purpose functions usually included within the libft library.
 */
 
 #include "philo.h"
+
+// IN FILE:
+
+int		ft_atoi(const char *str);
+int		ft_strcmp(const char *s1, const char *s2);
+void	ft_putstr_fd(char *s, int fd);
+void	*ft_calloc(size_t nmemb, size_t size);
 
 /**
 Converts a string to its corresponding integer representation.
@@ -95,7 +102,6 @@ Writes a string to the given file descriptor.
 
  @param s	The string to output. If the string is NULL, nothing is written.
  @param fd 	The file descriptor on which to write.
-
 */
 void	ft_putstr_fd(char *s, int fd)
 {
@@ -107,4 +113,30 @@ void	ft_putstr_fd(char *s, int fd)
 		write(fd, ptr, 1);
 		ptr++;
 	}
+}
+
+/**
+Allocates memory for an array of `nmemb` elements of `size` bytes each,
+and initializes all bytes to zero. If allocation fails, it returns NULL.
+
+ @param nmemb 	The number of elements to allocate memory for.
+ @param size 	The size, in bytes, of each element.
+
+ @return 		A pointer to the allocated and zero-initialized memory,
+				or `NULL` if the allocation fails or if the multiplication
+				of `nmemb` and `size` overflows.
+*/
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	total_bytes;
+
+	if (nmemb > 0 && ((size_t)-1) / nmemb < size)
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (!ptr)
+		return (NULL);
+	total_bytes = nmemb * size;
+	memset(ptr, 0, total_bytes);
+	return (ptr);
 }

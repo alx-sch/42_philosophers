@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/19 23:04:06 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 18:46:53 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,92 +14,110 @@
 
 // IN FILE:
 
-int	init(t_data *data, int argc, char **argv);
+int	init_simulation(t_sim *sim, int argc, char **argv);
 
-static int	init_args(t_data *data, int argc, char **argv)
+static int	init_args(t_sim *sim, int argc, char **argv)
 {
 	if (check_args(argc, argv))
 		return (1);
-	data->nr_philo = ft_atoi(argv[1]);
-	data->t_die = ft_atoi(argv[2]);
-	data->t_eat = ft_atoi(argv[3]);
-	data->t_sleep = ft_atoi(argv[4]);
+	sim->nr_philo = ft_atoi(argv[1]);
+	sim->t_die = ft_atoi(argv[2]);
+	sim->t_eat = ft_atoi(argv[3]);
+	sim->t_sleep = ft_atoi(argv[4]);
 	if (argc == 6)
-		data->max_meals = ft_atoi(argv[5]);
+		sim->max_meals = ft_atoi(argv[5]);
 	else
-		data->max_meals = -1;
+		sim->max_meals = -1;
 	return (0);
 }
 
-static int	init_data_struct(t_data *data, int argc, char **argv)
+/**
+
+NULL passed to mtx_act as there is no need to free anything yet (and avoid having
+a not created mutex destroyed).
+ */
+static int	init_sim_data(t_sim *sim, int argc, char **argv)
 {
-	if (init_args(data, argc, argv) || mtx_act(&data->mtx_pr, INIT))
+	struct timeval	start_time;
+
+	gettimeofday(&start_time, NULL);
+	sim->t_start_simulation = start_time.tv_sec * 1000
+		+ start_time.tv_usec / 1000;
+	sim->end_simulation = 0;
+	sim->forks = NULL;
+	sim->philos = NULL;
+	if (init_args(sim, argc, argv))
 		return (1);
-	data->t_start = 0;
-	data->end_simulation = 0;
-	data->forks = NULL;
-	data->philos = NULL;
+	if (mtx_act(&sim->mtx_pr, INIT, NULL))
+		return (1);
 	return (0);
 }
 
-// int init_forks(t_data *data)
-// {
-//     int i;
-
-//     // Allocate memory for forks
-//     data->forks = malloc(sizeof(t_fork) * data->nr_philo);
-//     if (!data->forks)
-//     {
-//         print_err_msg(ERR_MALLOC, NULL);
-//         return (1);
-//     }
-
-//     // Initialize each fork
-//     for (i = 0; i < data->nr_philo; i++)
-//     {
-//         // Initialize mutex for each fork
-//         if (mtx_act(&data->forks[i].fork, INIT))
-//         {
-//             print_err_msg(ERR_MUTEX_INIT, NULL);
-//             return (1);
-//         }
-//         data->forks[i].fork_id = i; // Set fork ID
-//     }
-
-//     return (0);
-// }
-
-
-int	init_philos(t_data *data)
+/*
+clean up as and passed NULL as free_data fct inly handles fully or not at all
+initialized fork mtx arrays
+*/
+int	init_forks(t_sim *sim)
 {
 	int	i;
 
-	data->philos = malloc(sizeof(t_philo) * data->nr_philo);
-	if (!data->philos)
+	sim->forks = malloc(sizeof(t_fork) * sim->nr_philo);
+	if (!sim->forks)
 	{
-		print_err_msg(ERR_MALLOC, NULL);
+		print_err_msg(ERR_MALLOC, sim);
 		return (1);
 	}
-
-
-    for (i = 0; i < data->nr_philo; i++) {
-        data->philos[i].data = data; // Point to the data structure
-        data->philos[i].id = i; // Set philosopher ID
-        data->philos[i].meals_eaten = 0; // Initialize meals eaten
-        data->philos[i].done_eating = 0; // Initialize done eating flag
-        data->philos[i].t_last_meal = 0; // Initialize last meal time
-        data->philos[i].left_fork = &data->forks[i]; // Set left fork
-        data->philos[i].right_fork = &data->forks[(i + 1) % data->nr_philo]; // Set right fork
-        data->philos[i].thread_id = 0; // Initialize thread ID to an invalid value
-
-        // Initialize other fields if necessary
-    }
+	i = 0;
+	while (i < sim->nr_philo)
+	{
+		if (mtx_act(&sim->forks[i].fork, INIT, NULL))
+		{
+			while (--i >= 0)
+				mtx_act(&sim->forks[i].fork, DESTROY, NULL);
+			free(sim->forks);
+			sim->forks = NULL;
+			free_data(sim);
+			return (1);
+		}
+		sim->forks[i].fork_id = i + 1;
+		i++;
+	}
 	return (0);
 }
 
-int	init(t_data *data, int argc, char **argv)
+int	init_philos(t_sim *sim)
 {
-	if (init_data_struct(data, argc, argv) || init_philos(data))
+	int	i;
+
+	sim->philos = malloc(sizeof(t_philo) * sim->nr_philo);
+	if (!sim->philos)
+	{
+		print_err_msg(ERR_MALLOC, sim);
+		return (1);
+	}
+	i = 0;
+	while (i < sim->nr_philo)
+	{
+		sim->philos[i].sim = sim;
+		sim->philos[i].id = i + 1;
+		sim->philos[i].thread_id = 0;
+		sim->philos[i].t_die = sim->t_die;
+		sim->philos[i].t_eat = sim->t_eat;
+		sim->philos[i].t_sleep = sim->t_die;
+		sim->philos[i].max_meals = sim->max_meals;
+		sim->philos[i].meals_eaten = 0;
+		sim->philos[i].done_eating = 0;
+		sim->philos[i].t_last_meal = sim->t_start_simulation;
+		sim->philos[i].left_fork = &sim->forks[i];
+		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
+		i++;
+	}
+	return (0);
+}
+
+int	init_simulation(t_sim *sim, int argc, char **argv)
+{
+	if (init_sim_data(sim, argc, argv) || init_forks(sim) || init_philos(sim))
 		return (1);
 
 	return (0);
