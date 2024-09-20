@@ -6,12 +6,13 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 19:26:27 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 19:37:43 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-TBD
+Utility functions for printing messages to the terminal with optional
+formatting and handling error reporting.
 */
 
 #include "philo.h"
@@ -44,12 +45,7 @@ static void	print_msg(char *msg, char *color, int nl)
 /**
 Used in check_args().
 
-Prints the correct usage information for the program, including details about
-each argument expected. It provides formatted error messages and explains the
-purpose of each command-line argument.
-
-Each message is printed with optional ANSI escape code formatting for emphasis
-and clarity, using the `print_err_msg()` function to handle the details.
+Prints the correct usage information for the program
 */
 void	print_usage(void)
 {
@@ -75,13 +71,11 @@ the simulation stops.", NULL, 1);
 }
 
 /**
-Handles and reports an unexpected error. This function prints a formatted
-error message to the standard error stream and performs cleanup on the provided
-data structure if it is not `NULL`.
+Prints a formatted error message to the standard error stream and
+performs cleanup on the provided data structure, if provided.
 
- @param msg 	Error message to be printed in error color and
- 				suffixed with a newline.
- @param sim 	A pointer to the data structure that needs to be cleaned up.
+ @param msg 	Error message to be printed.
+ @param sim 	A pointer to the data structure that is to be cleaned up.
 */
 void	print_err_msg(char *msg, t_sim *sim)
 {
@@ -90,7 +84,5 @@ void	print_err_msg(char *msg, t_sim *sim)
 	ft_putstr_fd("\n", STDERR_FILENO);
 	ft_putstr_fd(RESET, STDERR_FILENO);
 	if (sim)
-	{
-		// free data
-	}
+		free_data(sim);
 }

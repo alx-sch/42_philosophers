@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/20 19:26:33 by aschenk          ###   ########.fr        #
+#    Updated: 2024/09/20 20:46:44 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRCS_FILES :=	main.c \
 				utils/0_libft.c \
 				utils/1_print.c \
 				utils/2_mutex.c \
+				utils/3_time.c \
 				utils/free.c \
 
 SRCS :=			$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))

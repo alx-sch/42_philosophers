@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 18:35:50 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 21:00:59 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,15 @@
 
 # include <pthread.h> // thread fcts, like pthread_create()
 
-typedef pthread_mutex_t	t_mtx;
+typedef pthread_mutex_t	t_mtx; // abbreviate 'pthread_mutex_t' to 't_mtx'
 typedef struct s_sim	t_sim;
 
 /**
-TBD
+Represents the actions that can be performed on a mutex:
+ - INIT
+ - LOCK
+ - UNLOCK
+ - DESTROY
 */
 typedef enum e_mtx_act
 {
@@ -28,7 +32,6 @@ typedef enum e_mtx_act
 	UNLOCK,
 	DESTROY
 }	t_mtx_act;
-
 
 typedef struct s_fork
 {
@@ -45,7 +48,8 @@ typedef struct s_philo
 	int			t_eat;
 	int			t_sleep;
 	int			max_meals;
-	long		meals_eaten;
+	long		t_start_sim;
+	int			meals_eaten;
 	int			done_eating;
 	long		t_last_meal;
 	t_fork		*left_fork;
@@ -59,11 +63,10 @@ typedef struct s_sim
 	int		t_eat;
 	int		t_sleep;
 	int		max_meals;
-	long	t_start_simulation;
 	int		end_simulation;
 	t_fork	*forks;
 	t_philo	*philos;
-	t_mtx	mtx_pr;
+	t_mtx	mtx_print;
 }	t_sim;
 
 #endif

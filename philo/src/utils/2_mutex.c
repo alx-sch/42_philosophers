@@ -6,9 +6,15 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 18:45:16 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 19:18:11 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/**
+This file provides utility functions for handling mutex operations
+(initialization, locking, unlocking, and destruction) with proper
+error checking and reporting.
+*/
 
 #include "philo.h"
 
@@ -19,13 +25,13 @@ int	mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim);
 /**
 Performs an action on a mutex based on the specified action.
 
- @param 	mutex Pointer to a `pthread_mutex_t` mutex to operate on.
- @param 	action The action to perform on the mutex:
-			INIT, LOCK, UNLOCK, DESTROY
+ @param mutex 	Pointer to a `pthread_mutex_t` mutex to operate on.
+ @param action 	The action to perform on the mutex:
+				INIT, LOCK, UNLOCK, DESTROY
 
- @return 	`0` on success;
-			INIT`, `LOCK`, `UNLOCK`, or `DESTROY` on failure,
-			corresponding to the failed operation.
+ @return 		`0` on success;
+				INIT`, `LOCK`, `UNLOCK`, or `DESTROY` on failure,
+				corresponding to the failed operation.
  */
 static int	mtx_perform_act(t_mtx *mutex, t_mtx_act action)
 {

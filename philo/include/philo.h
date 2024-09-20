@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 18:51:11 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 20:46:29 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ TBD
 // utils/libft.c
 
 int		ft_atoi(const char *str);
-int		ft_strcmp(const char *s1, const char *s2);
 void	ft_putstr_fd(char *s, int fd);
-void	*ft_calloc(size_t nmemb, size_t size);
+int		contains_digit(const char *str);
 
 // utils/check_args.c
 
 int		check_args(int argc, char **argv);
+
+long	get_time_in_ms(void);
 
 void	print_usage(void);
 void	print_err_msg(char *msg, t_sim *sim);

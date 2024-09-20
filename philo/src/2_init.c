@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 18:46:53 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 21:14:04 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,12 @@ a not created mutex destroyed).
  */
 static int	init_sim_data(t_sim *sim, int argc, char **argv)
 {
-	struct timeval	start_time;
-
-	gettimeofday(&start_time, NULL);
-	sim->t_start_simulation = start_time.tv_sec * 1000
-		+ start_time.tv_usec / 1000;
 	sim->end_simulation = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
 	if (init_args(sim, argc, argv))
 		return (1);
-	if (mtx_act(&sim->mtx_pr, INIT, NULL))
+	if (mtx_act(&sim->mtx_print, INIT, NULL))
 		return (1);
 	return (0);
 }
@@ -105,13 +100,16 @@ int	init_philos(t_sim *sim)
 		sim->philos[i].t_eat = sim->t_eat;
 		sim->philos[i].t_sleep = sim->t_die;
 		sim->philos[i].max_meals = sim->max_meals;
+		sim->philos[i].t_start_sim = get_time_in_ms();
 		sim->philos[i].meals_eaten = 0;
 		sim->philos[i].done_eating = 0;
-		sim->philos[i].t_last_meal = sim->t_start_simulation;
+		sim->philos[i].t_last_meal = sim->philos[i].t_start_sim;
 		sim->philos[i].left_fork = &sim->forks[i];
 		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
+		printf("time %d: %ld\n", i, sim->philos[i].t_last_meal);
 		i++;
 	}
+	i = 0;
 	return (0);
 }
 

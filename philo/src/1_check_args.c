@@ -6,9 +6,16 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 19:43:01 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 19:47:20 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/**
+This file contains functions for validating command-line arguments passed
+to the philosopher simulation program.
+If invalid arguments are found, the program prints an appropriate error message
+and usage instructions.
+*/
 
 #include "philo.h"
 
@@ -17,53 +24,21 @@
 int		check_args(int argc, char **argv);
 
 /**
-Used in is_valid_arg().
-
-Checks if the given string represents the value zero.
-
-This function checks whether the input string `str` is equal to "0", "+0",
-or "-0". It returns 1 (true) if the string matches any of these, indicating
-that the string represents a zero value. Otherwise, it returns 0 (false).
-
- @param str 	The input string to be checked.
-
- @return		`0` if the string is "0", "+0", or "-0", indicating the string
-				represents zero;
-				`1` if the string does not represent zero.
- */
-static int	is_zero(const char *str)
-{
-	if (!ft_strcmp(str, "0") || !ft_strcmp(str, "+0") || !ft_strcmp(str, "-0"))
-		return (0);
-	else
-		return (1);
-}
-
-/**
 Used in check_args().
 
 Converts a string to an integer and validates the input.
 
-This function converts the input string `str` to an integer using `ft_atoi`.
-
-If the string represents a valid integer value >= 0, the function returns the
-converted integer value.
-
 There is no overflow detection, so it's the user's responsibility to ensure
-that only numbers up to `INT_MAX` are used
+that only numbers up to `INT_MAX` are used.
 
- @param str 	The input string to be validated and converted to an integer.
+ @param str 	The argument to be validated.
 
  @return		`0` if the argument is valid;
-				`1` if the string does not represent a number
-				or if the number is < 1.
+				`1` if the argument is not a number or if the number is < 0.
  */
 static int	is_valid_arg(const char *str)
 {
-	int	int_value;
-
-	int_value = ft_atoi(str);
-	if ((int_value == 0 && is_zero(str)) || int_value < 0)
+	if (contains_digit(str) || ft_atoi(str) < 0)
 		return (1);
 	return (0);
 }
@@ -75,12 +50,12 @@ Validates the number of command-line arguments passed to the program.
 
  @param argc 	The number of command-line arguments.
 
- @return 		`0` if the argument count is valid (4 or 5 passed arguments);
+ @return 		`0` if count of passed arguments is valid (4 or 5);
  				`1` otherwise.
 */
 static int	check_arg_count(int argc)
 {
-	if (argc != 5 && argc != 6)
+	if (argc < 5 || argc > 6)
 	{
 		print_err_msg(ERR_ARGS_NR, NULL);
 		print_usage();
@@ -92,16 +67,19 @@ static int	check_arg_count(int argc)
 /**
 Used in check_args().
 
-Checks if the passed number of philosophers is valid (>= 1).
+Checks if the number of philosophers is valid (>= 1).
 
  @param arg 	The first command-line argument (argv[1]).
 
- @return 		`0` if the nr of philos is valid,
- 				`1` if the nr of philos is invalid.
+ @return 		`0` if the nr of philos is valid;
+ 				`1` if the nr of philos is < 1;
+				`2` if argv[1] contains no digits.
 */
 static int	check_first_arg(char *arg)
 {
-	if (is_zero(arg) == 0 || ft_atoi(arg) < 0)
+	if (contains_digit(arg))
+		return (2);
+	if (ft_atoi(arg) < 1)
 	{
 		print_err_msg(ERR_ARGS_0_P, NULL);
 		print_usage();
@@ -112,27 +90,25 @@ static int	check_first_arg(char *arg)
 
 /**
 Validates the command-line arguments passed to the program.
+If invalid, it prints an error message and usage instructions.
 
-Checks if the number of passed arguments is valid (either 4 or 5). If the
-number of arguments is incorrect, it prints an error message and usage
-instructions.
+Checks if:
+ - The number of passed arguments is either 4 or 5;
+ - Arguments contain digits;
+ - 'nr of philos' is at least 1;
+ - Other args are >= 0.
 
-For each argument provided, it validates whether the argument is acceptable
-by calling `is_valid_arg()`. If an invalid argument is found (not int > 0),
-it prints an error message and usage instructions.
+ @param argc 	The number of command-line arguments.
+ @param argv 	An array of command-line argument strings.
 
- @param argc 		The number of command-line arguments.
- @param argv 		An array of command-line argument strings.
-
- @return 			Returns `0` if all arguments are valid,
- 					`1` if there is an error in the argument count or
-					if any argument is invalid.
+ @return 		`0` if all arguments are valid;
+ 				`1` if not.
 */
 int	check_args(int argc, char **argv)
 {
 	int	i;
 
-	if (check_arg_count(argc) || check_first_arg(argv[1]))
+	if (check_arg_count(argc) || check_first_arg(argv[1]) == 1)
 		return (1);
 	i = 1;
 	while (i <= (argc - 1))

@@ -1,39 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   3_time.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/18 18:08:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 20:14:25 by aschenk          ###   ########.fr       */
+/*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
+/*   Updated: 2024/09/20 20:49:01 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/**
+TBD
+*/
+
 #include "philo.h"
 
-static void	free_forks(t_sim *sim)
+// IN FILE:
+
+long	get_time_in_ms(void);
+
+/**
+Get the current time in milliseconds.
+
+ @return 	The current time in milliseconds as a long integer.
+*/
+long	get_time_in_ms(void)
 {
-	int	i;
+	struct timeval	tv;
+	long			time_in_ms;
 
-	if (sim->forks)
-	{
-		i = 0;
-		while (i < sim->nr_philo)
-		{
-			mtx_act(&sim->forks[i].fork, DESTROY, NULL);
-			i++;
-		}
-		free(sim->forks);
-		sim->forks = NULL;
-	}
-}
-
-
-void	free_data(t_sim *sim)
-{
-	free_forks(sim);
-	if (sim->philos)
-		free(sim->philos);
-	mtx_act(&sim->mtx_print, DESTROY, NULL);
+	gettimeofday(&tv, NULL);
+	time_in_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return (time_in_ms);
 }

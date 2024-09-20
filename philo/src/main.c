@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 18:25:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/20 20:15:43 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	*routine(void *arg)
 	t_sim	*sim;
 
 	sim = (t_sim *)arg;
-	mtx_act(&sim->mtx_pr, LOCK, sim);
+	mtx_act(&sim->mtx_print, LOCK, sim);
 	printf("Hello from philo %lu.\n", pthread_self());
-	mtx_act(&sim->mtx_pr, UNLOCK, sim);
+	mtx_act(&sim->mtx_print, UNLOCK, sim);
 	return (NULL);
 }
 
@@ -36,7 +36,10 @@ int	main(int argc, char **argv)
 	i = 0;
 
 	if (init_simulation(&sim, argc, argv))
+	{
+		printf("init failed\n");
 		return (1);
+	}
 
 	while (i < 4)
 	{
@@ -60,7 +63,6 @@ int	main(int argc, char **argv)
 	}
 
 	free_data(&sim);
-	//mtx_act(&data.mtx_pr, DESTROY, &data);
 
 	return (0);
 }
