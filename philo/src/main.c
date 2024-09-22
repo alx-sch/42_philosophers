@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 20:15:43 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/22 11:16:00 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	main(int argc, char **argv)
 
 	i = 0;
 
-	if (init_simulation(&sim, argc, argv))
+	if (init_sim(&sim, argc, argv))
 	{
 		printf("init failed\n");
 		return (1);
@@ -45,7 +45,7 @@ int	main(int argc, char **argv)
 	{
 		if (pthread_create(&philo[i], NULL, &routine, &sim))
 		{
-			print_err_msg(ERR_TR_CREATE, NULL);
+			print_err_and_clean(ERR_TR_CREATE, NULL);
 			return (1);
 		}
 		i++;
@@ -56,13 +56,13 @@ int	main(int argc, char **argv)
 	{
 		if (pthread_join(philo[i], NULL))
 		{
-			print_err_msg(ERR_TR_JOIN, NULL);
+			print_err_and_clean(ERR_TR_JOIN, NULL);
 			return (1);
 		}
 		i++;
 	}
 
-	free_data(&sim);
+	cleanup_sim(&sim);
 
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 21:14:04 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/22 11:18:54 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // IN FILE:
 
-int	init_simulation(t_sim *sim, int argc, char **argv);
+int	init_sim(t_sim *sim, int argc, char **argv);
 
 static int	init_args(t_sim *sim, int argc, char **argv)
 {
@@ -36,7 +36,7 @@ static int	init_args(t_sim *sim, int argc, char **argv)
 NULL passed to mtx_act as there is no need to free anything yet (and avoid having
 a not created mutex destroyed).
  */
-static int	init_sim_data(t_sim *sim, int argc, char **argv)
+static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
 	sim->end_simulation = 0;
 	sim->forks = NULL;
@@ -59,7 +59,7 @@ int	init_forks(t_sim *sim)
 	sim->forks = malloc(sizeof(t_fork) * sim->nr_philo);
 	if (!sim->forks)
 	{
-		print_err_msg(ERR_MALLOC, sim);
+		print_err_and_clean(ERR_MALLOC, sim);
 		return (1);
 	}
 	i = 0;
@@ -71,7 +71,7 @@ int	init_forks(t_sim *sim)
 				mtx_act(&sim->forks[i].fork, DESTROY, NULL);
 			free(sim->forks);
 			sim->forks = NULL;
-			free_data(sim);
+			cleanup_sim(sim);
 			return (1);
 		}
 		sim->forks[i].fork_id = i + 1;
@@ -87,7 +87,7 @@ int	init_philos(t_sim *sim)
 	sim->philos = malloc(sizeof(t_philo) * sim->nr_philo);
 	if (!sim->philos)
 	{
-		print_err_msg(ERR_MALLOC, sim);
+		print_err_and_clean(ERR_MALLOC, sim);
 		return (1);
 	}
 	i = 0;
@@ -113,9 +113,9 @@ int	init_philos(t_sim *sim)
 	return (0);
 }
 
-int	init_simulation(t_sim *sim, int argc, char **argv)
+int	init_sim(t_sim *sim, int argc, char **argv)
 {
-	if (init_sim_data(sim, argc, argv) || init_forks(sim) || init_philos(sim))
+	if (init_sim_state(sim, argc, argv) || init_forks(sim) || init_philos(sim))
 		return (1);
 
 	return (0);

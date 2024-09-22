@@ -6,13 +6,17 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 20:14:25 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/22 11:12:09 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	free_forks(t_sim *sim)
+// IN FILE:
+
+void	cleanup_sim(t_sim *sim);
+
+static void	clean_forks(t_sim *sim)
 {
 	int	i;
 
@@ -29,10 +33,9 @@ static void	free_forks(t_sim *sim)
 	}
 }
 
-
-void	free_data(t_sim *sim)
+void	cleanup_sim(t_sim *sim)
 {
-	free_forks(sim);
+	clean_forks(sim);
 	if (sim->philos)
 		free(sim->philos);
 	mtx_act(&sim->mtx_print, DESTROY, NULL);

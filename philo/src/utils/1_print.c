@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 19:37:43 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/22 11:12:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ formatting and handling error reporting.
 // IN FILE:
 
 void	print_usage(void);
-void	print_err_msg(char *msg, t_sim *sim);
+void	print_err_and_clean(char *msg, t_sim *sim);
 
 /**
 Used in print_usage().
@@ -72,17 +72,18 @@ the simulation stops.", NULL, 1);
 
 /**
 Prints a formatted error message to the standard error stream and
-performs cleanup on the provided data structure, if provided.
+performs cleanup on the provided data structure, if specified.
 
  @param msg 	Error message to be printed.
- @param sim 	A pointer to the data structure that is to be cleaned up.
+ @param sim 	A pointer to the data structure that is to be cleaned up,
+				or 'NULL' if no cleanup is required.
 */
-void	print_err_msg(char *msg, t_sim *sim)
+void	print_err_and_clean(char *msg, t_sim *sim)
 {
 	ft_putstr_fd(ERR_COLOR, STDERR_FILENO);
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
 	ft_putstr_fd(RESET, STDERR_FILENO);
 	if (sim)
-		free_data(sim);
+		cleanup_sim(sim);
 }

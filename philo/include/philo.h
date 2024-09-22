@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 20:46:29 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/22 11:15:44 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int		check_args(int argc, char **argv);
 long	get_time_in_ms(void);
 
 void	print_usage(void);
-void	print_err_msg(char *msg, t_sim *sim);
+void	print_err_and_clean(char *msg, t_sim *sim);
 
-int		init_simulation(t_sim *sim, int argc, char **argv);
+int		init_sim(t_sim *sim, int argc, char **argv);
 
 int		mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim);
 
-void	free_data(t_sim *sim);
+void	cleanup_sim(t_sim *sim);
 
 #endif

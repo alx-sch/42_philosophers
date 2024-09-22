@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 19:18:11 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/22 11:10:29 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,13 @@ int	mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim)
 	if (error != 0)
 	{
 		if (error == INIT)
-			print_err_msg(ERR_MTX_INIT, sim);
+			print_err_and_clean(ERR_MTX_INIT, sim);
 		else if (error == LOCK)
-			print_err_msg(ERR_MTX_LOCK, sim);
+			print_err_and_clean(ERR_MTX_LOCK, sim);
 		else if (error == UNLOCK)
-			print_err_msg(ERR_MTX_UNLOCK, sim);
+			print_err_and_clean(ERR_MTX_UNLOCK, sim);
 		else if (error == DESTROY)
-			print_err_msg(ERR_MTX_DESTR, sim);
+			print_err_and_clean(ERR_MTX_DESTR, sim);
 		return (1);
 	}
 	return (0);

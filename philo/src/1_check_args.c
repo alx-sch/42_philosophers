@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 19:47:20 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/22 11:08:14 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	check_arg_count(int argc)
 {
 	if (argc < 5 || argc > 6)
 	{
-		print_err_msg(ERR_ARGS_NR, NULL);
+		print_err_and_clean(ERR_ARGS_NR, NULL);
 		print_usage();
 		return (1);
 	}
@@ -81,7 +81,7 @@ static int	check_first_arg(char *arg)
 		return (2);
 	if (ft_atoi(arg) < 1)
 	{
-		print_err_msg(ERR_ARGS_0_P, NULL);
+		print_err_and_clean(ERR_ARGS_0_P, NULL);
 		print_usage();
 		return (1);
 	}
