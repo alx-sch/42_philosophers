@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/22 11:16:00 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/27 08:20:37 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,7 @@ int	main(int argc, char **argv)
 	i = 0;
 
 	if (init_sim(&sim, argc, argv))
-	{
-		printf("init failed\n");
 		return (1);
-	}
 
 	while (i < 4)
 	{

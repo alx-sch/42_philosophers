@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 21:00:59 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/26 21:16:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,29 +44,25 @@ typedef struct s_philo
 	t_sim		*sim;
 	int			id;
 	pthread_t	thread_id;
-	int			t_die;
-	int			t_eat;
-	int			t_sleep;
-	int			max_meals;
-	long		t_start_sim;
 	int			meals_eaten;
 	int			done_eating;
-	long		t_last_meal;
+	uint64_t	t_last_meal;
 	t_fork		*left_fork;
 	t_fork		*right_fork;
 }	t_philo;
 
 typedef struct s_sim
 {
-	int		nr_philo;
-	int		t_die;
-	int		t_eat;
-	int		t_sleep;
-	int		max_meals;
-	int		end_simulation;
-	t_fork	*forks;
-	t_philo	*philos;
-	t_mtx	mtx_print;
+	int			nr_philo;
+	int			t_die;
+	int			t_eat;
+	int			t_sleep;
+	int			max_meals;
+	int			end_simulation;
+	uint64_t	t_start_sim;
+	t_fork		*forks;
+	t_philo		*philos;
+	t_mtx		mtx_print;
 }	t_sim;
 
 #endif

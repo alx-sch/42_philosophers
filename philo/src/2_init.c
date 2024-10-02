@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/22 11:18:54 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/27 08:13:27 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,21 @@ a not created mutex destroyed).
  */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
+	uint64_t	current_time;
+
 	sim->end_simulation = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
+	current_time = get_time(); // might need to do this later, after threads where started
+	if (current_time == 0)
+		return (1);
+	else
+		sim->t_start_sim = current_time;
 	if (init_args(sim, argc, argv))
 		return (1);
 	if (mtx_act(&sim->mtx_print, INIT, NULL))
 		return (1);
+	printf("time: %lu\n", sim->t_start_sim);
 	return (0);
 }
 
@@ -96,17 +104,10 @@ int	init_philos(t_sim *sim)
 		sim->philos[i].sim = sim;
 		sim->philos[i].id = i + 1;
 		sim->philos[i].thread_id = 0;
-		sim->philos[i].t_die = sim->t_die;
-		sim->philos[i].t_eat = sim->t_eat;
-		sim->philos[i].t_sleep = sim->t_die;
-		sim->philos[i].max_meals = sim->max_meals;
-		sim->philos[i].t_start_sim = get_time_in_ms();
 		sim->philos[i].meals_eaten = 0;
 		sim->philos[i].done_eating = 0;
-		sim->philos[i].t_last_meal = sim->philos[i].t_start_sim;
 		sim->philos[i].left_fork = &sim->forks[i];
 		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
-		printf("time %d: %ld\n", i, sim->philos[i].t_last_meal);
 		i++;
 	}
 	i = 0;

@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/20 20:46:44 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/02 10:40:10 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,6 +68,7 @@ L_RED :=		\033[91m
 all:		$(NAME)
 
 # Target $(NAME) depends on object files $(OBJS)
+# Print out 'Thinking Philosopher' once program is compiled.
 $(NAME):	$(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 	@echo "$(BOLD)$(YELLOW)\n$(NAME) successfully compiled.$(RESET)"
@@ -102,7 +103,7 @@ $(NAME):	$(OBJS)
 	@echo "$(BOLD)- t_sleep [ms]:$(RESET) The time a philosopher will spend sleeping."
 	@echo "$(BOLD)- nr_meals (optional argument):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops.\n"
 
-# COMPILATION PROGRESS BAR
+## COMPILATION PROGRESS BAR ##
 # Rule to define how to generate object files (%.o) from corresponding
 # source files (%.c). Each .o file depends on the associated .c file and the
 # project header files.
@@ -138,4 +139,5 @@ fclean:	clean
 # and then rebuild the program.
 re:	fclean all
 
+# Makes that make rules are invoked even if files of the same name happen to be in the directory.
 .PHONY: all clean fclean re

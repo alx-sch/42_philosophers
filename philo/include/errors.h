@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:54:08 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 19:42:11 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/09/27 08:07:12 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,7 @@ This header file defines error messages.
 
 # define ERR_TR_CREATE	"ERROR: pthread_create() failed."
 # define ERR_TR_JOIN	"ERROR: pthread_join() failed."
+
+# define ERR_GET_TIME	"ERROR: gettimeofday() failed."
 
 #endif
