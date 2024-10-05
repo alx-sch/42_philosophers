@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_print.c                                          :+:      :+:    :+:   */
+/*   1_print_misc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/22 11:12:26 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 18:58:44 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-Utility functions for printing messages to the terminal with optional
-formatting and handling error reporting.
+Functions for handling error reporting and providing information on
+correct usage.
 */
 
 #include "philo.h"
@@ -20,10 +20,10 @@ formatting and handling error reporting.
 // IN FILE:
 
 void	print_usage(void);
-void	print_err_and_clean(char *msg, t_sim *sim);
+void	print_err_msg(char *msg);
 
 /**
-Used in print_usage().
+Used in `print_usage()`.
 
 Prints a message to the standard error stream with optional formatting applied.
 
@@ -43,47 +43,37 @@ static void	print_msg(char *msg, char *color, int nl)
 }
 
 /**
-Used in check_args().
-
-Prints the correct usage information for the program
+Prints the correct usage information for the program.
 */
 void	print_usage(void)
 {
-	print_msg("Usage: './philo nr_philo t_die t_eat t_sleep [nr_meals]'\n",
+	print_msg("Usage: './philo nr_philo t_die t_eat t_sleep (nr_meals)'\n",
 		YELLOW, 1);
 	print_msg("- nr_philo: ", BOLD, 0);
 	print_msg("The number of philosophers and also the number of forks.",
 		NULL, 1);
 	print_msg("- t_die [ms]: ", BOLD, 0);
 	print_msg("If a philosopher did not start eating in 't_die' since the \
-beginning of their last meal, they die.",
-		NULL, 1);
+beginning of their last meal, they die.", NULL, 1);
 	print_msg("- t_eat [ms]: ", BOLD, 0);
 	print_msg("The time it takes for a philosopher to eat. During that \
-time, they will need to hold two forks.",
-		NULL, 1);
+time, they will need to hold two forks.", NULL, 1);
 	print_msg("- t_sleep [ms]: ", BOLD, 0);
 	print_msg("The time a philosopher will spend sleeping.", NULL, 1);
-	print_msg("- nr_meals \
-(optional argument): ", BOLD, 0);
+	print_msg("- nr_meals (optional): ", BOLD, 0);
 	print_msg("If all philosophers have eaten at least 'nr_meals' times, \
 the simulation stops.", NULL, 1);
 }
 
 /**
-Prints a formatted error message to the standard error stream and
-performs cleanup on the provided data structure, if specified.
+Prints a formatted error message to the standard error stream.
 
  @param msg 	Error message to be printed.
- @param sim 	A pointer to the data structure that is to be cleaned up,
-				or 'NULL' if no cleanup is required.
 */
-void	print_err_and_clean(char *msg, t_sim *sim)
+void	print_err_msg(char *msg)
 {
 	ft_putstr_fd(ERR_COLOR, STDERR_FILENO);
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
 	ft_putstr_fd(RESET, STDERR_FILENO);
-	if (sim)
-		cleanup_sim(sim);
 }

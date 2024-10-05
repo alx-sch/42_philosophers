@@ -6,13 +6,14 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/22 11:08:14 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 20:38:35 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
 This file contains functions for validating command-line arguments passed
-to the philosopher simulation program.
+to the dining philosopher simulation.
+
 If invalid arguments are found, the program prints an appropriate error message
 and usage instructions.
 */
@@ -24,7 +25,7 @@ and usage instructions.
 int		check_args(int argc, char **argv);
 
 /**
-Used in check_args().
+Used in `check_args()`.
 
 Converts a string to an integer and validates the input.
 
@@ -44,7 +45,7 @@ static int	is_valid_arg(const char *str)
 }
 
 /**
-Used in check_args().
+Used in `check_args()`.
 
 Validates the number of command-line arguments passed to the program.
 
@@ -57,7 +58,7 @@ static int	check_arg_count(int argc)
 {
 	if (argc < 5 || argc > 6)
 	{
-		print_err_and_clean(ERR_ARGS_NR, NULL);
+		print_err_msg(ERR_ARGS_NR);
 		print_usage();
 		return (1);
 	}
@@ -65,23 +66,23 @@ static int	check_arg_count(int argc)
 }
 
 /**
-Used in check_args().
+Used in `check_args()`.
 
 Checks if the number of philosophers is valid (>= 1).
 
- @param arg 	The first command-line argument (argv[1]).
+ @param arg 	The first command-line argument (argv[1]) -> number of philos
 
  @return 		`0` if the nr of philos is valid;
  				`1` if the nr of philos is < 1;
 				`2` if argv[1] contains no digits.
 */
-static int	check_first_arg(char *arg)
+static int	check_phil_nr(char *arg)
 {
 	if (contains_digit(arg))
 		return (2);
 	if (ft_atoi(arg) < 1)
 	{
-		print_err_and_clean(ERR_ARGS_0_P, NULL);
+		print_err_msg(ERR_ARGS_MIN_P);
 		print_usage();
 		return (1);
 	}
@@ -98,6 +99,10 @@ Checks if:
  - 'nr of philos' is at least 1;
  - Other args are >= 0.
 
+Note: `ft_putstr_fd` is used instead of `print_err_msg` because the error
+message is split into multiple constants to adhere to norminette guidelines,
+which require each constant definition to be contained within a single line.
+
  @param argc 	The number of command-line arguments.
  @param argv 	An array of command-line argument strings.
 
@@ -108,7 +113,7 @@ int	check_args(int argc, char **argv)
 {
 	int	i;
 
-	if (check_arg_count(argc) || check_first_arg(argv[1]) == 1)
+	if (check_arg_count(argc) || check_phil_nr(argv[1]) == 1)
 		return (1);
 	i = 1;
 	while (i <= (argc - 1))

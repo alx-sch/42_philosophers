@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/09/20 20:46:44 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/05 18:48:22 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,21 @@
 
 NAME :=			philo
 
+# Use non-zero values to print emojis and/or an update when all meals were eaten
+# For example: 'make EMOJI=1 FULL=1'
+EMOJI ?=	1
+FULL ?=		1
+
 # SOURCE FILES
 SRCS_DIR :=		src
 SRCS_FILES :=	main.c \
 				1_check_args.c \
-				2_init.c \
+				2_init_sim.c \
+				3_run_sim.c \
+				dining_rules.c \
 				utils/0_libft.c \
-				utils/1_print.c \
+				utils/1_print_action.c \
+				utils/1_print_misc.c \
 				utils/2_mutex.c \
 				utils/3_time.c \
 				utils/free.c \
@@ -44,7 +52,7 @@ HDRS :=			$(addprefix $(HDRS_DIR)/, $(HDRS_FILES))
 # COMPILER
 CC :=			cc
 CFLAGS := 		-I$(HDRS_DIR)
-CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR)
+CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR) -DEMOJI=$(EMOJI) -DFULL=$(FULL)
 CFLAGS +=		-Wpedantic -g
 #CFLAGS +=		-fsanitize=thread
 
@@ -68,6 +76,7 @@ L_RED :=		\033[91m
 all:		$(NAME)
 
 # Target $(NAME) depends on object files $(OBJS)
+# Print out 'Thinking Philosopher' once program is compiled.
 $(NAME):	$(OBJS)
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 	@echo "$(BOLD)$(YELLOW)\n$(NAME) successfully compiled.$(RESET)"
@@ -95,14 +104,14 @@ $(NAME):	$(OBJS)
 	@echo "$(GREEN)        \`----'$(L_RED)(____________)"
 	@echo -n "$(RESET)"
 
-	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep [nr_meals]'$(RESET)"
+	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep (nr_meals)'$(RESET)"
 	@echo "$(BOLD)\n- nr_philo:$(RESET) The number of philosophers and also the number of forks."
 	@echo "$(BOLD)- t_die [ms]:$(RESET) If a philosopher did not start eating in 't_die' since the beginning of their last meal, they die."
 	@echo "$(BOLD)- t_eat [ms]:$(RESET) The time it takes for a philosopher to eat. During that time, they will need to hold two forks."
 	@echo "$(BOLD)- t_sleep [ms]:$(RESET) The time a philosopher will spend sleeping."
-	@echo "$(BOLD)- nr_meals (optional argument):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops.\n"
+	@echo "$(BOLD)- nr_meals (optional):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops.\n"
 
-# COMPILATION PROGRESS BAR
+## COMPILATION PROGRESS BAR ##
 # Rule to define how to generate object files (%.o) from corresponding
 # source files (%.c). Each .o file depends on the associated .c file and the
 # project header files.
@@ -138,4 +147,5 @@ fclean:	clean
 # and then rebuild the program.
 re:	fclean all
 
+# Makes that make rules are invoked even if files of the same name happen to be in the directory.
 .PHONY: all clean fclean re
