@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 16:53:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 18:58:44 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ correct usage.
 // IN FILE:
 
 void	print_usage(void);
-void	print_err_and_clean(char *msg);
+void	print_err_msg(char *msg);
 
 /**
-Used in print_usage().
+Used in `print_usage()`.
 
 Prints a message to the standard error stream with optional formatting applied.
 
@@ -43,9 +43,7 @@ static void	print_msg(char *msg, char *color, int nl)
 }
 
 /**
-Used in check_args().
-
-Prints the correct usage information for the program
+Prints the correct usage information for the program.
 */
 void	print_usage(void)
 {
@@ -68,19 +66,14 @@ the simulation stops.", NULL, 1);
 }
 
 /**
-Prints a formatted error message to the standard error stream and
-performs cleanup on the provided data structure, if specified.
+Prints a formatted error message to the standard error stream.
 
  @param msg 	Error message to be printed.
- @param sim 	A pointer to the data structure that is to be cleaned up,
-				or 'NULL' if no cleanup is required.
 */
-void	print_err_and_clean(char *msg)
+void	print_err_msg(char *msg)
 {
 	ft_putstr_fd(ERR_COLOR, STDERR_FILENO);
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
 	ft_putstr_fd(RESET, STDERR_FILENO);
-	// if (sim)
-	// 	cleanup_sim(sim);
 }

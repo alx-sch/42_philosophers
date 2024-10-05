@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/05 14:19:58 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/05 18:48:22 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ SRCS_DIR :=		src
 SRCS_FILES :=	main.c \
 				1_check_args.c \
 				2_init_sim.c \
-				3_start_sim.c \
+				3_run_sim.c \
+				dining_rules.c \
 				utils/0_libft.c \
 				utils/1_print_action.c \
 				utils/1_print_misc.c \

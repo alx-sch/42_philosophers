@@ -6,12 +6,14 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 16:55:11 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 19:07:20 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-TBD
+This file provides utility functions for time management in the dining
+philosophers simulation. It includes functions to retrieve the current
+time and to implement a precise waiting mechanism.
 */
 
 #include "philo.h"
@@ -36,7 +38,7 @@ t_ull	get_time(void)
 
 	if (gettimeofday(&tv, NULL))
 	{
-		print_err_and_clean(ERR_GET_TIME);
+		print_err_msg(ERR_GET_TIME);
 		return (0);
 	}
 	time_in_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
@@ -52,12 +54,14 @@ like `usleep()` may suffer from inaccuracies due to system scheduling, this
 implementation checks the current time at regular intervals, effectively
 mitigating such limitations.
 
+The `SLEEP_INTERVALS` constant is defined in `philo.h`.
+
  @param	duration_to_wait 	Duration in milliseconds for which to wait.
  @param	sim 				Pointer to a data struct to be freed
  							in case of error.
 
- @return	`0` if the wait was successful;
-			`1` if there was an error retrieving the current time.
+ @return					`0` if the wait was successful;
+							`1` if there was an error retrieving the time.
 */
 int	precise_wait(int duration_to_wait)
 {

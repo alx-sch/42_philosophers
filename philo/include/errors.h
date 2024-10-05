@@ -6,12 +6,12 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:54:08 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/27 08:07:12 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 20:28:51 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-This header file defines error messages.
+This header file defines constants for text formatting and error messages.
 */
 
 #ifndef ERRORS_H
@@ -23,9 +23,9 @@ This header file defines error messages.
 # define RESET			"\033[0m"
 
 # define ERR_ARGS_NR	"ERROR: Expected 4 or 5 arguments.\n"
-# define ERR_ARGS_VAL_1	"ERROR: Arguments must be integers >= 0"
-# define ERR_ARGS_VAL_2	" (but at least one philosopher).\n\n"
-# define ERR_ARGS_0_P	"ERROR: At least one philosopher must dine.\n"
+# define ERR_ARGS_VAL_1	"ERROR: Arguments must be integers >= 0 "
+# define ERR_ARGS_VAL_2	"(but at least one philosopher).\n\n"
+# define ERR_ARGS_MIN_P	"ERROR: At least one philosopher must dine.\n"
 
 # define ERR_MALLOC		"ERROR: malloc() failed."
 
