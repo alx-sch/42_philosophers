@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/02 10:40:10 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/04 10:58:14 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -96,12 +96,12 @@ $(NAME):	$(OBJS)
 	@echo "$(GREEN)        \`----'$(L_RED)(____________)"
 	@echo -n "$(RESET)"
 
-	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep [nr_meals]'$(RESET)"
+	@echo "\n$(BOLD)$(YELLOW)Usage: './philo nr_philo t_die t_eat t_sleep (nr_meals)'$(RESET)"
 	@echo "$(BOLD)\n- nr_philo:$(RESET) The number of philosophers and also the number of forks."
 	@echo "$(BOLD)- t_die [ms]:$(RESET) If a philosopher did not start eating in 't_die' since the beginning of their last meal, they die."
 	@echo "$(BOLD)- t_eat [ms]:$(RESET) The time it takes for a philosopher to eat. During that time, they will need to hold two forks."
 	@echo "$(BOLD)- t_sleep [ms]:$(RESET) The time a philosopher will spend sleeping."
-	@echo "$(BOLD)- nr_meals (optional argument):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops.\n"
+	@echo "$(BOLD)- nr_meals (optional):$(RESET) If all philosophers have eaten at least 'nr_meals' times, the simulation stops.\n"
 
 ## COMPILATION PROGRESS BAR ##
 # Rule to define how to generate object files (%.o) from corresponding

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/26 21:16:26 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/04 14:24:15 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 # include <pthread.h> // thread fcts, like pthread_create()
 
-typedef pthread_mutex_t	t_mtx; // abbreviate 'pthread_mutex_t' to 't_mtx'
-typedef struct s_sim	t_sim;
+typedef pthread_mutex_t		t_mtx; // abbreviate 'pthread_mutex_t' to 't_mtx'
+typedef unsigned long long	t_ull;
+typedef struct s_sim		t_sim;
 
 /**
 Represents the actions that can be performed on a mutex:
@@ -33,6 +34,16 @@ typedef enum e_mtx_act
 	DESTROY
 }	t_mtx_act;
 
+typedef enum e_action
+{
+	FORK,
+	EAT,
+	SLEEP,
+	THINK,
+	DIE,
+	FULL
+}	t_action;
+
 typedef struct s_fork
 {
 	t_mtx	fork;
@@ -46,7 +57,7 @@ typedef struct s_philo
 	pthread_t	thread_id;
 	int			meals_eaten;
 	int			done_eating;
-	uint64_t	t_last_meal;
+	t_ull		t_last_meal;
 	t_fork		*left_fork;
 	t_fork		*right_fork;
 }	t_philo;
@@ -59,7 +70,7 @@ typedef struct s_sim
 	int			t_sleep;
 	int			max_meals;
 	int			end_simulation;
-	uint64_t	t_start_sim;
+	t_ull		t_start_sim;
 	t_fork		*forks;
 	t_philo		*philos;
 	t_mtx		mtx_print;

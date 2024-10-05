@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/27 08:13:27 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/04 18:38:34 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ a not created mutex destroyed).
  */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
-	uint64_t	current_time;
+	t_ull	current_time;
 
 	sim->end_simulation = 0;
 	sim->forks = NULL;
@@ -52,7 +52,6 @@ static int	init_sim_state(t_sim *sim, int argc, char **argv)
 		return (1);
 	if (mtx_act(&sim->mtx_print, INIT, NULL))
 		return (1);
-	printf("time: %lu\n", sim->t_start_sim);
 	return (0);
 }
 

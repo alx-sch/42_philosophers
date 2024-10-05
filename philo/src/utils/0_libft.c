@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:56:47 by aschenk           #+#    #+#             */
-/*   Updated: 2024/09/20 19:33:05 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/04 14:10:20 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_putstr_fd(char *s, int fd)
 	ptr = s;
 	while (*ptr)
 	{
-		write(fd, ptr, 1);
+		(void)write(fd, ptr, 1);
 		ptr++;
 	}
 }
