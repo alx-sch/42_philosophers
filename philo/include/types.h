@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 21:07:27 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 21:47:21 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ This header file defines custom types and data structures.
 #ifndef TYPES_H
 # define TYPES_H
 
-# include <pthread.h> // Thread functions, like pthread_create()
+# include <pthread.h> // Thread functions, like pthread_create() etc.
 
 typedef pthread_mutex_t		t_mtx; // Abbreviation for 'pthread_mutex_t'
 typedef unsigned long long	t_ull; // Abbreviation for 'unsigned long long'
