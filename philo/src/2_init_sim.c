@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 12:54:50 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 16:45:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,9 @@ a not created mutex destroyed).
  */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
-	t_ull	current_time;
-
 	sim->end_simulation = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
-	current_time = get_time(); // might need to do this later, after threads where started
-	if (current_time == 0)
-		return (1);
-	else
-		sim->t_start_sim = current_time;
 	if (init_args(sim, argc, argv))
 		return (1);
 	if (mtx_act(&sim->mtx_print, INIT, NULL))
@@ -102,7 +95,6 @@ int	init_philos(t_sim *sim)
 	{
 		sim->philos[i].sim = sim;
 		sim->philos[i].id = i + 1;
-		sim->philos[i].thread_id = 0;
 		sim->philos[i].meals_eaten = 0;
 		sim->philos[i].done_eating = 0;
 		sim->philos[i].left_fork = &sim->forks[i];

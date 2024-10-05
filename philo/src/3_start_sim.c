@@ -6,71 +6,85 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:39:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 12:55:00 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 16:48:57 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	*routine(void *arg)
+{
+	t_philo *philo;
 
-// void	*routine(void *arg)
-// {
-// 	t_sim	*sim;
+	philo = (t_philo *)arg;
 
-// 	sim = (t_sim *)arg;
-// 	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, FORK, sim);
-// 	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, EAT, sim);
-// 	precise_wait(sim->t_eat);
-// 	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, SLEEP, sim);
-// 	precise_wait(sim->t_sleep);
-// 	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, THINK, sim);
-// 	precise_wait(50);
-// 	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, DIE, sim);
-// 	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, FULL, sim);
-// 	return (NULL);
-// }
+	print_action(philo, FORK, get_time(philo->sim) - philo->sim->t_start_sim);
+	print_action(philo, EAT, get_time(philo->sim) - philo->sim->t_start_sim);
+	precise_wait(philo->sim->t_eat, philo->sim);
+	print_action(philo, SLEEP, get_time(philo->sim) - philo->sim->t_start_sim);
+	precise_wait(philo->sim->t_sleep, philo->sim);
+	print_action(philo, THINK, get_time(philo->sim) - philo->sim->t_start_sim);
+	precise_wait(50, philo->sim);
+	print_action(philo, DIE, get_time(philo->sim) - philo->sim->t_start_sim);
+	if (FULL != 0)
+		print_action(philo, STUFFED, get_time(philo->sim) - philo->sim->t_start_sim);
+	return (NULL);
+}
 
-// int	start_sim(t_sim *sim)
-// {
-// 	t_ull	time_start_sim;
-// 	int		i;
+/**
+Sets the starting time for the simulation by retrieving the current time.
 
-// 	time_start_sim = get_time();
-// 	if (time_start_sim == 0)
-// 		return (1);
-// 	else
-// 		sim->t_start_sim = time_start_sim;
+ @param sim 	Pointer to the simulation structure to store the start time.
 
-// 	i = 0;
-// 	while (i < sim->nr_philo)
-// 	{
-// 		// Create a thread for each philosopher
-// 		if (pthread_create(&sim->philos[i].thread_id, NULL, &routine, &sim->philos[i]))
-// 		{
-// 			print_err_and_clean(ERR_TR_CREATE, sim);  // Handle thread creation error
-// 			return (1);
-// 		}
-// 		i++;
-// 	}
+ @return 		`0` on success;
+ 				`1` if there was an error retrieving the time.
+*/
+static int	set_start_time(t_sim *sim)
+{
+	t_ull	time_start_sim;
 
-// 	// Wait for all philosopher threads to finish
-// 	i = 0;
-// 	while (i < sim->nr_philo)
-// 	{
-// 		pthread_join(sim->philos[i].thread_id, NULL);
-// 		i++;
-// 	}
+	time_start_sim = get_time(sim);
+	if (time_start_sim == 0)
+		return (1);
+	else
+		sim->t_start_sim = time_start_sim;
+	return (0);
+}
 
-// 	return (0);
-// }
+int	start_sim(t_sim *sim)
+{
+	int		i;
+
+	if (set_start_time(sim))
+		return (1);
+	i = 0;
+	while (i < sim->nr_philo)
+	{
+		if (pthread_create(&sim->philos[i].thread_id, NULL, &routine, &sim->philos[i]))
+		{
+			print_err_and_clean(ERR_TR_CREATE, sim);  // Handle thread creation error
+			return (1);
+		}
+		i++;
+	}
+
+	// Wait for all philosopher threads to finish
+	i = 0;
+	while (i < sim->nr_philo)
+	{
+		pthread_join(sim->philos[i].thread_id, NULL);
+		i++;
+	}
+	return (0);
+}
 
 
-// 	while (i < ft_atoi(argv[1]))
-// 	{
-// 		if (pthread_create(&philo[i], NULL, &routine, &sim))
-// 		{
-// 			print_err_and_clean(ERR_TR_CREATE, NULL);
-// 			return (1);
-// 		}
-// 		i++;
-// 	}
+	// while (i < ft_atoi(argv[1]))
+	// {
+	// 	if (pthread_create(&philo[i], NULL, &routine, &sim))
+	// 	{
+	// 		print_err_and_clean(ERR_TR_CREATE, NULL);
+	// 		return (1);
+	// 	}
+	// 	i++;
+	// }

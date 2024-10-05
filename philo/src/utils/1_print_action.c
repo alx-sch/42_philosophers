@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 14:17:54 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 14:48:45 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ race conditions during concurrent output.
 
 // IN FILE:
 
-int	print_action(t_ull timestamp, t_action action, t_philo *philo);
+int	print_action(t_philo *philo, t_action action, t_ull timestamp);
 
 /**
 Prints the action of a philosopher WITHOUT emojis. This function locks the
@@ -50,7 +50,8 @@ Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
  @return 			`0` if the action was printed successfully;
  					`1` if there was an error in locking or unlocking the mutex.
 */
-static int	print_no_emoji(t_ull timestamp, t_action action, t_philo *philo)
+static int	print_without_emojis(t_philo *philo, t_action action,
+	t_ull timestamp)
 {
 	if (mtx_act(&philo->sim->mtx_print, LOCK, philo->sim))
 		return (1);
@@ -98,7 +99,7 @@ Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
  @return 			`0` if the action was printed successfully;
  					`1` if there was an error in locking or unlocking the mutex.
 */
-static int	print_emoji(t_ull timestamp, t_action action, t_philo *philo)
+static int	print_with_emojis(t_philo *philo, t_action action, t_ull timestamp)
 {
 	if (mtx_act(&philo->sim->mtx_print, LOCK, philo->sim))
 		return (1);
@@ -146,10 +147,10 @@ print the actions with emojis or without them (default: without emojis).
  @return 			`0` if the action was printed successfully;
  					`1` if there was an error in locking or unlocking the mutex.
 */
-int	print_action(t_ull timestamp, t_action action, t_philo *philo)
+int	print_action(t_philo *philo, t_action action, t_ull timestamp)
 {
 	if (EMOJI == 0)
-		return (print_no_emoji(timestamp, action, philo));
+		return (print_without_emojis(philo, action, timestamp));
 	else
-		return (print_emoji(timestamp, action, philo));
+		return (print_with_emojis(philo, action, timestamp));
 }

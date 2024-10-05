@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 13:54:31 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 16:53:03 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ correct usage.
 // IN FILE:
 
 void	print_usage(void);
-void	print_err_and_clean(char *msg, t_sim *sim);
+void	print_err_and_clean(char *msg);
 
 /**
 Used in print_usage().
@@ -75,12 +75,12 @@ performs cleanup on the provided data structure, if specified.
  @param sim 	A pointer to the data structure that is to be cleaned up,
 				or 'NULL' if no cleanup is required.
 */
-void	print_err_and_clean(char *msg, t_sim *sim)
+void	print_err_and_clean(char *msg)
 {
 	ft_putstr_fd(ERR_COLOR, STDERR_FILENO);
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
 	ft_putstr_fd(RESET, STDERR_FILENO);
-	if (sim)
-		cleanup_sim(sim);
+	// if (sim)
+	// 	cleanup_sim(sim);
 }

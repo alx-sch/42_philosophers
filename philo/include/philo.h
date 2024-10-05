@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 13:50:53 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 16:53:15 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,32 +26,51 @@ TBD
 # include "errors.h"
 # include "types.h" // all data structure types, e.g. 't_data'
 
-//
+// Used in precise_wait()
+# define SLEEP_INTERVALS 100
 
-// utils/libft.c
+// 1_check_args.c
+
+int		check_args(int argc, char **argv);
+
+// 1_init_sim.c
+
+int		init_sim(t_sim *sim, int argc, char **argv);
+
+
+int		start_sim(t_sim *sim);
+
+// utils/0_libft.c
 
 int		ft_atoi(const char *str);
 void	ft_putstr_fd(char *s, int fd);
 int		contains_digit(const char *str);
 
-// utils/check_args.c
+// utils/1_print_action.c
 
-int		check_args(int argc, char **argv);
-void	*routine(void *arg);
+int		print_action(t_philo *philo, t_action action, t_ull timestamp);
 
-// utils/time.c
-
-t_ull	get_time(void);
-void	precise_wait(int duration_to_wait);
+// utils/1_print_misc.c
 
 void	print_usage(void);
-void	print_err_and_clean(char *msg, t_sim *sim);
-int		print_action(t_ull timestamp, t_action action, t_philo *philo);
+void	print_err_and_clean(char *msg);
 
-int		init_sim(t_sim *sim, int argc, char **argv);
+// utils/2_mutex.c
 
 int		mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim);
 
+// utils/3_time.c
+
+t_ull	get_time(t_sim *sim);
+int		precise_wait(int duration_to_wait, t_sim *sim);
+
+// utils/X_free.c
+
 void	cleanup_sim(t_sim *sim);
+
+
+
+void	*routine(void *arg);
+
 
 #endif
