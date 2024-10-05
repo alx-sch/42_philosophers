@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/04 14:00:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 16:54:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ error checking and reporting.
 
 // IN FILE:
 
-int	mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim);
+int	mtx_act(t_mtx *mutex, t_mtx_act action);
 
 /**
 Performs an action on a mutex based on the specified action.
@@ -69,7 +69,7 @@ Handles mutex operations with error checking and error message printing.
  @return 		`0` on success;
 				`1` on failure (if any mutex operation fails).
 */
-int	mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim)
+int	mtx_act(t_mtx *mutex, t_mtx_act action)
 {
 	int	error;
 
@@ -77,13 +77,13 @@ int	mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim)
 	if (error != 0)
 	{
 		if (error == INIT)
-			print_err_and_clean(ERR_MTX_INIT, sim);
+			print_err_and_clean(ERR_MTX_INIT);
 		else if (error == LOCK)
-			print_err_and_clean(ERR_MTX_LOCK, sim);
+			print_err_and_clean(ERR_MTX_LOCK);
 		else if (error == UNLOCK)
-			print_err_and_clean(ERR_MTX_UNLOCK, sim);
+			print_err_and_clean(ERR_MTX_UNLOCK);
 		else if (error == DESTROY)
-			print_err_and_clean(ERR_MTX_DESTR, sim);
+			print_err_and_clean(ERR_MTX_DESTR);
 		return (1);
 	}
 	return (0);

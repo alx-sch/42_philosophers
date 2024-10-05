@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 14:48:45 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 17:01:30 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
 static int	print_without_emojis(t_philo *philo, t_action action,
 	t_ull timestamp)
 {
-	if (mtx_act(&philo->sim->mtx_print, LOCK, philo->sim))
+	if (mtx_act(&philo->sim->mtx_print, LOCK))
 		return (1);
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
@@ -74,7 +74,7 @@ static int	print_without_emojis(t_philo *philo, t_action action,
 		(void)printf("is full\n");
 	if (action == DIE || action == STUFFED)
 		(void)printf(RESET);
-	if (mtx_act(&philo->sim->mtx_print, UNLOCK, philo->sim))
+	if (mtx_act(&philo->sim->mtx_print, UNLOCK))
 		return (1);
 	return (0);
 }
@@ -101,7 +101,7 @@ Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
 */
 static int	print_with_emojis(t_philo *philo, t_action action, t_ull timestamp)
 {
-	if (mtx_act(&philo->sim->mtx_print, LOCK, philo->sim))
+	if (mtx_act(&philo->sim->mtx_print, LOCK))
 		return (1);
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
@@ -122,7 +122,7 @@ static int	print_with_emojis(t_philo *philo, t_action action, t_ull timestamp)
 		(void)printf("🫃\tis full\n");
 	if (action == DIE || action == STUFFED)
 		(void)printf(RESET);
-	if (mtx_act(&philo->sim->mtx_print, UNLOCK, philo->sim))
+	if (mtx_act(&philo->sim->mtx_print, UNLOCK))
 		return (1);
 	return (0);
 }

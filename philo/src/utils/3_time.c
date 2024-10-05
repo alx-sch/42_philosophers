@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 16:24:15 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 16:55:11 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ TBD
 
 // IN FILE:
 
-t_ull	get_time(t_sim *sim);
-int		precise_wait(int duration_to_wait, t_sim *sim);
+t_ull	get_time(void);
+int		precise_wait(int duration_to_wait);
 
 /**
 Get the current time in milliseconds since the epoch (January 1, 1970).
@@ -29,14 +29,14 @@ Get the current time in milliseconds since the epoch (January 1, 1970).
  @return 		The current time in milliseconds;
 				`0` in case of an error (or if it's 00:00:00 on 1/1/1970...)
  */
-t_ull	get_time(t_sim *sim)
+t_ull	get_time(void)
 {
 	struct timeval	tv;
 	t_ull			time_in_ms;
 
 	if (gettimeofday(&tv, NULL))
 	{
-		print_err_and_clean(ERR_GET_TIME, sim);
+		print_err_and_clean(ERR_GET_TIME);
 		return (0);
 	}
 	time_in_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
@@ -59,18 +59,18 @@ mitigating such limitations.
  @return	`0` if the wait was successful;
 			`1` if there was an error retrieving the current time.
 */
-int	precise_wait(int duration_to_wait, t_sim *sim)
+int	precise_wait(int duration_to_wait)
 {
 	t_ull	time_stop_waiting;
 	t_ull	current_time;
 
-	time_stop_waiting = get_time(sim);
+	time_stop_waiting = get_time();
 	if (time_stop_waiting == 0)
 		return (1);
 	time_stop_waiting += duration_to_wait;
 	while (1)
 	{
-		current_time = get_time(sim);
+		current_time = get_time();
 		if (current_time == 0)
 			return (1);
 		if (current_time >= time_stop_waiting)

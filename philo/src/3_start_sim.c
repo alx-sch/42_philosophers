@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:39:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 16:48:57 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 17:11:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,16 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 
-	print_action(philo, FORK, get_time(philo->sim) - philo->sim->t_start_sim);
-	print_action(philo, EAT, get_time(philo->sim) - philo->sim->t_start_sim);
-	precise_wait(philo->sim->t_eat, philo->sim);
-	print_action(philo, SLEEP, get_time(philo->sim) - philo->sim->t_start_sim);
-	precise_wait(philo->sim->t_sleep, philo->sim);
-	print_action(philo, THINK, get_time(philo->sim) - philo->sim->t_start_sim);
-	precise_wait(50, philo->sim);
-	print_action(philo, DIE, get_time(philo->sim) - philo->sim->t_start_sim);
+	print_action(philo, FORK, get_time() - philo->sim->t_start_sim);
+	print_action(philo, EAT, get_time() - philo->sim->t_start_sim);
+	precise_wait(philo->sim->t_eat);
+	print_action(philo, SLEEP, get_time() - philo->sim->t_start_sim);
+	precise_wait(philo->sim->t_sleep);
+	print_action(philo, THINK, get_time() - philo->sim->t_start_sim);
+	precise_wait(50);
+	print_action(philo, DIE, get_time() - philo->sim->t_start_sim);
 	if (FULL != 0)
-		print_action(philo, STUFFED, get_time(philo->sim) - philo->sim->t_start_sim);
+		print_action(philo, STUFFED, get_time() - philo->sim->t_start_sim);
 	return (NULL);
 }
 
@@ -43,7 +43,7 @@ static int	set_start_time(t_sim *sim)
 {
 	t_ull	time_start_sim;
 
-	time_start_sim = get_time(sim);
+	time_start_sim = get_time();
 	if (time_start_sim == 0)
 		return (1);
 	else
@@ -62,7 +62,7 @@ int	start_sim(t_sim *sim)
 	{
 		if (pthread_create(&sim->philos[i].thread_id, NULL, &routine, &sim->philos[i]))
 		{
-			print_err_and_clean(ERR_TR_CREATE, sim);  // Handle thread creation error
+			print_err_and_clean(ERR_TR_CREATE);  // Handle thread creation error
 			return (1);
 		}
 		i++;

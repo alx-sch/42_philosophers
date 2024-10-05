@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 16:49:29 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 18:13:50 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ TBD
 
 int	main(int argc, char **argv)
 {
-	//pthread_t		philo[ft_atoi(argv[1])];
-	t_sim			sim;
-	//t_ull			current_time;
+	t_sim			*sim;
 
-	//i = 0;
-
+	sim = NULL;
 	if (init_sim(&sim, argc, argv))
+	{
+		cleanup_sim(&sim);
 		return (1);
+	}
 
-	if (start_sim(&sim))
-		return (1);
+	// if (start_sim(sim))
+	// 	return (1);
 
 	// current_time = get_time(&sim);
 	// if (current_time == 0)

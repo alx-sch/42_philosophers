@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 16:53:15 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 17:57:23 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		check_args(int argc, char **argv);
 
 // 1_init_sim.c
 
-int		init_sim(t_sim *sim, int argc, char **argv);
+int		init_sim(t_sim **sim, int argc, char **argv);
 
 
 int		start_sim(t_sim *sim);
@@ -57,16 +57,16 @@ void	print_err_and_clean(char *msg);
 
 // utils/2_mutex.c
 
-int		mtx_act(t_mtx *mutex, t_mtx_act action, t_sim *sim);
+int		mtx_act(t_mtx *mutex, t_mtx_act action);
 
 // utils/3_time.c
 
-t_ull	get_time(t_sim *sim);
-int		precise_wait(int duration_to_wait, t_sim *sim);
+t_ull	get_time(void);
+int		precise_wait(int duration_to_wait);
 
 // utils/X_free.c
 
-void	cleanup_sim(t_sim *sim);
+void	cleanup_sim(t_sim **sim_ptr);
 
 
 

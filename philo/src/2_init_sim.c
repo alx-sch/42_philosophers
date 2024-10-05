@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 16:45:26 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 18:14:00 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // IN FILE:
 
-int	init_sim(t_sim *sim, int argc, char **argv);
+int	init_sim(t_sim **sim, int argc, char **argv);
 
 static int	init_args(t_sim *sim, int argc, char **argv)
 {
@@ -32,7 +32,6 @@ static int	init_args(t_sim *sim, int argc, char **argv)
 }
 
 /**
-
 NULL passed to mtx_act as there is no need to free anything yet (and avoid having
 a not created mutex destroyed).
  */
@@ -43,7 +42,7 @@ static int	init_sim_state(t_sim *sim, int argc, char **argv)
 	sim->philos = NULL;
 	if (init_args(sim, argc, argv))
 		return (1);
-	if (mtx_act(&sim->mtx_print, INIT, NULL))
+	if (mtx_act(&sim->mtx_print, INIT))
 		return (1);
 	return (0);
 }
@@ -59,19 +58,27 @@ int	init_forks(t_sim *sim)
 	sim->forks = malloc(sizeof(t_fork) * sim->nr_philo);
 	if (!sim->forks)
 	{
-		print_err_and_clean(ERR_MALLOC, sim);
+		print_err_and_clean(ERR_MALLOC);
 		return (1);
 	}
 	i = 0;
 	while (i < sim->nr_philo)
 	{
-		if (mtx_act(&sim->forks[i].fork, INIT, NULL))
+		if (i == 6)
 		{
 			while (--i >= 0)
-				mtx_act(&sim->forks[i].fork, DESTROY, NULL);
+				mtx_act(&sim->forks[i].fork, DESTROY);
 			free(sim->forks);
 			sim->forks = NULL;
-			cleanup_sim(sim);
+			return (1);
+		}
+
+		if (mtx_act(&sim->forks[i].fork, INIT))
+		{
+			while (--i >= 0)
+				mtx_act(&sim->forks[i].fork, DESTROY);
+			free(sim->forks);
+			sim->forks = NULL;
 			return (1);
 		}
 		sim->forks[i].fork_id = i + 1;
@@ -87,7 +94,7 @@ int	init_philos(t_sim *sim)
 	sim->philos = malloc(sizeof(t_philo) * sim->nr_philo);
 	if (!sim->philos)
 	{
-		print_err_and_clean(ERR_MALLOC, sim);
+		print_err_and_clean(ERR_MALLOC);
 		return (1);
 	}
 	i = 0;
@@ -105,9 +112,15 @@ int	init_philos(t_sim *sim)
 	return (0);
 }
 
-int	init_sim(t_sim *sim, int argc, char **argv)
+int	init_sim(t_sim **sim, int argc, char **argv)
 {
-	if (init_sim_state(sim, argc, argv) || init_forks(sim) || init_philos(sim))
+	*sim = malloc(sizeof(t_sim));
+	if (!(*sim))
+	{
+		print_err_and_clean(ERR_MALLOC);
+		return (1);
+	}
+	if (init_sim_state(*sim, argc, argv) || init_forks(*sim) || init_philos(*sim))
 		return (1);
 
 	return (0);
