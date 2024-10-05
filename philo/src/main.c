@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/04 19:01:37 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 13:55:10 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,20 @@ TBD
 
 void	*routine(void *arg)
 {
-	t_sim	*sim;
+	t_philo *philo;
 
-	sim = (t_sim *)arg;
-	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, FORK, sim);
-	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, EAT, sim);
-	precise_wait(sim->t_eat);
-	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, SLEEP, sim);
-	precise_wait(sim->t_sleep);
-	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, THINK, sim);
+	philo = (t_philo *)arg;
+
+	print_action(get_time() - philo->sim->t_start_sim, FORK, philo);
+	print_action(get_time() - philo->sim->t_start_sim, EAT, philo);
+	precise_wait(philo->sim->t_eat);
+	print_action(get_time() - philo->sim->t_start_sim, SLEEP, philo);
+	precise_wait(philo->sim->t_sleep);
+	print_action(get_time() - philo->sim->t_start_sim, THINK, philo);
 	precise_wait(50);
-	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, DIE, sim);
-	print_philo_action(get_time() - sim->t_start_sim, pthread_self() / 100000, FULL, sim);
+	print_action(get_time() - philo->sim->t_start_sim, DIE, philo);
+	if (FULL != 0)
+		print_action(get_time() - philo->sim->t_start_sim, STUFFED, philo);
 	return (NULL);
 }
 
@@ -46,7 +48,7 @@ int	main(int argc, char **argv)
 
 	while (i < ft_atoi(argv[1]))
 	{
-		if (pthread_create(&philo[i], NULL, &routine, &sim))
+		if (pthread_create(&philo[i], NULL, &routine, &sim.philos[i]))
 		{
 			print_err_and_clean(ERR_TR_CREATE, NULL);
 			return (1);

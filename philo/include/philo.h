@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/04 18:27:02 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 13:50:53 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int		contains_digit(const char *str);
 // utils/check_args.c
 
 int		check_args(int argc, char **argv);
+void	*routine(void *arg);
 
 // utils/time.c
 
@@ -45,8 +46,7 @@ void	precise_wait(int duration_to_wait);
 
 void	print_usage(void);
 void	print_err_and_clean(char *msg, t_sim *sim);
-int		print_philo_action(t_ull timestamp, int philo, t_action action,
-			t_sim *sim);
+int		print_action(t_ull timestamp, t_action action, t_philo *philo);
 
 int		init_sim(t_sim *sim, int argc, char **argv);
 

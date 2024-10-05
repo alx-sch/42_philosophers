@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_print.c                                          :+:      :+:    :+:   */
+/*   1_print_misc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/04 18:50:54 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 13:54:31 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-Utility functions for printing messages to the terminal with optional
-formatting and handling error reporting.
+Functions for handling error reporting and providing information on
+correct usage.
 */
 
 #include "philo.h"
@@ -21,8 +21,6 @@ formatting and handling error reporting.
 
 void	print_usage(void);
 void	print_err_and_clean(char *msg, t_sim *sim);
-int		print_philo_action(t_ull timestamp, int philo, t_action action,
-			t_sim *sim);
 
 /**
 Used in print_usage().
@@ -85,53 +83,4 @@ void	print_err_and_clean(char *msg, t_sim *sim)
 	ft_putstr_fd(RESET, STDERR_FILENO);
 	if (sim)
 		cleanup_sim(sim);
-}
-
-/**
-Prints the action of a philosopher to the standard output with a timestamp.
-It uses mutex locking to ensure that the output is thread-safe, preventing
-data races during concurrent access to the standard output.
-
-Additionally, it applies color formatting for the 'DIE' and 'FULL' action.
-
- @param timestamp 	The timestamp of the action in milliseconds.
- @param philo 		The ID of the philosopher performing the action.
- @param action 		The action being performed, represented as an enum type:
-					- FORK: Takes a fork;
-					- EAT: Start eating;
-					- SLEEP: Start sleeping;
-					- THINK: Start thinking;
-					- DIE: Dies;
-					- FULL: Has eaten all their meals.
- @param sim 		A pointer to the simulation data containing the mutex.
-
- @return 			`0` if the nr of philos is valid;
- 					`1` if there was an error locking the mutex or unlocking it.
- */
-int	print_philo_action(t_ull timestamp, int philo, t_action action, t_sim *sim)
-{
-	if (mtx_act(&sim->mtx_print, LOCK, sim))
-		return (1);
-	if (action == DIE)
-		(void)printf(ERR_COLOR);
-	else if (action == FULL)
-		(void)printf(YELLOW);
-	(void)printf("%llu\t%d\t", timestamp, philo);
-	if (action == FORK)
-		(void)printf("has taken a fork\n");
-	else if (action == EAT)
-		(void)printf("is eating\n");
-	else if (action == SLEEP)
-		(void)printf("is sleeping\n");
-	else if (action == THINK)
-		(void)printf("is thinking\n");
-	else if (action == DIE)
-		(void)printf("died\n");
-	else if (action == FULL)
-		(void)printf("is full\n");
-	if (action == DIE || action == FULL)
-		(void)printf(RESET);
-	if (mtx_act(&sim->mtx_print, UNLOCK, sim))
-		return (1);
-	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/04 14:24:15 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/05 13:27:15 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef enum e_action
 	SLEEP,
 	THINK,
 	DIE,
-	FULL
+	STUFFED
 }	t_action;
 
 typedef struct s_fork

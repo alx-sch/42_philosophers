@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/04 10:58:14 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/05 14:19:58 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,20 @@
 
 NAME :=			philo
 
+# Use non-zero values to print emojis and/or an update when all meals were eaten
+# For example: 'make EMOJI=1 FULL=1'
+EMOJI ?=	1
+FULL ?=		1
+
 # SOURCE FILES
 SRCS_DIR :=		src
 SRCS_FILES :=	main.c \
 				1_check_args.c \
-				2_init.c \
+				2_init_sim.c \
+				3_start_sim.c \
 				utils/0_libft.c \
-				utils/1_print.c \
+				utils/1_print_action.c \
+				utils/1_print_misc.c \
 				utils/2_mutex.c \
 				utils/3_time.c \
 				utils/free.c \
@@ -44,7 +51,7 @@ HDRS :=			$(addprefix $(HDRS_DIR)/, $(HDRS_FILES))
 # COMPILER
 CC :=			cc
 CFLAGS := 		-I$(HDRS_DIR)
-CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR)
+CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR) -DEMOJI=$(EMOJI) -DFULL=$(FULL)
 CFLAGS +=		-Wpedantic -g
 #CFLAGS +=		-fsanitize=thread
 
