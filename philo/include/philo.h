@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 19:58:01 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 22:06:09 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ Precision vs. CPU Load Trade-off:
 If `SLEEP_INTERVALS = 1`, the behavior would be similar to a direct call to
 `usleep()`, without the added precision checks.
 */
-# define SLEEP_INTERVALS 100
+# define SLEEP_INTERVALS 1000000000
 
 //	+++++++++++++++
 //	++ FUNCTIONS ++

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 20:04:14 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 23:11:12 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,22 @@ void	*dining(void *arg)
 		if (should_stop_sim(philo->sim))
 			break ;
 		print_action(0, philo, EAT, 1);
-		precise_wait(philo->sim->t_eat);
+		//precise_wait(philo->sim->t_eat);
+		usleep(philo->sim->t_eat * 1000);
 
 		// SLEEP
 		if (should_stop_sim(philo->sim))
 			break ;
 		print_action(0, philo, SLEEP, 1);
-		precise_wait(philo->sim->t_sleep);
+		//precise_wait(philo->sim->t_sleep);
+		usleep(philo->sim->t_sleep * 1000);
 
 		// THINK
 		if (should_stop_sim(philo->sim))
 			break ;
 		print_action(0, philo, THINK, 1);
-		precise_wait(500); // thinking time
+		//precise_wait(400); // thinking time
+		usleep(400 * 1000);
 
 		// FULL
 		if (FULL != 0)
@@ -80,7 +83,8 @@ void	*dining(void *arg)
 			mtx_action(&philo->sim->mtx_stop_sim, LOCK);
 			philo->sim->stop_sim = 1;
 			mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
-			usleep(1000); // makes sure that 'die' message is print last
+			usleep(500);
+			//precise_wait(1); // makes sure that 'die' message is print last
 			print_action(philo->timestamp_death, philo, DIE, 0);
 		}
 	}
