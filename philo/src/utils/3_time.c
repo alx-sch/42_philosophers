@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 09:12:45 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 16:00:04 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ philosophers simulation.
 
 t_ull	get_time(void);
 int		set_start_time(t_sim *sim);
+int		record_time_of_death(t_philo *philo);
 int		precise_wait(int duration_to_wait);
 
 /**
@@ -49,6 +50,9 @@ t_ull	get_time(void)
 Sets the starting time for the simulation in `sim->t_start_sim` by retrieving
 the current time right before the philosopher threads are created in `run_sim()`.
 
+This function also initializes each philosopher's last meal time to the
+start time.
+
  @param sim 	Pointer to the simulation structure to store the start time.
 
  @return 		`0` on success;
@@ -57,12 +61,38 @@ the current time right before the philosopher threads are created in `run_sim()`
 int	set_start_time(t_sim *sim)
 {
 	t_ull	time_start_sim;
+	int		i;
 
 	time_start_sim = get_time();
 	if (time_start_sim == 0)
 		return (1);
-	else
-		sim->t_start_sim = time_start_sim;
+	sim->t_start_sim = time_start_sim;
+	i = 0;
+	while (i < sim->nr_philo)
+	{
+		sim->philos[i].t_last_meal = time_start_sim;
+		i++;
+	}
+	return (0);
+}
+
+/**
+Sets the starting time for the simulation in `sim->t_start_sim` by retrieving
+the current time right before the philosopher threads are created in `run_sim()`.
+
+ @param sim 	Pointer to the simulation structure to store the start time.
+
+ @return 		`0` on success;
+ 				`1` if there was an error retrieving the time.
+*/
+int	record_time_of_death(t_philo *philo)
+{
+	t_ull	t_death;
+
+	t_death = get_time();
+	if (t_death == 0)
+		return (1);
+	philo->timestamp_death = t_death - philo->sim->t_start_sim;
 	return (0);
 }
 

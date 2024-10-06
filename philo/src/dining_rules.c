@@ -6,27 +6,84 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 08:18:53 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 16:04:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+/**
+Checks whether the simulation should stop by accessing the `stop_sim` flag
+in the simulation structure.
+
+This function ensures thread safety by using a mutex to lock access to the
+shared `stop_sim` variable.
+
+ @param sim 	Pointer to the simulation struct containing the `stop_sim` flag.
+
+ @return 		The value of the `stop_sim` flag:
+				`1` if the simulation should stop;
+				`0` otherwise.
+*/
+int	should_stop_sim(t_sim *sim)
+{
+	int	stop;
+
+	mtx_action(&sim->mtx_stop_sim, LOCK);
+	stop = sim->stop_sim;
+	mtx_action(&sim->mtx_stop_sim, UNLOCK);
+	return (stop);
+}
 
 void	*dining(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	print_action(get_time() - philo->sim->t_start_sim, philo, FORK);
-	print_action(get_time() - philo->sim->t_start_sim, philo, EAT);
-	precise_wait(philo->sim->t_eat);
-	print_action(get_time() - philo->sim->t_start_sim, philo, SLEEP);
-	precise_wait(philo->sim->t_sleep);
-	print_action(get_time() - philo->sim->t_start_sim, philo, THINK);
-	precise_wait(50);
-	print_action(get_time() - philo->sim->t_start_sim, philo, DIE);
-	if (FULL != 0)
-		print_action(get_time() - philo->sim->t_start_sim, philo, STUFFED);
+	while (1)
+	{
+		// FORK
+		if (should_stop_sim(philo->sim))
+			break ;
+		print_action(get_time() - philo->sim->t_start_sim, philo, FORK);
+
+		// EAT
+		if (should_stop_sim(philo->sim))
+			break ;
+		print_action(get_time() - philo->sim->t_start_sim, philo, EAT);
+		precise_wait(philo->sim->t_eat);
+
+		// SLEEP
+		if (should_stop_sim(philo->sim))
+			break ;
+		print_action(get_time() - philo->sim->t_start_sim, philo, SLEEP);
+		precise_wait(philo->sim->t_sleep);
+
+		// THINK
+		if (should_stop_sim(philo->sim))
+			break ;
+		print_action(get_time() - philo->sim->t_start_sim, philo, THINK);
+		precise_wait(500);
+
+		// FULL
+		if (FULL != 0)
+		{
+			if (should_stop_sim(philo->sim))
+				break ;
+			print_action(get_time() - philo->sim->t_start_sim, philo, STUFFED);
+		}
+
+		// DEATH CHECK
+		if (philo->id == 5) // DIES HERE!
+		{
+			record_time_of_death(philo);
+			mtx_action(&philo->sim->mtx_stop_sim, LOCK);
+			philo->sim->stop_sim = 1;
+			mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
+			usleep(1000); // makes sure that 'die' message is print last
+			print_action(philo->timestamp_death, philo, DIE);
+		}
+	}
 	return (NULL);
 }
 
@@ -35,6 +92,17 @@ void	*monitoring(void *arg)
 	t_sim	*sim;
 
 	sim = (t_sim *)arg;
-	printf("I am the monitor, I know what happens: %d\n", sim->t_sleep);
+	while (1)
+	{
+		mtx_action(&sim->mtx_stop_sim, LOCK);
+		if (sim->stop_sim == 1)
+		{
+			mtx_action(&sim->mtx_stop_sim, UNLOCK);
+			printf("%llu\tending simulation!\n", get_time() - sim->t_start_sim);
+			break ;
+		}
+		mtx_action(&sim->mtx_stop_sim, UNLOCK);
+		usleep(100); // reduces CPU load
+	}
 	return (NULL);
 }

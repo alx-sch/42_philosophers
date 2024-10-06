@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 09:32:52 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 15:45:20 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	init_args(t_sim *sim, int argc, char **argv)
 
 /**
 Sets initial values for the simulation state and initializes a mutex used for
-printing.
+printing and checking for a simulation stop.
 
  @param sim 	Pointer to the simulation structure to initialize.
 
@@ -61,15 +61,19 @@ printing.
 */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
-	sim->end_sim = 0;
+	sim->stop_sim = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
 	sim->mtx_print_init = 0;
+	sim->mtx_stop_sim_init = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
 	if (mtx_action(&sim->mtx_print, INIT))
 		return (1);
 	sim->mtx_print_init = 1;
+	if (mtx_action(&sim->mtx_stop_sim, INIT))
+		return (1);
+	sim->mtx_stop_sim_init = 1;
 	return (0);
 }
 

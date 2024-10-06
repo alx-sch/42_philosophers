@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 08:13:02 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 14:47:40 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct s_philo
 	int			done_eating;
 	int			is_alive;
 	t_ull		t_last_meal;
+	t_ull		timestamp_death;
 	t_fork		*left_fork;
 	t_fork		*right_fork;
 }	t_philo;
@@ -104,7 +105,8 @@ Structure representing the overall simulation state:
  - t_sleep:		Time in milliseconds a philosopher sleeps after eating.
  - max_meals:	Max. number of meals a philosopher can eat before they stop
  				dining; -1 means unlimited.
- - end_sim:		Flag indicating whether the simulation should end.
+ - stop_sim:	Flag indicating whether the simulation should end, either when
+ 				all philosophers have finished eating or if one philosopher dies.
  - t_start_sim:	Timestamp for when the simulation started.
  - forks:		Array of forks available for the philosophers.
  - philos:		Array of philosophers participating in the simulation.
@@ -118,13 +120,15 @@ typedef struct s_sim
 	int			t_eat;
 	int			t_sleep;
 	int			max_meals;
-	int			end_sim;
+	int			stop_sim;
 	t_ull		t_start_sim;
 	t_fork		*forks;
 	t_philo		*philos;
 	pthread_t	monitor;
 	t_mtx		mtx_print;
 	int			mtx_print_init;
+	t_mtx		mtx_stop_sim;
+	int			mtx_stop_sim_init;
 }	t_sim;
 
 #endif

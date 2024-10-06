@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 08:29:06 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 15:20:19 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int		mtx_action(t_mtx *mutex, t_mtx_action action);
 
 t_ull	get_time(void);
 int		set_start_time(t_sim *sim);
+int		record_time_of_death(t_philo *philo);
 int		precise_wait(int duration_to_wait);
 
 // utils/X_free.c
