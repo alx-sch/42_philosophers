@@ -6,14 +6,13 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 19:07:20 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 06:27:30 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
 This file provides utility functions for time management in the dining
-philosophers simulation. It includes functions to retrieve the current
-time and to implement a precise waiting mechanism.
+philosophers simulation.
 */
 
 #include "philo.h"
@@ -30,7 +29,7 @@ Get the current time in milliseconds since the epoch (January 1, 1970).
 
  @return 		The current time in milliseconds;
 				`0` in case of an error (or if it's 00:00:00 on 1/1/1970...)
- */
+*/
 t_ull	get_time(void)
 {
 	struct timeval	tv;

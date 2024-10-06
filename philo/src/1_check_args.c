@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:38:35 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 06:08:48 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ Used in `check_args()`.
 
 Converts a string to an integer and validates the input.
 
-There is no overflow detection, so it's the user's responsibility to ensure
-that only numbers up to `INT_MAX` are used.
+Note: There is no overflow detection, so it's the user's responsibility to
+ensure that only numbers up to `INT_MAX` are used.
 
  @param str 	The argument to be validated.
 

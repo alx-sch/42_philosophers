@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:58:33 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 06:11:32 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@ This file contains functions for setting up the simulation state and for
 creating the fork and philosopher structures.
 These functions ensure that all required resources are allocated and properly
 configured before the simulation begins.
-
-Proper error handling and resource management are implemented to gracefully
-handle any initialization failures during the setup process.
 */
 
 #include "philo.h"
@@ -85,8 +82,6 @@ Used in `init_sim()`.
 
 This function allocates memory for the forks used by philosophers in the
 simulation, and initializes their mutexes.
-If any fork's mutex initialization fails, it cleans up previously allocated
-resources before returning an error.
 
  @param sim 	Pointer to the simulation structure containing fork data.
 
@@ -123,10 +118,9 @@ static int	init_forks(t_sim *sim)
 /**
 Used in `init_sim()`.
 
-Initializes the philosophers participating in the simulation.
-
-This function allocates memory for the philosophers and sets their initial
-state, including the assignment of forks.
+Initializes the philosophers participating in the simulation by allocating
+memory for their structs and setting their initial state, including the
+assignment of forks.
 
  @param sim 	Pointer to the simulation structure containing philosopher data.
 

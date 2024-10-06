@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:01:46 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 06:22:05 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ void	*dining(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	print_action(philo, FORK, get_time() - philo->sim->t_start_sim);
-	print_action(philo, EAT, get_time() - philo->sim->t_start_sim);
+	print_action(get_time() - philo->sim->t_start_sim, philo, FORK);
+	print_action(get_time() - philo->sim->t_start_sim, philo, EAT);
 	precise_wait(philo->sim->t_eat);
-	print_action(philo, SLEEP, get_time() - philo->sim->t_start_sim);
+	print_action(get_time() - philo->sim->t_start_sim, philo, SLEEP);
 	precise_wait(philo->sim->t_sleep);
-	print_action(philo, THINK, get_time() - philo->sim->t_start_sim);
+	print_action(get_time() - philo->sim->t_start_sim, philo, THINK);
 	precise_wait(50);
-	print_action(philo, DIE, get_time() - philo->sim->t_start_sim);
+	print_action(get_time() - philo->sim->t_start_sim, philo, DIE);
 	if (FULL != 0)
-		print_action(philo, STUFFED, get_time() - philo->sim->t_start_sim);
+		print_action(get_time() - philo->sim->t_start_sim, philo, STUFFED);
 	return (NULL);
 }

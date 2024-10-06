@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:39:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 19:17:04 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 06:15:54 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	run_sim(t_sim *sim);
 /**
 Used in `run_sim()`.
 
-Sets the starting time for the simulation by retrieving the current time.
+Sets the starting time for the simulation by retrieving the current time right
+before the philosopher threads are created.
 
  @param sim 	Pointer to the simulation structure to store the start time.
 
@@ -112,9 +113,9 @@ threads after the simulation has finished.
 
  @param	sim 	Pointer to the sim structure, which holds the philosopher data.
 
- @return	`0` on success;
-			`1` if any of the steps fails (setting start time, thread creation,
-			or thread joining).
+ @return		`0` on success;
+				`1` if any of the steps fails (setting start time,
+				thread creation, or thread joining).
 */
 int	run_sim(t_sim *sim)
 {

@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/05 18:48:22 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/06 06:24:38 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@
 
 NAME :=			philo
 
-# Use non-zero values to print emojis and/or an update when all meals were eaten
-# For example: 'make EMOJI=1 FULL=1'
+# Use non-zero values to print emojis and/or more info on the philo state;
+# for example: 'make EMOJI=1 FULL=1'
 EMOJI ?=	1
 FULL ?=		1
 
@@ -30,7 +30,7 @@ SRCS_FILES :=	main.c \
 				dining_rules.c \
 				utils/0_libft.c \
 				utils/1_print_action.c \
-				utils/1_print_misc.c \
+				utils/1_print_error.c \
 				utils/2_mutex.c \
 				utils/3_time.c \
 				utils/free.c \

@@ -6,14 +6,13 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:10:44 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 06:26:52 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-This file provides utility functions for handling mutex operations
-(initialization, locking, unlocking, and destruction) with proper
-error checking and reporting.
+This file provides functions for handling mutex operations (initialization,
+locking, unlocking, and destruction) with proper error checking and reporting.
 */
 
 #include "philo.h"
@@ -69,7 +68,7 @@ Handles mutex operations with error checking and error message printing.
  @param sim 	Pointer to a data struct to be freed in case of error.
 
  @return 		`0` on success;
-				`1` on failure (if any mutex operation fails).
+				`1` if the mutex operation failed.
 */
 int	mtx_action(t_mtx *mutex, t_mtx_action action)
 {
