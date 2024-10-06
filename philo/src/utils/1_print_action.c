@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 17:45:55 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 19:10:31 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,30 +27,15 @@ visual cues are printed to enhance the output.
 int	print_action(t_ull timestamp, t_philo *philo, t_action action);
 
 /**
-Prints the action of a philosopher WITHOUT emojis. This function locks the
-printing mutex before output and unlocks it afterward to ensure thread-safe
-output.
-
-Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
+Prints the action of a philosopher WITHOUT emojis.
 
  @param timestamp 	The timestamp of the action in milliseconds.
- @param action 		The action being performed, represented as an enum type:
-					- FORK: Takes a fork;
-					- EAT: Starts eating;
-					- SLEEP: Starts sleeping;
-					- THINK: Starts thinking;
-					- DIE: Dies;
-					- STUFFED: Has eaten all their meals.
+ @param action 		The action being performed, represented as an enum type.
  @param philo 		A pointer to the philosopher structure performing the action.
-
- @return 			`0` if the action was printed successfully;
- 					`1` if there was an error in locking or unlocking the mutex.
 */
-static int	print_without_emojis(t_ull timestamp, t_philo *philo,
+static void	print_without_emojis(t_ull timestamp, t_philo *philo,
 				t_action action)
 {
-	if (mtx_action(&philo->sim->mtx_print, LOCK))
-		return (1);
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
 	else if (action == STUFFED)
@@ -70,35 +55,17 @@ static int	print_without_emojis(t_ull timestamp, t_philo *philo,
 		(void)printf("is full\n");
 	if (action == DIE || action == STUFFED)
 		(void)printf(RESET);
-	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
-		return (1);
-	return (0);
 }
 
 /**
-Prints the action of a philosopher WITH emojis. This function locks the
-printing mutex before output and unlocks it afterward to ensure thread-safe
-output.
-
-Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
+Prints the action of a philosopher WITH emojis.
 
  @param timestamp 	The timestamp of the action in milliseconds.
- @param action 		The action being performed, represented as an enum type:
-					- FORK: Takes a fork;
-					- EAT: Starts eating;
-					- SLEEP: Starts sleeping;
-					- THINK: Starts thinking;
-					- DIE: Dies;
-					- STUFFED: Has eaten all their meals.
+ @param action 		The action being performed, represented as an enum type.
  @param philo 		A pointer to the philosopher structure performing the action.
-
- @return 			`0` if the action was printed successfully;
- 					`1` if there was an error in locking or unlocking the mutex.
 */
-static int	print_with_emojis(t_ull timestamp, t_philo *philo, t_action action)
+static void	print_with_emojis(t_ull timestamp, t_philo *philo, t_action action)
 {
-	if (mtx_action(&philo->sim->mtx_print, LOCK))
-		return (1);
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
 	else if (action == STUFFED)
@@ -118,9 +85,6 @@ static int	print_with_emojis(t_ull timestamp, t_philo *philo, t_action action)
 		(void)printf("🫃\tis full\n");
 	if (action == DIE || action == STUFFED)
 		(void)printf(RESET);
-	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
-		return (1);
-	return (0);
 }
 
 /**
@@ -149,8 +113,13 @@ compilation) before being printed to enhance readability (default: no rounding).
 */
 int	print_action(t_ull timestamp, t_philo *philo, t_action action)
 {
+	if (mtx_action(&philo->sim->mtx_print, LOCK))
+		return (1);
 	if (EMOJI == 0)
-		return (print_without_emojis(timestamp, philo, action));
+		print_without_emojis(timestamp, philo, action);
 	else
-		return (print_with_emojis(timestamp, philo, action));
+		print_with_emojis(timestamp, philo, action);
+	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
+		return (1);
+	return (0);
 }
