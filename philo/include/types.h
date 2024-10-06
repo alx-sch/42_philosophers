@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 06:32:47 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 08:13:02 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ typedef struct s_sim
 	t_ull		t_start_sim;
 	t_fork		*forks;
 	t_philo		*philos;
+	pthread_t	monitor;
 	t_mtx		mtx_print;
 	int			mtx_print_init;
 }	t_sim;

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 06:27:30 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:12:45 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ philosophers simulation.
 // IN FILE:
 
 t_ull	get_time(void);
+int		set_start_time(t_sim *sim);
 int		precise_wait(int duration_to_wait);
 
 /**
@@ -42,6 +43,27 @@ t_ull	get_time(void)
 	}
 	time_in_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	return (time_in_ms);
+}
+
+/**
+Sets the starting time for the simulation in `sim->t_start_sim` by retrieving
+the current time right before the philosopher threads are created in `run_sim()`.
+
+ @param sim 	Pointer to the simulation structure to store the start time.
+
+ @return 		`0` on success;
+ 				`1` if there was an error retrieving the time.
+*/
+int	set_start_time(t_sim *sim)
+{
+	t_ull	time_start_sim;
+
+	time_start_sim = get_time();
+	if (time_start_sim == 0)
+		return (1);
+	else
+		sim->t_start_sim = time_start_sim;
+	return (0);
 }
 
 /**

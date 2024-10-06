@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 06:11:32 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:32:52 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ configured before the simulation begins.
 int	init_sim(t_sim **sim, int argc, char **argv);
 
 /**
-Used in `init_sim_state()`.
-
 Initializes the simulation parameters from command line arguments.
 This function checks the validity of the arguments, converts them to integers,
 and assigns them to the corresponding fields in the simulation structure.
@@ -53,8 +51,6 @@ static int	init_args(t_sim *sim, int argc, char **argv)
 }
 
 /**
-Used in `init_sim()`.
-
 Sets initial values for the simulation state and initializes a mutex used for
 printing.
 
@@ -78,8 +74,6 @@ static int	init_sim_state(t_sim *sim, int argc, char **argv)
 }
 
 /**
-Used in `init_sim()`.
-
 This function allocates memory for the forks used by philosophers in the
 simulation, and initializes their mutexes.
 
@@ -103,8 +97,8 @@ static int	init_forks(t_sim *sim)
 	{
 		if (mtx_action(&sim->forks[i].fork, INIT))
 		{
-			while (--i >= 0)
-				mtx_action(&sim->forks[i].fork, DESTROY);
+			while (i > 0)
+				mtx_action(&sim->forks[--i].fork, DESTROY);
 			free(sim->forks);
 			sim->forks = NULL;
 			return (1);
@@ -116,8 +110,6 @@ static int	init_forks(t_sim *sim)
 }
 
 /**
-Used in `init_sim()`.
-
 Initializes the philosophers participating in the simulation by allocating
 memory for their structs and setting their initial state, including the
 assignment of forks.
@@ -149,7 +141,6 @@ static int	init_philos(t_sim *sim)
 		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
 		i++;
 	}
-	i = 0;
 	return (0);
 }
 
@@ -172,9 +163,11 @@ int	init_sim(t_sim **sim, int argc, char **argv)
 		print_err_msg(ERR_MALLOC);
 		return (1);
 	}
-	if (init_sim_state(*sim, argc, argv)
-		|| init_forks(*sim)
-		|| init_philos(*sim))
+	if (init_sim_state(*sim, argc, argv))
+		return (1);
+	if (init_forks(*sim))
+		return (1);
+	if (init_philos(*sim))
 		return (1);
 	return (0);
 }

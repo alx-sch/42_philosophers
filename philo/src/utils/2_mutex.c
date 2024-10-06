@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 06:26:52 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:01:21 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ locking, unlocking, and destruction) with proper error checking and reporting.
 int	mtx_action(t_mtx *mutex, t_mtx_action action);
 
 /**
-Used in `mtx_action()`.
-
 Performs an action on a mutex based on the specified action.
 
  @param mutex 	Pointer to a `pthread_mutex_t` mutex to operate on.

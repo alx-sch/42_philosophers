@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:58:41 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:02:14 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ mutexes used for synchronization.
 void	cleanup_sim(t_sim **sim_ptr);
 
 /**
-Used in `cleanup_sim()`.
-
 Cleans up the fork resources for the simulation.
 
 This function iterates through the forks associated with the simulation
@@ -48,8 +46,6 @@ static void	clean_forks(t_sim *sim)
 }
 
 /**
-Used in `cleanup_sim()`.
-
 Cleans up the philosopher resources for the simulation.
 
 This function frees the memory allocated for the philosopher array and sets

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 06:20:38 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:00:48 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ visual cues are printed to enhance the output.
 int	print_action(t_ull timestamp, t_philo *philo, t_action action);
 
 /**
-Used in `print_action()`.
-
 Prints the action of a philosopher WITHOUT emojis. This function locks the
 printing mutex before output and unlocks it afterward to ensure thread-safe
 output.
@@ -78,8 +76,6 @@ static int	print_without_emojis(t_ull timestamp, t_philo *philo,
 }
 
 /**
-Used in `print_action()`.
-
 Prints the action of a philosopher WITH emojis. This function locks the
 printing mutex before output and unlocks it afterward to ensure thread-safe
 output.

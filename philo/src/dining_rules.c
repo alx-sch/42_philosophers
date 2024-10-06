@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 06:22:05 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 08:18:53 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,14 @@ void	*dining(void *arg)
 	print_action(get_time() - philo->sim->t_start_sim, philo, DIE);
 	if (FULL != 0)
 		print_action(get_time() - philo->sim->t_start_sim, philo, STUFFED);
+	return (NULL);
+}
+
+void	*monitoring(void *arg)
+{
+	t_sim	*sim;
+
+	sim = (t_sim *)arg;
+	printf("I am the monitor, I know what happens: %d\n", sim->t_sleep);
 	return (NULL);
 }

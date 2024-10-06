@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 06:25:02 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 08:29:06 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int		run_sim(t_sim *sim);
 // X_dining.c
 
 void	*dining(void *arg);
+void	*monitoring(void *arg);
 
 // utils/0_libft.c
 
@@ -91,6 +92,7 @@ int		mtx_action(t_mtx *mutex, t_mtx_action action);
 // utils/3_time.c
 
 t_ull	get_time(void);
+int		set_start_time(t_sim *sim);
 int		precise_wait(int duration_to_wait);
 
 // utils/X_free.c
