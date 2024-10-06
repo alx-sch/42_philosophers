@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 17:25:51 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 19:58:01 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ int		contains_digit(const char *str);
 
 // utils/1_print_action.c
 
-int		print_action(t_ull timestamp, t_philo *philo, t_action action);
+int		print_action(t_ull timestamp, t_philo *philo, t_action action,
+			int recalc_timestamp);
 
 // utils/1_print_error.c
 
