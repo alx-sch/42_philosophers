@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 09:00:48 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 17:45:55 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int	print_without_emojis(t_ull timestamp, t_philo *philo,
 		(void)printf(ERR_COLOR);
 	else if (action == STUFFED)
 		(void)printf(YELLOW);
-	(void)printf("%llu\t%d\t", timestamp, philo->id);
+	(void)printf("%llu\t%d\t", timestamp / ROUND * ROUND, philo->id);
 	if (action == FORK)
 		(void)printf("has taken a fork\n");
 	else if (action == EAT)
@@ -103,7 +103,7 @@ static int	print_with_emojis(t_ull timestamp, t_philo *philo, t_action action)
 		(void)printf(ERR_COLOR);
 	else if (action == STUFFED)
 		(void)printf(YELLOW);
-	(void)printf("%llu\t%d\t", timestamp, philo->id);
+	(void)printf("%llu\t%d\t", timestamp / ROUND * ROUND, philo->id);
 	if (action == FORK)
 		(void)printf("🥄\thas taken a fork\n");
 	else if (action == EAT)
@@ -127,8 +127,12 @@ static int	print_with_emojis(t_ull timestamp, t_philo *philo, t_action action)
 Prints the action of a philosopher with a timestamp, ensuring thread-safe access
 to the standard output using a mutex.
 
-Depending on the global configuration (`EMOJI` flag), the function will either
-print the actions with emojis or without them (default: without emojis).
+Depending on the `EMOJI` and `FULL` flags (defined during compilation), the
+function will print additional visual cues and information (default: no emojis
+or additional info).
+
+The timestamp is rounded to the nearest `ROUND` milliseconds (also defined during
+compilation) before being printed to enhance readability (default: no rounding).
 
  @param timestamp 	The timestamp of the action in milliseconds.
  @param action 		The action being performed, represented as an enum type:

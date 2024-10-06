@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/06 06:24:38 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/06 17:52:24 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,11 @@ NAME :=			philo
 # for example: 'make EMOJI=1 FULL=1'
 EMOJI ?=	1
 FULL ?=		1
+
+# Rounds timestamp during printing. E.g., timestamps are rounded to the nearest
+# increment of 5 ms via 'ROUND=3'. To disable rounding and use the exact
+# timestamp value, set 'ROUND' to 1 ('make ROUND=1').
+ROUND ?=	1
 
 # SOURCE FILES
 SRCS_DIR :=		src
@@ -52,7 +57,7 @@ HDRS :=			$(addprefix $(HDRS_DIR)/, $(HDRS_FILES))
 # COMPILER
 CC :=			cc
 CFLAGS := 		-I$(HDRS_DIR)
-CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR) -DEMOJI=$(EMOJI) -DFULL=$(FULL)
+CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR) -DEMOJI=$(EMOJI) -DFULL=$(FULL) -DROUND=$(ROUND)
 CFLAGS +=		-Wpedantic -g
 #CFLAGS +=		-fsanitize=thread
 
