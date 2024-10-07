@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 19:40:25 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 20:40:52 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ Structure representing a philosopher in the dining philosophers problem:
 					to shared data.
  - id:				The philosopher's identifier.
  - thread_id:		The identifier for the philosopher's thread.
+ - odd:				XXXX
  - meals_eaten:		Counter for the number of meals the philosopher has eaten.
  - done_eating:		Indicates whether the philosopher has finished eating.
  - is_alive:		A flag indicating whether the philosopher is still alive.
@@ -88,6 +89,7 @@ typedef struct s_philo
 {
 	t_sim		*sim;
 	int			id;
+	int			odd;
 	pthread_t	thread_id;
 	int			meals_eaten;
 	t_ull		t_last_meal;

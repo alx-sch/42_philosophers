@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 19:42:14 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 20:45:24 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,10 @@ static int	init_philos(t_sim *sim)
 		sim->philos[i].meals_eaten = 0;
 		sim->philos[i].left_fork = &sim->forks[i];
 		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
+		if (sim->philos[i].id % 2 == 1)
+			sim->philos[i].odd = 1;
+		else
+			sim->philos[i].odd = 0;
 		i++;
 	}
 	return (0);

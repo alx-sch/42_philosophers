@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 19:06:21 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 21:13:57 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,11 @@ static void	print_more(t_ull timestamp, t_philo *philo, t_action action)
 		(void)printf(YELLOW);
 	(void)printf("%llu\t%d\t", timestamp / ROUND * ROUND, philo->id);
 	if (action == FORK_L)
-		(void)printf("🥄\thas taken their fork\t(%d) left\n", philo->left_fork->fork_id);
+		(void)printf("🥄←\thas taken their fork\t(%d) left\n", philo->left_fork->fork_id);
 	if (action == FORK_R)
-		(void)printf("🥄\thas taken their fork\t(%d) right\n", philo->right_fork->fork_id);
+		(void)printf("→🥄\thas taken their fork\t(%d) right\n", philo->right_fork->fork_id);
 	else if (action == EAT)
-		(void)printf("🍝\tis eating\t\t(%d meals)\n", philo->meals_eaten + 1);
+		(void)printf("🍝\tis eating\t\t(%d. meal)\n", philo->meals_eaten + 1);
 	else if (action == SLEEP)
 		(void)printf("💤\tis sleeping\n");
 	else if (action == THINK)
@@ -82,7 +82,7 @@ static void	print_more(t_ull timestamp, t_philo *philo, t_action action)
 	else if (action == DIE)
 		(void)printf("💀\tdied\n");
 	else if (action == STUFFED)
-		(void)printf("🫃\tis full\n");
+		(void)printf("🫃\tis full\t\t\t(%d meals)\n", philo->meals_eaten);
 	if (action == DIE || action == STUFFED)
 		(void)printf(RESET);
 }
@@ -123,7 +123,7 @@ int	print_action(t_ull timestamp, t_philo *philo, t_action action,
 		return (1);
 	if (recalc_timestamp)
 		timestamp = get_time() - philo->sim->t_start_sim;
-	if (MORE == 0)
+	if (FANCY == 0)
 		print_standard(timestamp, philo, action);
 	else
 		print_more(timestamp, philo, action);

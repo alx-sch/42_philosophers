@@ -6,24 +6,19 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/07 18:42:01 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/07 21:27:03 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#################
-## DEFINITIONS ##
-#################
+# Fancy up the simulation printout with emojis and additional information bymak
+# using non-zero values during compilation, e.g. 'make FANCY=1'.
+FANCY ?=		0
+
+# Rounds timestamp during printing: 'make ROUND=5' rounds to the nearest
+# increment of 5 ms. To disable rounding, set 'ROUND' to 1.
+ROUND ?=		1
 
 NAME :=			philo
-
-# Use non-zero values to print emojis and/or more info on the philo state;
-# for example: 'make EMOJI=1 FULL=1'
-MORE ?=	0
-
-# Rounds timestamp during printing. E.g., timestamps are rounded to the nearest
-# increment of 5 ms via 'ROUND=3'. To disable rounding and use the exact
-# timestamp value, set 'ROUND' to 1 ('make ROUND=1').
-ROUND ?=	1
 
 # SOURCE FILES
 SRCS_DIR :=		src
@@ -56,7 +51,7 @@ HDRS :=			$(addprefix $(HDRS_DIR)/, $(HDRS_FILES))
 # COMPILER
 CC :=			cc
 CFLAGS := 		-I$(HDRS_DIR)
-CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR) -DMORE=$(MORE) -DROUND=$(ROUND)
+CFLAGS :=		-Werror -Wextra -Wall -pthread -I$(HDRS_DIR) -DFANCY=$(FANCY) -DROUND=$(ROUND)
 CFLAGS +=		-Wpedantic -g
 #CFLAGS +=		-fsanitize=thread
 

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:39:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 09:16:19 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 20:11:45 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,16 @@ initialized before the philosopher threads begin their dining routines.
  @return		`0` on success;
 				`1` if there was an error creating the monitor thread.
 */
-static int	start_monitoring(t_sim *sim)
-{
-	if (pthread_create(&sim->monitor, NULL, &monitoring, sim))
-	{
-		print_err_msg(ERR_TR_CREATE);
-		return (1);
-	}
-	usleep(100);
-	return (0);
-}
+// static int	start_monitoring(t_sim *sim)
+// {
+// 	if (pthread_create(&sim->monitor, NULL, &monitoring, sim))
+// 	{
+// 		print_err_msg(ERR_TR_CREATE);
+// 		return (1);
+// 	}
+// 	usleep(100);
+// 	return (0);
+// }
 
 /**
 Joins the monitor thread, waiting for it to finish execution.
@@ -51,15 +51,15 @@ Joins the monitor thread, waiting for it to finish execution.
  @return		`0` on success;
 				`1` if there was an error joining the monitor thread.
 */
-static int	end_monitoring(t_sim *sim)
-{
-	if (pthread_join(sim->monitor, NULL))
-	{
-		print_err_msg(ERR_TR_JOIN);
-		return (1);
-	}
-	return (0);
-}
+// static int	end_monitoring(t_sim *sim)
+// {
+// 	if (pthread_join(sim->monitor, NULL))
+// 	{
+// 		print_err_msg(ERR_TR_JOIN);
+// 		return (1);
+// 	}
+// 	return (0);
+// }
 
 /**
 Starts the dining simulation by creating threads for each philosopher. Each
@@ -129,15 +129,15 @@ and join those threads after the simulation has finished.
 */
 int	run_sim(t_sim *sim)
 {
-	if (start_monitoring(sim))
-		return (1);
+	// if (start_monitoring(sim))
+	// 	return (1);
 	if (set_start_time(sim))
 		return (1);
 	if (start_dining(sim))
 		return (1);
 	if (end_dining(sim))
 		return (1);
-	if (end_monitoring(sim))
-		return (1);
+	// if (end_monitoring(sim))
+	// 	return (1);
 	return (0);
 }
