@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 17:04:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:42:14 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,19 +61,24 @@ printing and checking for a simulation stop.
 */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
-	sim->stop_sim = 0;
+	sim->full_philos = 0;
+	sim->philo_dead = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
-	sim->mtx_print_init = 0;
-	sim->mtx_stop_sim_init = 0;
+	sim->mtx_print_flag = 0;
+	sim->mtx_full_philos_flag = 0;
+	sim->mtx_philo_dead_flag = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
 	if (mtx_action(&sim->mtx_print, INIT))
 		return (1);
-	sim->mtx_print_init = 1;
-	if (mtx_action(&sim->mtx_stop_sim, INIT))
+	sim->mtx_print_flag = 1;
+	if (mtx_action(&sim->mtx_full_philos, INIT))
 		return (1);
-	sim->mtx_stop_sim_init = 1;
+	sim->mtx_full_philos_flag = 1;
+	if (mtx_action(&sim->mtx_philo_dead, INIT))
+		return (1);
+	sim->mtx_philo_dead_flag = 1;
 	return (0);
 }
 
@@ -139,8 +144,6 @@ static int	init_philos(t_sim *sim)
 		sim->philos[i].sim = sim;
 		sim->philos[i].id = i + 1;
 		sim->philos[i].meals_eaten = 0;
-		sim->philos[i].done_eating = 0;
-		sim->philos[i].is_alive = 1;
 		sim->philos[i].left_fork = &sim->forks[i];
 		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
 		i++;

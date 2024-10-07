@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 17:04:07 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 19:40:25 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ Enumeration for representing the various actions a philosopher can take:
 typedef enum e_action
 {
 	FORK,
+	FORK_L,
+	FORK_R,
 	EAT,
 	SLEEP,
 	THINK,
@@ -88,8 +90,6 @@ typedef struct s_philo
 	int			id;
 	pthread_t	thread_id;
 	int			meals_eaten;
-	int			done_eating;
-	int			is_alive;
 	t_ull		t_last_meal;
 	t_ull		timestamp_death;
 	t_fork		*left_fork;
@@ -120,15 +120,18 @@ typedef struct s_sim
 	int			t_eat;
 	int			t_sleep;
 	int			max_meals;
-	int			stop_sim;
+	int			full_philos;
+	int			philo_dead;
 	t_ull		t_start_sim;
 	t_fork		*forks;
 	t_philo		*philos;
 	pthread_t	monitor;
 	t_mtx		mtx_print;
-	int			mtx_print_init;
-	t_mtx		mtx_stop_sim;
-	int			mtx_stop_sim_init;
+	int			mtx_print_flag;
+	t_mtx		mtx_full_philos;
+	int			mtx_full_philos_flag;
+	t_mtx		mtx_philo_dead;
+	int			mtx_philo_dead_flag;
 }	t_sim;
 
 #endif
