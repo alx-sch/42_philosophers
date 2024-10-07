@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 22:10:46 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 13:30:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,34 +113,34 @@ TBD
 
 int	main(int argc, char **argv)
 {
-	t_sim	*sim;
+	// t_sim	*sim;
 
-	sim = NULL;
-	if (init_sim(&sim, argc, argv))
-	{
-		cleanup_sim(&sim);
-		return (1);
-	}
-	if (run_sim(sim))
-	{
-		cleanup_sim(&sim);
-		return (1);
-	}
-	cleanup_sim(&sim);
+	// sim = NULL;
+	// if (init_sim(&sim, argc, argv))
+	// {
+	// 	cleanup_sim(&sim);
+	// 	return (1);
+	// }
+	// if (run_sim(sim))
+	// {
+	// 	cleanup_sim(&sim);
+	// 	return (1);
+	// }
+	// cleanup_sim(&sim);
 
-	// (void)argc;
-	// (void)argv;
-	// printf("\n\n");
-	// int sleep_duration = 300000; // 10,000 microseconds
-	// int iterations = 100;
+	(void)argc;
+	(void)argv;
+	printf("\n\n");
+	int sleep_duration = 300000; // 10,000 microseconds
+	int iterations = 100;
 
-    // printf("\nTesting usleep and precise_wait (%d iterations)\n", iterations);
-	// printf("SLEEP_INTERVALS = %d\n\n", SLEEP_INTERVALS);
-    // test_usleep(sleep_duration, iterations);
-	// printf("\n");
-    // test_precise_wait(sleep_duration, iterations);
+    printf("\nTesting usleep and precise_wait (%d iterations)\n", iterations);
+	printf("SLEEP_INTERVALS = %d\n\n", SLEEP_INTERVALS);
+    test_usleep(sleep_duration, iterations);
+	printf("\n");
+    test_precise_wait(sleep_duration, iterations);
 
-	// printf("\n\n");
+	printf("\n\n");
 
 	return (0);
 }
