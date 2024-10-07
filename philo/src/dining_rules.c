@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 23:11:12 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 17:29:56 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,16 @@ int	should_stop_sim(t_sim *sim)
 	return (stop);
 }
 
+int	pick_forks(t_philo *philo)
+{
+	mtx_action(&philo->left_fork->fork, LOCK);
+	print_action(0, philo, FORK, 1);
+	mtx_action(&philo->right_fork->fork, LOCK);
+	print_action(0, philo, FORK, 1);
+
+	return (0);
+}
+
 void	*dining(void *arg)
 {
 	t_philo	*philo;
@@ -45,48 +55,63 @@ void	*dining(void *arg)
 		// FORK
 		if (should_stop_sim(philo->sim))
 			break ;
-		print_action(0, philo, FORK, 1);
+		if (philo->id % 2 == 1) // Odd philosophers
+		{
+			mtx_action(&philo->left_fork->fork, LOCK);
+			print_action(0, philo, FORK, 1);
+			mtx_action(&philo->right_fork->fork, LOCK);
+			print_action(0, philo, FORK, 1);
+		}
+		else
+		{
+			usleep(100);
+			mtx_action(&philo->right_fork->fork, LOCK);
+			print_action(0, philo, FORK, 1);
+			mtx_action(&philo->left_fork->fork, LOCK);
+			print_action(0, philo, FORK, 1);
+		}
 
 		// EAT
 		if (should_stop_sim(philo->sim))
 			break ;
 		print_action(0, philo, EAT, 1);
-		//precise_wait(philo->sim->t_eat);
-		usleep(philo->sim->t_eat * 1000);
+		philo->meals_eaten++;
+		precise_wait(philo->sim->t_eat);
+		// Put down forks
+		mtx_action(&philo->left_fork->fork, UNLOCK);
+		mtx_action(&philo->right_fork->fork, UNLOCK);
 
 		// SLEEP
 		if (should_stop_sim(philo->sim))
 			break ;
 		print_action(0, philo, SLEEP, 1);
-		//precise_wait(philo->sim->t_sleep);
-		usleep(philo->sim->t_sleep * 1000);
+		precise_wait(philo->sim->t_sleep);
 
 		// THINK
 		if (should_stop_sim(philo->sim))
 			break ;
 		print_action(0, philo, THINK, 1);
 		//precise_wait(400); // thinking time
-		usleep(400 * 1000);
 
 		// FULL
-		if (FULL != 0)
-		{
-			if (should_stop_sim(philo->sim))
-				break ;
-			print_action(get_time() - philo->sim->t_start_sim, philo, STUFFED, 1);
-		}
+		// if (FULL != 0)
+		// {
+		// 	if (should_stop_sim(philo->sim))
+		// 		break ;
+		// 	print_action(get_time() - philo->sim->t_start_sim, philo, STUFFED, 1);
+		// }
 
-		// DEATH CHECK
-		if (philo->id == 5) // DIES HERE!
-		{
-			record_time_of_death(philo);
-			mtx_action(&philo->sim->mtx_stop_sim, LOCK);
-			philo->sim->stop_sim = 1;
-			mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
-			usleep(500);
-			//precise_wait(1); // makes sure that 'die' message is print last
-			print_action(philo->timestamp_death, philo, DIE, 0);
-		}
+		// // DEATH CHECK
+		// if (philo->id == 5) // DIES HERE!
+		// {
+		// 	record_time_of_death(philo);
+		// 	mtx_action(&philo->sim->mtx_stop_sim, LOCK);
+		// 	philo->sim->stop_sim = 1;
+		// 	mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
+		// 	usleep(200);
+		// 	//precise_wait(1); // makes sure that 'die' message is print last
+		// 	print_action(philo->timestamp_death, philo, DIE, 0);
+		// }
 	}
 	return (NULL);
 }
