@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:38:35 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:02:39 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,10 @@ and usage instructions.
 int		check_args(int argc, char **argv);
 
 /**
-Used in `check_args()`.
-
 Converts a string to an integer and validates the input.
 
-There is no overflow detection, so it's the user's responsibility to ensure
-that only numbers up to `INT_MAX` are used.
+Note: There is no overflow detection, so it's the user's responsibility to
+ensure that only numbers up to `INT_MAX` are used.
 
  @param str 	The argument to be validated.
 
@@ -45,8 +43,6 @@ static int	is_valid_arg(const char *str)
 }
 
 /**
-Used in `check_args()`.
-
 Validates the number of command-line arguments passed to the program.
 
  @param argc 	The number of command-line arguments.
@@ -66,8 +62,6 @@ static int	check_arg_count(int argc)
 }
 
 /**
-Used in `check_args()`.
-
 Checks if the number of philosophers is valid (>= 1).
 
  @param arg 	The first command-line argument (argv[1]) -> number of philos

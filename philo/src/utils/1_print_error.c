@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_print_misc.c                                     :+:      :+:    :+:   */
+/*   1_print_error.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 18:58:44 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:01:01 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ void	print_usage(void);
 void	print_err_msg(char *msg);
 
 /**
-Used in `print_usage()`.
-
 Prints a message to the standard error stream with optional formatting applied.
 
  @param msg 		The error message to be printed.

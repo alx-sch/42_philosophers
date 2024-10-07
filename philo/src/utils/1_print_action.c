@@ -6,62 +6,42 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 19:48:37 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 20:01:56 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
 This file contains functions responsible for printing the actions of
-philosophers in the dining philosopher simulation. The output includes a
-timestamp, the philosopher's ID, and a description of the action being
-performed.
+philosophers in the dining simulation. The output includes a timestamp,
+the philosopher's ID, and a description of the action being performed.
 
 When the `EMOJI` and/or `FULL` (all meals eaten) flags are set during
 compilation (e.g., `make EMOJI=1 FULL=1`), additional information and
 visual cues are printed to enhance the output.
-
-The printing functions are designed to be thread-safe, using a mutex to prevent
-race conditions during concurrent output.
 */
 
 #include "philo.h"
 
 // IN FILE:
 
-int	print_action(t_philo *philo, t_action action, t_ull timestamp);
+int	print_action(t_ull timestamp, t_philo *philo, t_action action,
+		int recalc_timestamp);
 
 /**
-Used in `print_action()`.
-
-Prints the action of a philosopher WITHOUT emojis. This function locks the
-printing mutex before output and unlocks it afterward to ensure thread-safe
-output.
-
-Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
+Prints the action of a philosopher WITHOUT emojis.
 
  @param timestamp 	The timestamp of the action in milliseconds.
- @param action 		The action being performed, represented as an enum type:
-					- FORK: Takes a fork;
-					- EAT: Starts eating;
-					- SLEEP: Starts sleeping;
-					- THINK: Starts thinking;
-					- DIE: Dies;
-					- STUFFED: Has eaten all their meals.
+ @param action 		The action being performed, represented as an enum type.
  @param philo 		A pointer to the philosopher structure performing the action.
-
- @return 			`0` if the action was printed successfully;
- 					`1` if there was an error in locking or unlocking the mutex.
 */
-static int	print_without_emojis(t_philo *philo, t_action action,
-	t_ull timestamp)
+static void	print_without_emojis(t_ull timestamp, t_philo *philo,
+				t_action action)
 {
-	if (mtx_action(&philo->sim->mtx_print, LOCK))
-		return (1);
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
 	else if (action == STUFFED)
 		(void)printf(YELLOW);
-	(void)printf("%llu\t%d\t", timestamp, philo->id);
+	(void)printf("%llu\t%d\t", timestamp / ROUND * ROUND, philo->id);
 	if (action == FORK)
 		(void)printf("has taken a fork\n");
 	else if (action == EAT)
@@ -76,42 +56,22 @@ static int	print_without_emojis(t_philo *philo, t_action action,
 		(void)printf("is full\n");
 	if (action == DIE || action == STUFFED)
 		(void)printf(RESET);
-	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
-		return (1);
-	return (0);
 }
 
 /**
-Used in `print_action()`.
-
-Prints the action of a philosopher WITH emojis. This function locks the
-printing mutex before output and unlocks it afterward to ensure thread-safe
-output.
-
-Special color formatting is applied for the 'DIE' and 'STUFFED' actions.
+Prints the action of a philosopher WITH emojis.
 
  @param timestamp 	The timestamp of the action in milliseconds.
- @param action 		The action being performed, represented as an enum type:
-					- FORK: Takes a fork;
-					- EAT: Starts eating;
-					- SLEEP: Starts sleeping;
-					- THINK: Starts thinking;
-					- DIE: Dies;
-					- STUFFED: Has eaten all their meals.
+ @param action 		The action being performed, represented as an enum type.
  @param philo 		A pointer to the philosopher structure performing the action.
-
- @return 			`0` if the action was printed successfully;
- 					`1` if there was an error in locking or unlocking the mutex.
 */
-static int	print_with_emojis(t_philo *philo, t_action action, t_ull timestamp)
+static void	print_with_emojis(t_ull timestamp, t_philo *philo, t_action action)
 {
-	if (mtx_action(&philo->sim->mtx_print, LOCK))
-		return (1);
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
 	else if (action == STUFFED)
 		(void)printf(YELLOW);
-	(void)printf("%llu\t%d\t", timestamp, philo->id);
+	(void)printf("%llu\t%d\t", timestamp / ROUND * ROUND, philo->id);
 	if (action == FORK)
 		(void)printf("🥄\thas taken a fork\n");
 	else if (action == EAT)
@@ -126,17 +86,21 @@ static int	print_with_emojis(t_philo *philo, t_action action, t_ull timestamp)
 		(void)printf("🫃\tis full\n");
 	if (action == DIE || action == STUFFED)
 		(void)printf(RESET);
-	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
-		return (1);
-	return (0);
 }
 
 /**
 Prints the action of a philosopher with a timestamp, ensuring thread-safe access
 to the standard output using a mutex.
 
-Depending on the global configuration (`EMOJI` flag), the function will either
-print the actions with emojis or without them (default: without emojis).
+The `recalc_timestamp` flag helps prevent timestamp mix-ups in multithreaded
+execution by recalculating the timestamp just before printing.
+
+Depending on the `EMOJI` and `FULL` flags (defined during compilation), the
+function will print additional visual cues and information (default: no emojis
+or additional info).
+
+The timestamp is rounded to the nearest `ROUND` milliseconds (also defined during
+compilation) before being printed to enhance readability (default: no rounding).
 
  @param timestamp 	The timestamp of the action in milliseconds.
  @param action 		The action being performed, represented as an enum type:
@@ -147,14 +111,24 @@ print the actions with emojis or without them (default: without emojis).
 					- DIE: Dies;
 					- STUFFED: Has eaten all their meals.
  @param philo 		A pointer to the philosopher structure performing the action.
+ @param recalc_timestamp 	`0`: Use the provided timestamp as is;
+							`1`: Recalculate the timestamp just before printing.
 
  @return 			`0` if the action was printed successfully;
  					`1` if there was an error in locking or unlocking the mutex.
 */
-int	print_action(t_philo *philo, t_action action, t_ull timestamp)
+int	print_action(t_ull timestamp, t_philo *philo, t_action action,
+		int recalc_timestamp)
 {
+	if (mtx_action(&philo->sim->mtx_print, LOCK))
+		return (1);
+	if (recalc_timestamp)
+		timestamp = get_time() - philo->sim->t_start_sim;
 	if (EMOJI == 0)
-		return (print_without_emojis(philo, action, timestamp));
+		print_without_emojis(timestamp, philo, action);
 	else
-		return (print_with_emojis(philo, action, timestamp));
+		print_with_emojis(timestamp, philo, action);
+	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
+		return (1);
+	return (0);
 }

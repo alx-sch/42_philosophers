@@ -6,13 +6,13 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:39:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 19:17:04 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 09:16:19 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-Implements functions for starting and ending the simulation by
-creating and joining philosopher threads, respectively.
+Implements functions for running the simulation by creating and joining
+monitor and philosopher threads.
 */
 
 #include "philo.h"
@@ -22,39 +22,55 @@ creating and joining philosopher threads, respectively.
 int	run_sim(t_sim *sim);
 
 /**
-Used in `run_sim()`.
+Starts the monitor thread to observe the state of the simulation.
 
-Sets the starting time for the simulation by retrieving the current time.
+A short delay (`usleep`) is introduced to ensure the monitor is fully
+initialized before the philosopher threads begin their dining routines.
 
- @param sim 	Pointer to the simulation structure to store the start time.
+ @param	sim 	Pointer to the sim structure, which holds the philosopher data.
 
- @return 		`0` on success;
- 				`1` if there was an error retrieving the time.
+ @return		`0` on success;
+				`1` if there was an error creating the monitor thread.
 */
-static int	set_start_time(t_sim *sim)
+static int	start_monitoring(t_sim *sim)
 {
-	t_ull	time_start_sim;
-
-	time_start_sim = get_time();
-	if (time_start_sim == 0)
+	if (pthread_create(&sim->monitor, NULL, &monitoring, sim))
+	{
+		print_err_msg(ERR_TR_CREATE);
 		return (1);
-	else
-		sim->t_start_sim = time_start_sim;
+	}
+	usleep(100);
 	return (0);
 }
 
 /**
-Used in `run_sim()`.
+Joins the monitor thread, waiting for it to finish execution.
 
-Starts the simulation by creating threads for each philosopher. Each thread
-will run the `dining` function that simulates the philosopher's behavior.
+ @param	sim 	Pointer to the sim structure, which holds the philosopher data.
+
+ @return		`0` on success;
+				`1` if there was an error joining the monitor thread.
+*/
+static int	end_monitoring(t_sim *sim)
+{
+	if (pthread_join(sim->monitor, NULL))
+	{
+		print_err_msg(ERR_TR_JOIN);
+		return (1);
+	}
+	return (0);
+}
+
+/**
+Starts the dining simulation by creating threads for each philosopher. Each
+thread will run the `dining` function that simulates the philosopher's behavior.
 
  @param	sim 	Pointer to the sim structure, which holds the philosopher data.
 
  @return		`0` on success;
 				`1` if there was an error creating any of the threads.
 */
-static int	start_sim(t_sim *sim)
+static int	start_dining(t_sim *sim)
 {
 	int	i;
 
@@ -73,20 +89,15 @@ static int	start_sim(t_sim *sim)
 }
 
 /**
-Used in `run_sim()`.
-
-Ends the simulation by joining all philosopher threads.
-
-This function waits for all philosopher threads to finish by calling
-`pthread_join()` on each one. This ensures that the main thread waits until all
-philosopher threads have completed their execution.
+Ends the dining simulation by joining all philosopher threads, waiting until
+all philosophers have completed their execution.
 
  @param	sim 	Pointer to the sim structure, which holds the philosopher data.
 
  @return		`0` on success;
 				`1` if there was an error joining any of the threads.
 */
-static int	end_sim(t_sim *sim)
+static int	end_dining(t_sim *sim)
 {
 	int	i;
 
@@ -107,22 +118,26 @@ static int	end_sim(t_sim *sim)
 Runs the entire simulation.
 
 This function orchestrates the simulation by calling the necessary functions
-to set the start time, create threads for each philosopher, and join those
-threads after the simulation has finished.
+to set the start time, create threads for the monitor and each philosopher,
+and join those threads after the simulation has finished.
 
  @param	sim 	Pointer to the sim structure, which holds the philosopher data.
 
- @return	`0` on success;
-			`1` if any of the steps fails (setting start time, thread creation,
-			or thread joining).
+ @return		`0` on success;
+				`1` if any of the steps fails (setting start time,
+				thread creation, or thread joining).
 */
 int	run_sim(t_sim *sim)
 {
+	if (start_monitoring(sim))
+		return (1);
 	if (set_start_time(sim))
 		return (1);
-	if (start_sim(sim))
+	if (start_dining(sim))
 		return (1);
-	if (end_sim(sim))
+	if (end_dining(sim))
+		return (1);
+	if (end_monitoring(sim))
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:58:33 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/07 17:04:03 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@ This file contains functions for setting up the simulation state and for
 creating the fork and philosopher structures.
 These functions ensure that all required resources are allocated and properly
 configured before the simulation begins.
-
-Proper error handling and resource management are implemented to gracefully
-handle any initialization failures during the setup process.
 */
 
 #include "philo.h"
@@ -27,8 +24,6 @@ handle any initialization failures during the setup process.
 int	init_sim(t_sim **sim, int argc, char **argv);
 
 /**
-Used in `init_sim_state()`.
-
 Initializes the simulation parameters from command line arguments.
 This function checks the validity of the arguments, converts them to integers,
 and assigns them to the corresponding fields in the simulation structure.
@@ -56,10 +51,8 @@ static int	init_args(t_sim *sim, int argc, char **argv)
 }
 
 /**
-Used in `init_sim()`.
-
 Sets initial values for the simulation state and initializes a mutex used for
-printing.
+printing and checking for a simulation stop.
 
  @param sim 	Pointer to the simulation structure to initialize.
 
@@ -68,25 +61,25 @@ printing.
 */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
-	sim->end_sim = 0;
+	sim->stop_sim = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
 	sim->mtx_print_init = 0;
+	sim->mtx_stop_sim_init = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
 	if (mtx_action(&sim->mtx_print, INIT))
 		return (1);
 	sim->mtx_print_init = 1;
+	if (mtx_action(&sim->mtx_stop_sim, INIT))
+		return (1);
+	sim->mtx_stop_sim_init = 1;
 	return (0);
 }
 
 /**
-Used in `init_sim()`.
-
 This function allocates memory for the forks used by philosophers in the
 simulation, and initializes their mutexes.
-If any fork's mutex initialization fails, it cleans up previously allocated
-resources before returning an error.
 
  @param sim 	Pointer to the simulation structure containing fork data.
 
@@ -108,8 +101,8 @@ static int	init_forks(t_sim *sim)
 	{
 		if (mtx_action(&sim->forks[i].fork, INIT))
 		{
-			while (--i >= 0)
-				mtx_action(&sim->forks[i].fork, DESTROY);
+			while (i > 0)
+				mtx_action(&sim->forks[--i].fork, DESTROY);
 			free(sim->forks);
 			sim->forks = NULL;
 			return (1);
@@ -121,12 +114,9 @@ static int	init_forks(t_sim *sim)
 }
 
 /**
-Used in `init_sim()`.
-
-Initializes the philosophers participating in the simulation.
-
-This function allocates memory for the philosophers and sets their initial
-state, including the assignment of forks.
+Initializes the philosophers participating in the simulation by allocating
+memory for their structs and setting their initial state, including the
+assignment of forks.
 
  @param sim 	Pointer to the simulation structure containing philosopher data.
 
@@ -155,7 +145,6 @@ static int	init_philos(t_sim *sim)
 		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
 		i++;
 	}
-	i = 0;
 	return (0);
 }
 
@@ -178,9 +167,11 @@ int	init_sim(t_sim **sim, int argc, char **argv)
 		print_err_msg(ERR_MALLOC);
 		return (1);
 	}
-	if (init_sim_state(*sim, argc, argv)
-		|| init_forks(*sim)
-		|| init_philos(*sim))
+	if (init_sim_state(*sim, argc, argv))
+		return (1);
+	if (init_forks(*sim))
+		return (1);
+	if (init_philos(*sim))
 		return (1);
 	return (0);
 }

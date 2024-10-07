@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/05 20:58:41 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/06 15:44:44 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ mutexes used for synchronization.
 void	cleanup_sim(t_sim **sim_ptr);
 
 /**
-Used in `cleanup_sim()`.
-
 Cleans up the fork resources for the simulation.
 
 This function iterates through the forks associated with the simulation
@@ -48,8 +46,6 @@ static void	clean_forks(t_sim *sim)
 }
 
 /**
-Used in `cleanup_sim()`.
-
 Cleans up the philosopher resources for the simulation.
 
 This function frees the memory allocated for the philosopher array and sets
@@ -67,7 +63,7 @@ static void	clean_philos(t_sim *sim)
 Cleans up all resources associated with the simulation.
 
 This function handles the cleanup of philosopher and fork resources,
-as well as the print mutex, if initialized. It ensures that all allocated
+as well as mutexes, if initialized. It ensures that all allocated
 memory is freed and sets the main simulation pointer to NULL to avoid
 dangling references.
 
@@ -87,6 +83,8 @@ void	cleanup_sim(t_sim **sim_ptr)
 		clean_philos(sim);
 	if (sim->mtx_print_init)
 		mtx_action(&sim->mtx_print, DESTROY);
+	if (sim->mtx_stop_sim_init)
+		mtx_action(&sim->mtx_stop_sim, DESTROY);
 	free(sim);
 	*sim_ptr = NULL;
 }
