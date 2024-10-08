@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 21:13:57 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 05:58:42 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	print_standard(t_ull timestamp, t_philo *philo, t_action action)
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
 	(void)printf("%llu\t%d\t", timestamp / ROUND * ROUND, philo->id);
-	if (action == FORK)
+	if (action == FORK_L || action == FORK_R)
 		(void)printf("has taken a fork\n");
 	else if (action == EAT)
 		(void)printf("is eating\n");
@@ -62,7 +62,7 @@ Prints the action of a philosopher WITH emojis.
  @param action 		The action being performed, represented as an enum type.
  @param philo 		A pointer to the philosopher structure performing the action.
 */
-static void	print_more(t_ull timestamp, t_philo *philo, t_action action)
+static void	print_fancy(t_ull timestamp, t_philo *philo, t_action action)
 {
 	if (action == DIE)
 		(void)printf(ERR_COLOR);
@@ -70,9 +70,11 @@ static void	print_more(t_ull timestamp, t_philo *philo, t_action action)
 		(void)printf(YELLOW);
 	(void)printf("%llu\t%d\t", timestamp / ROUND * ROUND, philo->id);
 	if (action == FORK_L)
-		(void)printf("🥄←\thas taken their fork\t(%d) left\n", philo->left_fork->fork_id);
+		(void)printf("🥄←\thas taken their fork\t(%d) left\n",
+			philo->left_fork->fork_id);
 	if (action == FORK_R)
-		(void)printf("→🥄\thas taken their fork\t(%d) right\n", philo->right_fork->fork_id);
+		(void)printf("→🥄\thas taken their fork\t(%d) right\n",
+			philo->right_fork->fork_id);
 	else if (action == EAT)
 		(void)printf("🍝\tis eating\t\t(%d. meal)\n", philo->meals_eaten + 1);
 	else if (action == SLEEP)
@@ -103,7 +105,8 @@ compilation) before being printed to enhance readability (default: no rounding).
 
  @param timestamp 	The timestamp of the action in milliseconds.
  @param action 		The action being performed, represented as an enum type:
-					- FORK: Takes a fork;
+					- FORK_L: Takes their left fork;
+					- FORK_R: Takes their right fork;
 					- EAT: Starts eating;
 					- SLEEP: Starts sleeping;
 					- THINK: Starts thinking;
@@ -126,7 +129,7 @@ int	print_action(t_ull timestamp, t_philo *philo, t_action action,
 	if (FANCY == 0)
 		print_standard(timestamp, philo, action);
 	else
-		print_more(timestamp, philo, action);
+		print_fancy(timestamp, philo, action);
 	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
 		return (1);
 	return (0);

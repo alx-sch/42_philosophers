@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 21:56:54 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 06:11:41 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,52 +34,58 @@ int	check_death(t_sim *sim)
 	mtx_action(&sim->mtx_philo_dead, UNLOCK);
 	return (dead);
 }
+
 /**
  *
  *
  *  odd / even: to prevent lock-order violations (more a helgrind issue, no deadlock arise during sim):
  * when multiple mutextes are lock by threads, the order must be consistent for all threads
  */
-void pick_forks(t_philo *philo)
+int	pick_forks(t_philo *philo)
 {
-    if (philo->odd) {
-        // Even philosopher picks right fork first
-		mtx_action(&philo->left_fork->fork, LOCK);
-		if (FANCY == 0)
-			print_action(0, philo, FORK, 1);
-		else
-			print_action(0, philo, FORK_L, 1);
-		mtx_action(&philo->right_fork->fork, LOCK);
-		if (FANCY == 0)
-			print_action(0, philo, FORK, 1);
-		else
-			print_action(0, philo, FORK_R, 1);
-    } else {
-        // Odd philosopher picks left fork first
-        mtx_action(&philo->right_fork->fork, LOCK);
-		if (FANCY == 0)
-			print_action(0, philo, FORK, 1);
-		else
-			print_action(0, philo, FORK_R, 1);
-		mtx_action(&philo->left_fork->fork, LOCK);
-		if (FANCY == 0)
-			print_action(0, philo, FORK, 1);
-		else
-			print_action(0, philo, FORK_L, 1);
-    }
+	if (philo->odd)
+	{
+		if (mtx_action(&philo->left_fork->fork, LOCK))
+			return (1);
+		if (print_action(0, philo, FORK_L, 1))
+			return (1);
+		if (mtx_action(&philo->right_fork->fork, LOCK))
+			return (1);
+		if (print_action(0, philo, FORK_R, 1))
+			return (1);
+	}
+	else
+	{
+		if (mtx_action(&philo->right_fork->fork, LOCK))
+			return (1);
+		if (print_action(0, philo, FORK_R, 1))
+			return (1);
+		if (mtx_action(&philo->left_fork->fork, LOCK))
+			return (1);
+		if (print_action(0, philo, FORK_L, 1))
+			return (1);
+	}
+	return (0);
 }
 
-void drop_forks(t_philo *philo)
+int	drop_forks(t_philo *philo)
 {
-    if (philo->odd) {
-        // Even philosopher unlocks the left fork first, then the right fork
-        mtx_action(&philo->right_fork->fork, UNLOCK);
-		mtx_action(&philo->left_fork->fork, UNLOCK);
-    } else {
-        // Odd philosopher unlocks the right fork first, then the left fork
-		mtx_action(&philo->left_fork->fork, UNLOCK);
-		mtx_action(&philo->right_fork->fork, UNLOCK);
-    }
+	if (philo->odd)
+	{
+		if (mtx_action(&philo->right_fork->fork, UNLOCK))
+			return (1);
+		if (mtx_action(&philo->left_fork->fork, UNLOCK))
+			return (1);
+	}
+	else
+	{
+		if (mtx_action(&philo->left_fork->fork, UNLOCK))
+			return (1);
+		if (mtx_action(&philo->right_fork->fork, UNLOCK))
+			return (1);
+	}
+	return (1);
+	return (0);
 }
 
 // int	pick_forks(t_philo *philo)
@@ -113,8 +119,8 @@ void	*dining(void *arg)
 	while (1)
 	{
 		// FORK
-		// if (check_death(philo->sim))
-		// 	break ;
+		if (check_death(philo->sim))
+			break ;
 		if (philo->id % 2 == 1) // Odd philosophers
 			pick_forks(philo);
 		else
@@ -124,13 +130,20 @@ void	*dining(void *arg)
 		}
 
 		// EAT
-		// if (check_death(philo->sim))
-		// 	break ; // put down forks
+		if (check_death(philo->sim))
+			break ; // put down forks
 		print_action(0, philo, EAT, 1);
 		philo->meals_eaten++;
 		precise_wait(philo->sim->t_eat);
 		// Put down forks
-		drop_forks(philo);
+		if (drop_forks(philo))
+		{
+			mtx_action(&philo->sim->mtx_philo_dead, LOCK);
+			philo->sim->philo_dead = 1;
+			mtx_action(&philo->sim->mtx_philo_dead, UNLOCK);
+			printf(ERR_COLOR"ERROR\n"RESET);
+			break;
+		}
 
 		// check if FULL
 		if (philo->meals_eaten == philo->sim->max_meals)
@@ -140,18 +153,18 @@ void	*dining(void *arg)
 			mtx_action(&philo->sim->mtx_full_philos, UNLOCK);
 			if (FANCY != 0)
 				print_action(0, philo, STUFFED, 1);
-			break;
+			break ;
 		}
 
 		// SLEEP
-		// if (check_death(philo->sim))
-		// 	break ;
+		if (check_death(philo->sim))
+			break ;
 		print_action(0, philo, SLEEP, 1);
 		precise_wait(philo->sim->t_sleep);
 
 		// THINK
-		// if (check_death(philo->sim))
-		// 	break ;
+		if (check_death(philo->sim))
+			break ;
 		print_action(0, philo, THINK, 1);
 		//precise_wait(400); // thinking time
 

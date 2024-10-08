@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 20:40:52 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 05:51:23 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ Enumeration for representing the various actions a philosopher can take:
 */
 typedef enum e_action
 {
-	FORK,
 	FORK_L,
 	FORK_R,
 	EAT,
