@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/09 12:04:11 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 17:40:39 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,20 +122,21 @@ Structure representing the overall simulation state:
 */
 typedef struct s_sim
 {
-	int		nr_philo;
-	int		t_die;
-	int		t_eat;
-	int		t_sleep;
-	int		t_think;
-	int		max_meals;
-	int		philo_dead;
-	t_ull	t_start_sim;
-	t_fork	*forks;
-	t_philo	*philos;
-	t_mtx	mtx_print;
-	int		mtx_print_flag;
-	t_mtx	mtx_philo_dead;
-	int		mtx_philo_dead_flag;
+	int			nr_philo;
+	int			t_die;
+	int			t_eat;
+	int			t_sleep;
+	int			t_think;
+	int			max_meals;
+	int			philo_dead;
+	t_ull		t_start_sim;
+	t_fork		*forks;
+	t_philo		*philos;
+	pthread_t	monitor;
+	t_mtx		mtx_print;
+	int			mtx_print_flag;
+	t_mtx		mtx_philo_dead;
+	int			mtx_philo_dead_flag;
 }	t_sim;
 
 #endif
