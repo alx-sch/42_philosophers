@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/09 14:05:29 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:21:37 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,33 @@ void	*dining(void *arg)
 			break ;
 		print_action(0, philo, THINK, 1);
 		precise_wait(philo->sim->t_think * ALTRUISM_FACTOR);
+	}
+	return (NULL);
+}
+
+void	*monitoring(void *arg)
+{
+	t_sim	*sim;
+
+	sim = (t_sim *)arg;
+	while (1)
+	{
+		mtx_action(&sim->mtx_full_philos, LOCK);
+		if (sim->full_philos == sim->nr_philo)
+		{
+			mtx_action(&sim->mtx_full_philos, UNLOCK);
+			break ;
+		}
+		mtx_action(&sim->mtx_full_philos, UNLOCK);
+		mtx_action(&sim->mtx_philo_dead, LOCK);
+		if (sim->philo_dead == 1)
+		{
+			mtx_action(&sim->mtx_philo_dead, UNLOCK);
+			printf("%llu\tending simulation, someone died!\n", get_time() - sim->t_start_sim);
+			break ;
+		}
+		mtx_action(&sim->mtx_philo_dead, UNLOCK);
+		usleep(100); // reduces CPU load
 	}
 	return (NULL);
 }
