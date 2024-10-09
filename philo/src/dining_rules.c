@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/08 14:09:29 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 14:05:29 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,11 @@ int	perform_eat_action(t_philo *philo)
 	return (0);
 }
 
+/**
+return (1);  // Early return on failure
+return (2); // Successfully full and done thinking
+return (0);  // Not full yet
+ */
 int	check_full(t_philo *philo)
 {
 	if (philo->meals_eaten == philo->sim->max_meals)
@@ -165,11 +170,12 @@ int	check_full(t_philo *philo)
 		if (FANCY != 0)
 			if (print_action(0, philo, STUFFED, 1))
 				return (1);
+		if (print_action(0, philo, THINK, 1))
+			return (1);
 		return (2);
 	}
 	return (0);
 }
-
 
 void	*dining(void *arg)
 {
@@ -190,13 +196,6 @@ void	*dining(void *arg)
 		if (check_full(philo) == 2)
 			break ;
 
-		// if (philo->meals_eaten == philo->sim->max_meals)
-		// {
-		// 	if (FANCY != 0)
-		// 		print_action(0, philo, STUFFED, 1);
-		// 	break ;
-		// }
-
 		// SLEEP
 		if (check_death(philo))
 			break ;
@@ -207,27 +206,7 @@ void	*dining(void *arg)
 		if (check_death(philo))
 			break ;
 		print_action(0, philo, THINK, 1);
-		precise_wait((philo->sim->t_die - philo->sim->t_eat - philo->sim->t_sleep) / 2);
-
-		//FULL
-		// if (FULL != 0)
-		// {
-		// 	if (should_stop_sim(philo->sim))
-		// 		break ;
-		// 	print_action(get_time() - philo->sim->t_start_sim, philo, STUFFED, 1);
-		// }
-
-		// // DEATH CHECK
-		// if (philo->id == 5) // DIES HERE!
-		// {
-		// 	record_time_of_death(philo);
-		// 	mtx_action(&philo->sim->mtx_stop_sim, LOCK);
-		// 	philo->sim->stop_sim = 1;
-		// 	mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
-		// 	usleep(200);
-		// 	//precise_wait(1); // makes sure that 'die' message is print last
-		// 	print_action(philo->timestamp_death, philo, DIE, 0);
-		// }
+		precise_wait(philo->sim->t_think * ALTRUISM_FACTOR);
 	}
 	return (NULL);
 }

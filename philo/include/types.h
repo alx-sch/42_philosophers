@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/08 11:00:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:04:11 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,11 @@ Structure representing the overall simulation state:
 				haven't start eating.
  - t_eat:		Time in ms a philosopher takes to eat.
  - t_sleep:		Time in milliseconds a philosopher sleeps after eating.
+ - t_think:		Philosophers are altruistic in this simulation, meaning they delay
+				taking forks and eating for as long as possible without starving.
+				This behavior helps keep every philosopher alive as long as
+				possible, especially when there's an odd number of philosophers:
+				t_think = t_die - t_eat - t_sleep.
  - max_meals:	Max. number of meals a philosopher can eat before they stop
  				dining; `-1` means unlimited meals.
  - philo_dead:	Flag indicating if a philosopher has died.
@@ -121,6 +126,7 @@ typedef struct s_sim
 	int		t_die;
 	int		t_eat;
 	int		t_sleep;
+	int		t_think;
 	int		max_meals;
 	int		philo_dead;
 	t_ull	t_start_sim;

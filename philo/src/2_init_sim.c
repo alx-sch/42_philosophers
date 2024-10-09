@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/08 14:15:35 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:12:22 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static int	init_sim_state(t_sim *sim, int argc, char **argv)
 	sim->mtx_philo_dead_flag = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
+	sim->t_think = sim->t_die - sim->t_eat - sim->t_sleep;
 	if (mtx_action(&sim->mtx_print, INIT))
 		return (1);
 	sim->mtx_print_flag = 1;

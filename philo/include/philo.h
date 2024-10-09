@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/08 10:27:53 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 13:53:09 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,29 @@ If `SLEEP_INTERVALS = 1`, the behavior would be similar to a direct call to
 Value fine-tuned to '100,000' using `test_usleep.c`;
 see https://github.com/alx-sch/42_philosophers.
 */
-# define SLEEP_INTERVALS 100000
+# define SLEEP_INTERVALS	100000
+
+/**
+Represents the level of "altruism" or "greed" exhibited by the philosophers in
+their decision to eat. It scales the time they wait before attempting to eat,
+controlling whether they immediately grab forks or delay their actions in favor
+of others.
+
+An ALTRUISM_FACTOR of '0' means the philosopher is purely greedy, always
+attempting to eat as soon as possible, which leads to starvation risk for others,
+especially with an odd number of philosophers.
+
+An ALTRUISM_FACTOR of '1' means the philosopher is entirely altruistic,
+pushing the limits of how long they delay eating (close to starving themselves)
+to give others a chance to eat first. This can (and eventually will) lead to
+starvation for the thinking philosopher due to the inherent delays during the
+simulation.
+
+Choosing an ALTRUISM_FACTOR of 0.9 strikes a balance between self-interest and
+altruism, allowing philosophers to delay their eating just enough to minimize
+the risk of starvation among others while still prioritizing their own needs.
+*/
+# define ALTRUISM_FACTOR		0.9
 
 //	+++++++++++++++
 //	++ FUNCTIONS ++
