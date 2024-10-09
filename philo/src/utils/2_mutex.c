@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 09:01:21 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 10:32:04 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ Performs an action on a mutex based on the specified action.
  @param action 	The action to perform on the mutex:
 				INIT, LOCK, UNLOCK, DESTROY
 
- @return 		`0` on success;
+ @return		`0` on success;
 				INIT`, `LOCK`, `UNLOCK`, or `DESTROY` on failure,
 				corresponding to the failed operation.
 */
@@ -65,7 +65,7 @@ Handles mutex operations with error checking and error message printing.
 				INIT, LOCK, UNLOCK, DESTROY.
  @param sim 	Pointer to a data struct to be freed in case of error.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if the mutex operation failed.
 */
 int	mtx_action(t_mtx *mutex, t_mtx_action action)

@@ -6,41 +6,77 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/08 06:11:41 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 14:09:29 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
-Checks whether the simulation should stop by accessing the `stop_sim` flag
-in the simulation structure.
+Checks whether the simulation should stop by accessing the `philo_dead` flag.
 
-This function ensures thread safety by using a mutex to lock access to the
-shared `stop_sim` variable.
+ @param sim 	Pointer to the simulation struct containing the `philo_dead` flag.
 
- @param sim 	Pointer to the simulation struct containing the `stop_sim` flag.
-
- @return 		The value of the `stop_sim` flag:
+ @return		The value of the `stop_sim` flag:
 				`1` if the simulation should stop;
 				`0` otherwise.
 */
-int	check_death(t_sim *sim)
+int	check_death(t_philo *philo)
 {
-	int	dead;
+	int		dead;
+	int		this_philo_died;
 
-	mtx_action(&sim->mtx_philo_dead, LOCK);
-	dead = sim->philo_dead;
-	mtx_action(&sim->mtx_philo_dead, UNLOCK);
+	this_philo_died = 0;
+	mtx_action(&philo->sim->mtx_philo_dead, LOCK);
+	dead = philo->sim->philo_dead;
+	if (!dead)
+	{
+		if (get_time() - philo->t_last_meal > (t_ull)philo->sim->t_die)
+		{
+			philo->sim->philo_dead = 1;
+			dead = 1;
+			this_philo_died = 1;
+			record_time_of_death(philo);
+		}
+	}
+	mtx_action(&philo->sim->mtx_philo_dead, UNLOCK);
+	if (this_philo_died)
+	{
+		usleep(200);
+		print_action(philo->timestamp_death, philo, DIE, 0);
+	}
 	return (dead);
 }
 
+
+// // DEATH CHECK
+// 		if (philo->id == 5) // DIES HERE!
+// 		{
+// 			record_time_of_death(philo);
+// 			mtx_action(&philo->sim->mtx_stop_sim, LOCK);
+// 			philo->sim->stop_sim = 1;
+// 			mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
+// 			usleep(200);
+// 			//precise_wait(1); // makes sure that 'die' message is print last
+// 			print_action(philo->timestamp_death, philo, DIE, 0);
+// 		}
+
 /**
- *
- *
- *  odd / even: to prevent lock-order violations (more a helgrind issue, no deadlock arise during sim):
- * when multiple mutextes are lock by threads, the order must be consistent for all threads
- */
+Attempts to pick up the left and right forks for the philosopher.
+
+If a fork cannot be picked up, the philosopher will spin in a loop,
+continuously attempting to acquire the forks. This behavior ensures that the
+philosopher can pick up the forks as soon as they are available.
+
+The order of locking is differentiated based on whether the philosopher
+is odd or even to prevent lock-order violations (while not necessarily resulting
+in deadlocks here, Helgrind / `-fsanitize=thread` checks for this).
+
+ @param philo 	A pointer to the philosopher attempting to pick up the forks.
+
+ @return		`0` on success;
+				`1` if there is an error locking a mutex or printing the action.
+*/
 int	pick_forks(t_philo *philo)
 {
 	if (philo->odd)
@@ -68,6 +104,18 @@ int	pick_forks(t_philo *philo)
 	return (0);
 }
 
+/**
+Releases the left and right forks held by the philosopher.
+
+The order of unlocking is differentiated based on whether the philosopher
+is odd or even to prevent lock-order violations (while not necessarily resulting
+in deadlocks here, Helgrind / `-fsanitize=thread` checks for this).
+
+ @param philo 	A pointer to the philosopher structure releasing the forks.
+
+ @return		`0` on success;
+				`1` if there is an error unlocking a mutex.
+*/
 int	drop_forks(t_philo *philo)
 {
 	if (philo->odd)
@@ -84,32 +132,44 @@ int	drop_forks(t_philo *philo)
 		if (mtx_action(&philo->right_fork->fork, UNLOCK))
 			return (1);
 	}
-	return (1);
 	return (0);
 }
 
-// int	pick_forks(t_philo *philo)
-// {
-// 	if (MORE == 0)
-// 	{
-// 		if (mtx_action(&philo->left_fork->fork, LOCK))
-// 			return (1);
-// 		print_action(0, philo, FORK, 1);
-// 		if (mtx_action(&philo->right_fork->fork, LOCK))
-// 			return (1);
-// 		print_action(0, philo, FORK, 1);
-// 	}
-// 	else
-// 	{
-// 		if (mtx_action(&philo->left_fork->fork, LOCK))
-// 			return (1);
-// 		print_action(0, philo, FORK_L, 1);
-// 		if (mtx_action(&philo->right_fork->fork, LOCK))
-// 			return (1);
-// 		print_action(0, philo, FORK_R, 1);
-// 	}
-// 	return (0);
-// }
+int	perform_fork_action(t_philo *philo)
+{
+	if (philo->odd)
+		return (pick_forks(philo));
+	else
+	{
+		usleep(900);
+		return (pick_forks(philo));
+	}
+}
+
+int	perform_eat_action(t_philo *philo)
+{
+	philo->meals_eaten++;
+	philo->t_last_meal = get_time();
+	if (print_action(0, philo, EAT, 1))
+		return (1);
+	precise_wait(philo->sim->t_eat);
+	if (drop_forks(philo))
+		return (1);
+	return (0);
+}
+
+int	check_full(t_philo *philo)
+{
+	if (philo->meals_eaten == philo->sim->max_meals)
+	{
+		if (FANCY != 0)
+			if (print_action(0, philo, STUFFED, 1))
+				return (1);
+		return (2);
+	}
+	return (0);
+}
+
 
 void	*dining(void *arg)
 {
@@ -118,55 +178,36 @@ void	*dining(void *arg)
 	philo = (t_philo *)arg;
 	while (1)
 	{
-		// FORK
-		if (check_death(philo->sim))
+		if (check_death(philo))
 			break ;
-		if (philo->id % 2 == 1) // Odd philosophers
-			pick_forks(philo);
-		else
+		(void)perform_fork_action(philo);
+		if (check_death(philo))
 		{
-			usleep(900);
-			pick_forks(philo);
-		}
-
-		// EAT
-		if (check_death(philo->sim))
-			break ; // put down forks
-		print_action(0, philo, EAT, 1);
-		philo->meals_eaten++;
-		precise_wait(philo->sim->t_eat);
-		// Put down forks
-		if (drop_forks(philo))
-		{
-			mtx_action(&philo->sim->mtx_philo_dead, LOCK);
-			philo->sim->philo_dead = 1;
-			mtx_action(&philo->sim->mtx_philo_dead, UNLOCK);
-			printf(ERR_COLOR"ERROR\n"RESET);
-			break;
-		}
-
-		// check if FULL
-		if (philo->meals_eaten == philo->sim->max_meals)
-		{
-			mtx_action(&philo->sim->mtx_full_philos, LOCK);
-			philo->sim->full_philos++;
-			mtx_action(&philo->sim->mtx_full_philos, UNLOCK);
-			if (FANCY != 0)
-				print_action(0, philo, STUFFED, 1);
+			drop_forks(philo);
 			break ;
 		}
+		(void)perform_eat_action(philo);
+		if (check_full(philo) == 2)
+			break ;
+
+		// if (philo->meals_eaten == philo->sim->max_meals)
+		// {
+		// 	if (FANCY != 0)
+		// 		print_action(0, philo, STUFFED, 1);
+		// 	break ;
+		// }
 
 		// SLEEP
-		if (check_death(philo->sim))
+		if (check_death(philo))
 			break ;
 		print_action(0, philo, SLEEP, 1);
 		precise_wait(philo->sim->t_sleep);
 
 		// THINK
-		if (check_death(philo->sim))
+		if (check_death(philo))
 			break ;
 		print_action(0, philo, THINK, 1);
-		//precise_wait(400); // thinking time
+		precise_wait((philo->sim->t_die - philo->sim->t_eat - philo->sim->t_sleep) / 2);
 
 		//FULL
 		// if (FULL != 0)
@@ -187,33 +228,6 @@ void	*dining(void *arg)
 		// 	//precise_wait(1); // makes sure that 'die' message is print last
 		// 	print_action(philo->timestamp_death, philo, DIE, 0);
 		// }
-	}
-	return (NULL);
-}
-
-void	*monitoring(void *arg)
-{
-	t_sim	*sim;
-
-	sim = (t_sim *)arg;
-	while (1)
-	{
-		mtx_action(&sim->mtx_full_philos, LOCK);
-		if (sim->full_philos == sim->nr_philo)
-		{
-			mtx_action(&sim->mtx_full_philos, UNLOCK);
-			break ;
-		}
-		mtx_action(&sim->mtx_full_philos, UNLOCK);
-		mtx_action(&sim->mtx_philo_dead, LOCK);
-		if (sim->philo_dead == 1)
-		{
-			mtx_action(&sim->mtx_philo_dead, UNLOCK);
-			printf("%llu\tending simulation, someone died!\n", get_time() - sim->t_start_sim);
-			break ;
-		}
-		mtx_action(&sim->mtx_philo_dead, UNLOCK);
-		usleep(100); // reduces CPU load
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 13:31:49 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 10:32:16 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int		precise_wait(int duration_to_wait);
 /**
 Get the current time in milliseconds since the epoch (January 1, 1970).
 
- @return 		The current time in milliseconds;
-				`0` in case of an error (or if it's 00:00:00 on 1/1/1970...)
+ @return	The current time in milliseconds;
+			`0` in case of an error (or if it's 00:00:00 on 1/1/1970...)
 */
 t_ull	get_time(void)
 {
@@ -53,7 +53,7 @@ start time.
 
  @param sim 	Pointer to the simulation structure to store the start time.
 
- @return 		`0` on success;
+ @return		`0` on success;
  				`1` if there was an error retrieving the time.
 */
 int	set_start_time(t_sim *sim)
@@ -80,7 +80,7 @@ the current time right before the philosopher threads are created in `run_sim()`
 
  @param sim 	Pointer to the simulation structure to store the start time.
 
- @return 		`0` on success;
+ @return		`0` on success;
  				`1` if there was an error retrieving the time.
 */
 int	record_time_of_death(t_philo *philo)

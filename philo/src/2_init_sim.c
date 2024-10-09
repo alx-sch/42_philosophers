@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 20:45:24 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 14:15:35 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ and assigns them to the corresponding fields in the simulation structure.
  @param argc 	The argument count from the command line.
  @param argv 	The argument vector from the command line.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if any of the arguments are invalid.
 */
 static int	init_args(t_sim *sim, int argc, char **argv)
@@ -56,26 +56,21 @@ printing and checking for a simulation stop.
 
  @param sim 	Pointer to the simulation structure to initialize.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if argument initialization or mutex initialization fails.
 */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
-	sim->full_philos = 0;
 	sim->philo_dead = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
 	sim->mtx_print_flag = 0;
-	sim->mtx_full_philos_flag = 0;
 	sim->mtx_philo_dead_flag = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
 	if (mtx_action(&sim->mtx_print, INIT))
 		return (1);
 	sim->mtx_print_flag = 1;
-	if (mtx_action(&sim->mtx_full_philos, INIT))
-		return (1);
-	sim->mtx_full_philos_flag = 1;
 	if (mtx_action(&sim->mtx_philo_dead, INIT))
 		return (1);
 	sim->mtx_philo_dead_flag = 1;
@@ -88,7 +83,7 @@ simulation, and initializes their mutexes.
 
  @param sim 	Pointer to the simulation structure containing fork data.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if memory allocation or mutex initialization fails.
 */
 static int	init_forks(t_sim *sim)
@@ -125,7 +120,7 @@ assignment of forks.
 
  @param sim 	Pointer to the simulation structure containing philosopher data.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if memory allocation fails.
 */
 static int	init_philos(t_sim *sim)
