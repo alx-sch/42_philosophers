@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 09:01:01 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 10:26:25 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void	print_err_msg(char *msg);
 /**
 Prints a message to the standard error stream with optional formatting applied.
 
- @param msg 		The error message to be printed.
- @param color 		ANSI escape code formatting; no formatting if `NULL`.
- @param nl 			Flag to print the newline character after the error message
- 					(`0` does not, otherwise does).
+ @param msg 	The error message to be printed.
+ @param color 	ANSI escape code formatting; no formatting if `NULL`.
+ @param nl 		Flag to print the newline character after the error message
+ 				(`0` does not, otherwise does).
 */
 static void	print_msg(char *msg, char *color, int nl)
 {

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 17:04:07 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:04:11 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,18 @@ typedef enum e_mtx_action
 
 /**
 Enumeration for representing the various actions a philosopher can take:
- - FORK:	Indicates that a philosopher is picking up a fork.
- - EAT:		Philosopher starts eating.
- - SLEEP:	Philosopher starts sleeping.
- - THINK:	Philosopher starts thinking.
- - DIE:		Indicates that the philosopher has died.
- - STUFFED:	Indicates that a philosopher has eaten enough and is no
-			longer participating.
+ - FORK_L:	Takes their left fork.
+ - FORK_R: 	Takes their right fork.
+ - EAT:		Starts eating.
+ - SLEEP:	Starts sleeping.
+ - THINK:	Starts thinking.
+ - DIE:		Has died.
+ - STUFFED:	Has eaten all their meals.
 */
 typedef enum e_action
 {
-	FORK,
+	FORK_L,
+	FORK_R,
 	EAT,
 	SLEEP,
 	THINK,
@@ -71,25 +72,25 @@ typedef struct s_fork
 
 /**
 Structure representing a philosopher in the dining philosophers problem:
- - sim:				A pointer to the simulation structure, allowing access
-					to shared data.
- - id:				The philosopher's identifier.
- - thread_id:		The identifier for the philosopher's thread.
- - meals_eaten:		Counter for the number of meals the philosopher has eaten.
- - done_eating:		Indicates whether the philosopher has finished eating.
- - is_alive:		A flag indicating whether the philosopher is still alive.
- - t_last_meal:		Timestamp of the philosopher's last meal in milliseconds.
- - left_fork:		A pointer to the philosopher's left fork.
- - right_fork:		A pointer to the philosopher's right fork.
+ - sim:			A pointer to the simulation structure, allowing access
+				to shared data.
+ - id:			The philosopher's identifier.
+ - thread_id:	The identifier for the philosopher's thread.
+ - odd:			A flag indicating if a philo's ID is odd or not.
+ - meals_eaten:	Counter for the number of meals the philosopher has eaten.
+ - done_eating:	Indicates whether the philosopher has finished eating.
+ - is_alive:	A flag indicating whether the philosopher is still alive.
+ - t_last_meal:	Timestamp of the philosopher's last meal in milliseconds.
+ - left_fork:	A pointer to the philosopher's left fork.
+ - right_fork:	A pointer to the philosopher's right fork.
 */
 typedef struct s_philo
 {
 	t_sim		*sim;
 	int			id;
+	int			odd;
 	pthread_t	thread_id;
 	int			meals_eaten;
-	int			done_eating;
-	int			is_alive;
 	t_ull		t_last_meal;
 	t_ull		timestamp_death;
 	t_fork		*left_fork;
@@ -103,32 +104,38 @@ Structure representing the overall simulation state:
 				haven't start eating.
  - t_eat:		Time in ms a philosopher takes to eat.
  - t_sleep:		Time in milliseconds a philosopher sleeps after eating.
+ - t_think:		Philosophers are altruistic in this simulation, meaning they delay
+				taking forks and eating for as long as possible without starving.
+				This behavior helps keep every philosopher alive as long as
+				possible, especially when there's an odd number of philosophers:
+				t_think = t_die - t_eat - t_sleep.
  - max_meals:	Max. number of meals a philosopher can eat before they stop
- 				dining; -1 means unlimited.
- - stop_sim:	Flag indicating whether the simulation should end, either when
- 				all philosophers have finished eating or if one philosopher dies.
+ 				dining; `-1` means unlimited meals.
+ - philo_dead:	Flag indicating if a philosopher has died.
  - t_start_sim:	Timestamp for when the simulation started.
  - forks:		Array of forks available for the philosophers.
  - philos:		Array of philosophers participating in the simulation.
- - mtx_print:	Mutex used for synchronizing output to the console (printing).
- - mtx_print_init:	Flag indicating whether the print mutex has been initialized.
+ - mtx_print:	Mutex for synchronizing output to the console (printing).
+ - mtx_print_flagt:	Flag checking if 'print' mutex has been initialized.
+ - mtx_philo_dead:	Mutex for synchronizing access to the `philo_dead` flag.
+ - mtx_philo_dead_flag:	Flag checking if 'philo dead' mutex has been initialized.
 */
 typedef struct s_sim
 {
-	int			nr_philo;
-	int			t_die;
-	int			t_eat;
-	int			t_sleep;
-	int			max_meals;
-	int			stop_sim;
-	t_ull		t_start_sim;
-	t_fork		*forks;
-	t_philo		*philos;
-	pthread_t	monitor;
-	t_mtx		mtx_print;
-	int			mtx_print_init;
-	t_mtx		mtx_stop_sim;
-	int			mtx_stop_sim_init;
+	int		nr_philo;
+	int		t_die;
+	int		t_eat;
+	int		t_sleep;
+	int		t_think;
+	int		max_meals;
+	int		philo_dead;
+	t_ull	t_start_sim;
+	t_fork	*forks;
+	t_philo	*philos;
+	t_mtx	mtx_print;
+	int		mtx_print_flag;
+	t_mtx	mtx_philo_dead;
+	int		mtx_philo_dead_flag;
 }	t_sim;
 
 #endif

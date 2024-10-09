@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/06 09:02:39 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 10:32:44 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ and usage instructions.
 
 // IN FILE:
 
-int		check_args(int argc, char **argv);
+int	check_args(int argc, char **argv);
 
 /**
 Converts a string to an integer and validates the input.
@@ -47,7 +47,7 @@ Validates the number of command-line arguments passed to the program.
 
  @param argc 	The number of command-line arguments.
 
- @return 		`0` if count of passed arguments is valid (4 or 5);
+ @return		`0` if count of passed arguments is valid (4 or 5);
  				`1` otherwise.
 */
 static int	check_arg_count(int argc)
@@ -66,7 +66,7 @@ Checks if the number of philosophers is valid (>= 1).
 
  @param arg 	The first command-line argument (argv[1]) -> number of philos
 
- @return 		`0` if the nr of philos is valid;
+ @return		`0` if the nr of philos is valid;
  				`1` if the nr of philos is < 1;
 				`2` if argv[1] contains no digits.
 */
@@ -100,7 +100,7 @@ which require each constant definition to be contained within a single line.
  @param argc 	The number of command-line arguments.
  @param argv 	An array of command-line argument strings.
 
- @return 		`0` if all arguments are valid;
+ @return		`0` if all arguments are valid;
  				`1` if not.
 */
 int	check_args(int argc, char **argv)

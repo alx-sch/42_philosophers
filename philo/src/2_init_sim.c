@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/07 17:04:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/09 12:12:22 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ and assigns them to the corresponding fields in the simulation structure.
  @param argc 	The argument count from the command line.
  @param argv 	The argument vector from the command line.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if any of the arguments are invalid.
 */
 static int	init_args(t_sim *sim, int argc, char **argv)
@@ -56,24 +56,25 @@ printing and checking for a simulation stop.
 
  @param sim 	Pointer to the simulation structure to initialize.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if argument initialization or mutex initialization fails.
 */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
-	sim->stop_sim = 0;
+	sim->philo_dead = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
-	sim->mtx_print_init = 0;
-	sim->mtx_stop_sim_init = 0;
+	sim->mtx_print_flag = 0;
+	sim->mtx_philo_dead_flag = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
+	sim->t_think = sim->t_die - sim->t_eat - sim->t_sleep;
 	if (mtx_action(&sim->mtx_print, INIT))
 		return (1);
-	sim->mtx_print_init = 1;
-	if (mtx_action(&sim->mtx_stop_sim, INIT))
+	sim->mtx_print_flag = 1;
+	if (mtx_action(&sim->mtx_philo_dead, INIT))
 		return (1);
-	sim->mtx_stop_sim_init = 1;
+	sim->mtx_philo_dead_flag = 1;
 	return (0);
 }
 
@@ -83,7 +84,7 @@ simulation, and initializes their mutexes.
 
  @param sim 	Pointer to the simulation structure containing fork data.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if memory allocation or mutex initialization fails.
 */
 static int	init_forks(t_sim *sim)
@@ -120,7 +121,7 @@ assignment of forks.
 
  @param sim 	Pointer to the simulation structure containing philosopher data.
 
- @return 		`0` on success;
+ @return		`0` on success;
 				`1` if memory allocation fails.
 */
 static int	init_philos(t_sim *sim)
@@ -139,10 +140,12 @@ static int	init_philos(t_sim *sim)
 		sim->philos[i].sim = sim;
 		sim->philos[i].id = i + 1;
 		sim->philos[i].meals_eaten = 0;
-		sim->philos[i].done_eating = 0;
-		sim->philos[i].is_alive = 1;
 		sim->philos[i].left_fork = &sim->forks[i];
 		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
+		if (sim->philos[i].id % 2 == 1)
+			sim->philos[i].odd = 1;
+		else
+			sim->philos[i].odd = 0;
 		i++;
 	}
 	return (0);

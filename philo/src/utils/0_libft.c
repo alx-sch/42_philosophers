@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:56:47 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/04 14:10:20 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/08 10:31:26 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ Checks if the given string contains any digit (0-9).
 
  @param str 	A pointer to the string to be checked.
 
- @return 		`0` if the string contains at least one digit;
+ @return		`0` if the string contains at least one digit;
 				`1` if no digits are found.
 */
 int	contains_digit(const char *str)
