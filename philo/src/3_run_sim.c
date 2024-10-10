@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:39:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/10 14:07:26 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/10 15:48:52 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,9 @@ and join those threads after the simulation has finished.
 */
 int	run_sim(t_sim *sim)
 {
-	if (start_monitoring(sim))
-		return (1);
 	if (set_start_time(sim))
+		return (1);
+	if (start_monitoring(sim))
 		return (1);
 	if (start_dining(sim))
 		return (1);

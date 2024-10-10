@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/09 12:12:22 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/10 14:26:06 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,20 +61,24 @@ printing and checking for a simulation stop.
 */
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
+	sim->full_philos = 0;
 	sim->philo_dead = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
-	sim->mtx_print_flag = 0;
-	sim->mtx_philo_dead_flag = 0;
+	sim->mtx_print_init = 0;
+	sim->mtx_philo_dead_init = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
 	sim->t_think = sim->t_die - sim->t_eat - sim->t_sleep;
 	if (mtx_action(&sim->mtx_print, INIT))
 		return (1);
-	sim->mtx_print_flag = 1;
+	if (mtx_action(&sim->mtx_full_philos, INIT))
+		return (1);
+	sim->mtx_full_philos_init = 1;
+	sim->mtx_print_init = 1;
 	if (mtx_action(&sim->mtx_philo_dead, INIT))
 		return (1);
-	sim->mtx_philo_dead_flag = 1;
+	sim->mtx_philo_dead_init = 1;
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/10 14:08:04 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/10 15:59:44 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,37 +29,25 @@ int	check_death(t_philo *philo)
 	this_philo_died = 0;
 	mtx_action(&philo->sim->mtx_philo_dead, LOCK);
 	dead = philo->sim->philo_dead;
-	if (!dead)
-	{
-		if (get_time() - philo->t_last_meal > (t_ull)philo->sim->t_die)
-		{
-			philo->sim->philo_dead = 1;
-			dead = 1;
-			this_philo_died = 1;
-			record_time_of_death(philo);
-		}
-	}
 	mtx_action(&philo->sim->mtx_philo_dead, UNLOCK);
-	if (this_philo_died)
-	{
-		usleep(200);
-		print_action(philo->timestamp_death, philo, DIE, 0);
-	}
+	// if (!dead)
+	// {
+	// 	if (get_time() - philo->t_last_meal > (t_ull)philo->sim->t_die)
+	// 	{
+	// 		philo->sim->philo_dead = 1;
+	// 		dead = 1;
+	// 		this_philo_died = 1;
+	// 		record_time_of_death(philo);
+	// 	}
+	// }
+	// mtx_action(&philo->sim->mtx_philo_dead, UNLOCK);
+	// if (this_philo_died)
+	// {
+	// 	usleep(200);
+	// 	print_action(philo->timestamp_death, philo, DIE, 0);
+	// }
 	return (dead);
 }
-
-
-// // DEATH CHECK
-// 		if (philo->id == 5) // DIES HERE!
-// 		{
-// 			record_time_of_death(philo);
-// 			mtx_action(&philo->sim->mtx_stop_sim, LOCK);
-// 			philo->sim->stop_sim = 1;
-// 			mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
-// 			usleep(200);
-// 			//precise_wait(1); // makes sure that 'die' message is print last
-// 			print_action(philo->timestamp_death, philo, DIE, 0);
-// 		}
 
 /**
 Attempts to pick up the left and right forks for the philosopher.
@@ -167,6 +155,9 @@ int	check_full(t_philo *philo)
 {
 	if (philo->meals_eaten == philo->sim->max_meals)
 	{
+		mtx_action(&philo->sim->mtx_full_philos, LOCK);
+		philo->sim->full_philos++;
+		mtx_action(&philo->sim->mtx_full_philos, UNLOCK);
 		if (FANCY != 0)
 			if (print_action(0, philo, STUFFED, 1))
 				return (1);
@@ -214,11 +205,15 @@ void	*dining(void *arg)
 void	*monitoring(void *arg)
 {
 	t_sim	*sim;
+	int		i;
+	t_ull	t_die;
+	t_ull	current_time;
 
 	sim = (t_sim *)arg;
-	printf("I AM MONITORING!\n");
+	t_die = (t_ull)sim->t_die;
 	while (1)
 	{
+		// end monitoring when all philos are full
 		mtx_action(&sim->mtx_full_philos, LOCK);
 		if (sim->full_philos == sim->nr_philo)
 		{
@@ -226,15 +221,32 @@ void	*monitoring(void *arg)
 			break ;
 		}
 		mtx_action(&sim->mtx_full_philos, UNLOCK);
+
+		// check if philo starved
+		i = 0;
+		current_time = get_time();
+		while (i < sim->nr_philo)
+		{
+			if ((current_time - sim->philos[i].t_last_meal > t_die))
+			{
+		// 		// mtx_action(&sim->mtx_philo_dead, LOCK);
+		// 		// sim->philo_dead = 1;
+		// 		// mtx_action(&sim->mtx_philo_dead, UNLOCK);
+		// 		// record_time_of_death(&sim->philos[i]);
+		// 		print_action(sim->philos[i].timestamp_death, &sim->philos[i], DIE, 0);
+			}
+			i++;
+		}
 		mtx_action(&sim->mtx_philo_dead, LOCK);
 		if (sim->philo_dead == 1)
 		{
 			mtx_action(&sim->mtx_philo_dead, UNLOCK);
-			printf("%llu\tending simulation, someone died!\n", get_time() - sim->t_start_sim);
 			break ;
 		}
 		mtx_action(&sim->mtx_philo_dead, UNLOCK);
-		usleep(100); // reduces CPU load
+
+
+		usleep(100); // do checking in intervals to reduce CPU load // sim delays
 	}
 	return (NULL);
 }
