@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/09 17:41:09 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/10 14:08:04 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,15 +216,16 @@ void	*monitoring(void *arg)
 	t_sim	*sim;
 
 	sim = (t_sim *)arg;
+	printf("I AM MONITORING!\n");
 	while (1)
 	{
-		// mtx_action(&sim->mtx_full_philos, LOCK);
-		// if (sim->full_philos == sim->nr_philo)
-		// {
-		// 	mtx_action(&sim->mtx_full_philos, UNLOCK);
-		// 	break ;
-		// }
-		// mtx_action(&sim->mtx_full_philos, UNLOCK);
+		mtx_action(&sim->mtx_full_philos, LOCK);
+		if (sim->full_philos == sim->nr_philo)
+		{
+			mtx_action(&sim->mtx_full_philos, UNLOCK);
+			break ;
+		}
+		mtx_action(&sim->mtx_full_philos, UNLOCK);
 		mtx_action(&sim->mtx_philo_dead, LOCK);
 		if (sim->philo_dead == 1)
 		{
