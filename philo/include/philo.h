@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/09 13:53:09 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 22:11:17 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,21 @@ the risk of starvation among others while still prioritizing their own needs.
 // 1_check_args.c
 
 int		check_args(int argc, char **argv);
+int		simulate_single_philo(t_sim *sim);
+
+// 2_init_philos.c
+
+int		init_philos(t_sim *sim);
 
 // 2_init_sim.c
 
 int		init_sim(t_sim **sim, int argc, char **argv);
+
+// 3_eat.c
+
+int		pick_forks_and_log(t_philo *philo);
+int		eat_and_log(t_philo *philo, int t_eat);
+int		is_philo_full(t_philo *philo, int max_meals);
 
 // 3_run_sim.c
 
@@ -92,8 +103,8 @@ int		run_sim(t_sim *sim);
 
 // X_dining.c
 
-void	*dining(void *arg);
-void	*monitoring(void *arg);
+void	*eat_sleep_think(void *arg);
+void	*monitor(void *arg);
 
 // utils/0_libft.c
 
