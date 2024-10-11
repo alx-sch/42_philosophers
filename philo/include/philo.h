@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 19:52:51 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 22:11:17 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ the risk of starvation among others while still prioritizing their own needs.
 // 1_check_args.c
 
 int		check_args(int argc, char **argv);
+int		simulate_single_philo(t_sim *sim);
 
 // 2_init_philos.c
 

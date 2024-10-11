@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   6_monitor.c                                        :+:      :+:    :+:   */
+/*   4_monitor.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 17:28:17 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 21:23:58 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 22:16:56 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static int	all_philos_full(t_sim *sim, int nr_philos)
 		return (2);
 	return (full);
 }
-
 
 /**
 Handles the death of a philosopher by recording the time of death,
@@ -83,10 +82,7 @@ static int	check_starvation_and_log(t_sim *sim, t_philo *philo,
 	if (mtx_action(&philo->mtx_last_meal, LOCK))
 		return (2);
 	if (current_time - philo->t_last_meal > t_die)
-	{
-		//return (2);
-		return (handle_death(sim, philo)); ////
-	}
+		return (handle_death(sim, philo));
 	if (mtx_action(&philo->mtx_last_meal, UNLOCK))
 		return (2);
 	return (0);
@@ -97,8 +93,8 @@ Monitors the state of the philosophers in the simulation to check for starvation
 and whether all philosophers are full. It runs in an infinite loop until all
 philosophers have eaten their fill or a philosopher dies.
 
-Errors are not checked intentionally, as there is no need to retrieve return
-values from thread routines.
+Error handling is not checked intentionally, as this falls outside the
+project's scope and can be somewhat tedious when dealing with thread routines.
 
  @param arg 	A pointer to the simulation structure containing the global state
 				of the simulation, including the list of philosophers and their

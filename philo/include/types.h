@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 12:25:02 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 22:26:12 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,13 @@ Structure representing a philosopher in the dining philosophers problem:
  - sim:			A pointer to the simulation structure, allowing access
 				to shared data.
  - id:			The philosopher's identifier.
- - thread_id:	The identifier for the philosopher's thread.
  - odd:			A flag indicating if a philo's ID is odd or not.
+ - thread_id:	The identifier for the philosopher's thread.
  - meals_eaten:	Counter for the number of meals the philosopher has eaten.
- - done_eating:	Indicates whether the philosopher has finished eating.
- - is_alive:	A flag indicating whether the philosopher is still alive.
  - t_last_meal:	Timestamp of the philosopher's last meal in milliseconds.
+ - mtx_last_meal:		Mutex for synchronizing access to `t_last_meal`.
+ - mtx_last_meal_init:	Flag checking if `mtx_last_meal` has been initialized.
+ - timestamp_death:		Timestamp in milliseconds for when the philosopher dies.
  - left_fork:	A pointer to the philosopher's left fork.
  - right_fork:	A pointer to the philosopher's right fork.
 */
@@ -119,6 +120,8 @@ Structure representing the overall simulation state:
  - t_start_sim:	Timestamp in milliseconds for when the simulation started.
  - forks:		Array of forks available for the philosophers.
  - philos:		Array of philosophers participating in the simulation.
+ - monitor:		Thread handle for the monitoring thread that observes the
+				state of the simulation.
  - mtx_print:	Mutex for synchronizing output to the console (printing).
  - mtx_print_init:	Flag checking if 'print' mutex has been initialized.
  - mtx_full_philos:	Mutex for checking / increasing 'full_philos'.

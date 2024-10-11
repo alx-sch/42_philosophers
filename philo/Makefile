@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/11 19:43:22 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/11 22:16:06 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,12 @@ SRCS_DIR :=		src
 SRCS_FILES :=	main.c \
 				1_check_args.c \
 				2_init_philos.c \
-				3_init_sim.c \
-				4_eat.c \
-				5_eat_sleep_think.c \
-				6_monitor.c \
-				7_run_sim.c \
+				2_init_sim.c \
+				3_eat.c \
+				3_eat_sleep_think.c \
+				4_monitor.c \
+				5_run_sim_utils.c \
+				5_run_sim.c \
 				utils/0_libft.c \
 				utils/1_print_action.c \
 				utils/1_print_error.c \

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 19:50:39 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 21:33:23 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,9 @@ or reaches the maximum number of meals.
 The function first checks if the philosopher has zero meals to eat.
 If not, the philosopher repeatedly attempts to eat, sleep, and think until the
 simulation detects a death or the philosopher is full.
+
+Error handling is not checked intentionally, as this falls outside the
+project's scope and can be somewhat tedious when dealing with thread routines.
 
  @param arg 	A void pointer cast to the `t_philo` struct representing
  				the philosopher.
