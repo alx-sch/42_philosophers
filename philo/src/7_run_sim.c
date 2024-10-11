@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   3_run_sim.c                                        :+:      :+:    :+:   */
+/*   7_run_sim.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 12:39:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/10 15:48:52 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 20:58:14 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ initialized before the philosopher threads begin their dining routines.
 */
 static int	start_monitoring(t_sim *sim)
 {
-	if (pthread_create(&sim->monitor, NULL, &monitoring, sim))
+	if (sim->max_meals == 0)
+		return(0);
+	if (pthread_create(&sim->monitor, NULL, &monitor, sim))
 	{
 		print_err_msg(ERR_TR_CREATE);
 		return (1);
@@ -53,6 +55,8 @@ Joins the monitor thread, waiting for it to finish execution.
 */
 static int	end_monitoring(t_sim *sim)
 {
+	if (sim->max_meals == 0)
+		return(0);
 	if (pthread_join(sim->monitor, NULL))
 	{
 		print_err_msg(ERR_TR_JOIN);
@@ -77,7 +81,7 @@ static int	start_dining(t_sim *sim)
 	i = 0;
 	while (i < sim->nr_philo)
 	{
-		if (pthread_create(&sim->philos[i].thread_id, NULL, &dining,
+		if (pthread_create(&sim->philos[i].thread_id, NULL, &eat_sleep_think,
 				&sim->philos[i]))
 		{
 			print_err_msg(ERR_TR_CREATE);

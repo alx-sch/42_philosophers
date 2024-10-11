@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   4_free.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/10 14:24:32 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 19:47:33 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
 Functions for cleaning up simulation resources. It includes routines to free
-the memory allocated for philosophers and forks, as well as to destroy any
-mutexes used for synchronization.
+the memory allocated for philosophers and forks and to destroy any initialized
+mutexes.
 */
 
 #include "philo.h"
@@ -25,18 +25,19 @@ void	cleanup_sim(t_sim **sim_ptr);
 /**
 Cleans up the fork resources for the simulation.
 
-This function iterates through the forks associated with the simulation
-and destroys each mutex lock. After that, it frees the memory allocated
-for the fork array and sets the pointer to NULL to avoid dangling references.
+Destroys all fork (mutex lock). After that, it frees the memory allocated for
+the fork array and sets the pointer to NULL to avoid dangling references.
 
  @param sim 	Pointer to the simulation structure containing fork resources.
 */
 static void	clean_forks(t_sim *sim)
 {
+	int	nr_philo;
 	int	i;
 
 	i = 0;
-	while (i < sim->nr_philo)
+	nr_philo = sim->nr_philo;
+	while (i < nr_philo)
 	{
 		mtx_action(&sim->forks[i].fork, DESTROY);
 		i++;
@@ -48,13 +49,24 @@ static void	clean_forks(t_sim *sim)
 /**
 Cleans up the philosopher resources for the simulation.
 
-This function frees the memory allocated for the philosopher array and sets
-the pointer to NULL to  prevent dangling references.
+Destroys all mutex locks for accessing 'last_meal'. After that, it frees the
+memory allocated for the philo array and sets the pointer to NULL to avoid
+dangling reference
 
  @param sim 	Pointer to the sim structure containing philosopher resources.
 */
 static void	clean_philos(t_sim *sim)
 {
+	int	nr_philo;
+	int	i;
+
+	i = 0;
+	nr_philo = sim->nr_philo;
+	while (i < nr_philo)
+	{
+		mtx_action(&sim->philos[i].mtx_last_meal, DESTROY);
+		i++;
+	}
 	free(sim->philos);
 	sim->philos = NULL;
 }

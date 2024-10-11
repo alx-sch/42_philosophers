@@ -6,13 +6,12 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/08 10:32:44 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 19:55:33 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-This file contains functions for validating command-line arguments passed
-to the dining philosopher simulation.
+Validating command-line arguments passed to the dining philosopher simulation.
 
 If invalid arguments are found, the program prints an appropriate error message
 and usage instructions.

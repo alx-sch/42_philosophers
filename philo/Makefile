@@ -6,7 +6,7 @@
 #    By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 14:29:17 by aschenk           #+#    #+#              #
-#    Updated: 2024/10/08 11:07:13 by aschenk          ###   ########.fr        #
+#    Updated: 2024/10/11 19:43:22 by aschenk          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,15 +24,18 @@ NAME :=			philo
 SRCS_DIR :=		src
 SRCS_FILES :=	main.c \
 				1_check_args.c \
-				2_init_sim.c \
-				3_run_sim.c \
-				dining_rules.c \
+				2_init_philos.c \
+				3_init_sim.c \
+				4_eat.c \
+				5_eat_sleep_think.c \
+				6_monitor.c \
+				7_run_sim.c \
 				utils/0_libft.c \
 				utils/1_print_action.c \
 				utils/1_print_error.c \
 				utils/2_mutex.c \
 				utils/3_time.c \
-				utils/free.c \
+				utils/4_free.c \
 
 SRCS :=			$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 

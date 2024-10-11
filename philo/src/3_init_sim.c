@@ -1,20 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   2_init_sim.c                                       :+:      :+:    :+:   */
+/*   3_init_sim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/10 14:26:06 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 19:55:15 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
-This file contains functions for setting up the simulation state and for
-creating the fork and philosopher structures.
-These functions ensure that all required resources are allocated and properly
-configured before the simulation begins.
+Creating the fork structures and intializing the simulation state.
 */
 
 #include "philo.h"
@@ -25,7 +22,8 @@ int	init_sim(t_sim **sim, int argc, char **argv);
 
 /**
 Initializes the simulation parameters from command line arguments.
-This function checks the validity of the arguments, converts them to integers,
+
+Checks the validity of the arguments, converts them to integers,
 and assigns them to the corresponding fields in the simulation structure.
 
  @param sim 	Pointer to the simulation structure to initialize.
@@ -51,8 +49,7 @@ static int	init_args(t_sim *sim, int argc, char **argv)
 }
 
 /**
-Sets initial values for the simulation state and initializes a mutex used for
-printing and checking for a simulation stop.
+Sets initial values for the simulation state and initializes mutexes.
 
  @param sim 	Pointer to the simulation structure to initialize.
 
@@ -93,16 +90,18 @@ simulation, and initializes their mutexes.
 */
 static int	init_forks(t_sim *sim)
 {
+	int	nr_philo;
 	int	i;
 
-	sim->forks = malloc(sizeof(t_fork) * sim->nr_philo);
+	nr_philo = sim->nr_philo;
+	sim->forks = malloc(sizeof(t_fork) * nr_philo);
 	if (!sim->forks)
 	{
 		print_err_msg(ERR_MALLOC);
 		return (1);
 	}
 	i = 0;
-	while (i < sim->nr_philo)
+	while (i < nr_philo)
 	{
 		if (mtx_action(&sim->forks[i].fork, INIT))
 		{
@@ -112,44 +111,7 @@ static int	init_forks(t_sim *sim)
 			sim->forks = NULL;
 			return (1);
 		}
-		sim->forks[i].fork_id = i + 1; // actually needed?
-		i++;
-	}
-	return (0);
-}
-
-/**
-Initializes the philosophers participating in the simulation by allocating
-memory for their structs and setting their initial state, including the
-assignment of forks.
-
- @param sim 	Pointer to the simulation structure containing philosopher data.
-
- @return		`0` on success;
-				`1` if memory allocation fails.
-*/
-static int	init_philos(t_sim *sim)
-{
-	int	i;
-
-	sim->philos = malloc(sizeof(t_philo) * sim->nr_philo);
-	if (!sim->philos)
-	{
-		print_err_msg(ERR_MALLOC);
-		return (1);
-	}
-	i = 0;
-	while (i < sim->nr_philo)
-	{
-		sim->philos[i].sim = sim;
-		sim->philos[i].id = i + 1;
-		sim->philos[i].meals_eaten = 0;
-		sim->philos[i].left_fork = &sim->forks[i];
-		sim->philos[i].right_fork = &sim->forks[(i + 1) % sim->nr_philo];
-		if (sim->philos[i].id % 2 == 1)
-			sim->philos[i].odd = 1;
-		else
-			sim->philos[i].odd = 0;
+		sim->forks[i].fork_id = i + 1;
 		i++;
 	}
 	return (0);
@@ -163,8 +125,8 @@ and setting up the initial state, forks, and philosophers.
  @param argc 	The argument count from the command line.
  @param argv 	The argument vector from the command line.
 
- @return 		`0` on success;
-				`1` if memory allocation or initialization fails.
+ @return		`0` on success;
+				`1` if memory allocation or an initialization step fails.
 */
 int	init_sim(t_sim **sim, int argc, char **argv)
 {

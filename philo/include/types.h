@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/10 14:23:40 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 12:25:02 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ typedef struct s_philo
 	pthread_t	thread_id;
 	int			meals_eaten;
 	t_ull		t_last_meal;
+	t_mtx		mtx_last_meal;
+	int			mtx_last_meal_init;
 	t_ull		timestamp_death;
 	t_fork		*left_fork;
 	t_fork		*right_fork;
