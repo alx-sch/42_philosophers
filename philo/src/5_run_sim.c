@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   7_run_sim.c                                        :+:      :+:    :+:   */
+/*   5_run_sim.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 22:06:38 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 22:11:25 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:57:52 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	start_monitoring(t_sim *sim)
 		print_err_msg(ERR_TR_CREATE);
 		return (1);
 	}
-	usleep(100);
+	(void)usleep(100);
 	return (0);
 }
 
@@ -75,6 +75,9 @@ static int	end_monitoring(t_sim *sim)
 Starts the dining simulation by creating threads for each philosopher. Each
 thread will run the `dining` function that simulates the philosopher's behavior.
 
+If any thread creation fails, the simulation stops, all previously created
+threads are joined (cleaned up), and the simulation is terminated.
+
  @param	sim 	Pointer to the sim structure, which holds the philosopher data.
 
  @return		`0` on success;
@@ -83,13 +86,22 @@ thread will run the `dining` function that simulates the philosopher's behavior.
 static int	start_dining(t_sim *sim)
 {
 	int	i;
+	int	nr_philo;
 
 	i = 0;
-	while (i < sim->nr_philo)
+	nr_philo = sim->nr_philo;
+	while (i < nr_philo)
 	{
 		if (pthread_create(&sim->philos[i].thread_id, NULL, &eat_sleep_think,
 				&sim->philos[i]))
 		{
+			mtx_action(&sim->mtx_stop_sim, LOCK);
+			sim->stop_sim = 1;
+			mtx_action(&sim->mtx_stop_sim, UNLOCK);
+			while (i-- >= 0)
+				pthread_join(sim->philos[i].thread_id, NULL);
+			end_monitoring(sim);
+			(void)usleep(100);
 			print_err_msg(ERR_TR_CREATE);
 			return (1);
 		}
@@ -116,6 +128,11 @@ static int	end_dining(t_sim *sim)
 	{
 		if (pthread_join(sim->philos[i].thread_id, NULL))
 		{
+			mtx_action(&sim->mtx_stop_sim, LOCK);
+			sim->stop_sim = 1;
+			mtx_action(&sim->mtx_stop_sim, UNLOCK);
+			end_monitoring(sim);
+			(void)usleep(100);
 			print_err_msg(ERR_TR_JOIN);
 			return (1);
 		}

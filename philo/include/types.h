@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 22:26:12 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:38:34 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,16 +107,16 @@ Structure representing the overall simulation state:
 				haven't start eating.
  - t_eat:		Time in milliseconds a philosopher takes to eat.
  - t_sleep:		Time in milliseconds a philosopher sleeps after eating.
- - t_think:		Philosophers are altruistic in this simulation, meaning they delay
-				taking forks and eating for as long as possible without starving.
-				This behavior helps keep every philosopher alive as long as
-				possible, especially when there's an odd number of philosophers:
-				t_think = t_die - t_eat - t_sleep.
+ - t_think:		Philosophers are altruistic in this simulation, meaning they
+ 				delay taking forks and eating for as long as possible without
+				starving. This behavior helps keep every philosopher alive as
+				long as possible, especially when there's an odd number of
+				philosophers: t_think = t_die - t_eat - t_sleep.
  - max_meals:	Max. number of meals a philosopher can eat before they stop
  				dining; `-1` means unlimited meals.
  - full_philos:	The number of philosophers who have eaten their maximum number
  				of meals (if specified) and have stopped eating.
- - philo_dead:	Flag indicating if a philosopher has died.
+ - stop_sim:	Flag indicating if to stop the simulation.
  - t_start_sim:	Timestamp in milliseconds for when the simulation started.
  - forks:		Array of forks available for the philosophers.
  - philos:		Array of philosophers participating in the simulation.
@@ -127,8 +127,8 @@ Structure representing the overall simulation state:
  - mtx_full_philos:	Mutex for checking / increasing 'full_philos'.
  - mtx_full_philos_init:	Flag checking if 'full_philos' mutex has been
  							initialized.
- - mtx_philo_dead:	Mutex for synchronizing access to the `philo_dead` flag.
- - mtx_philo_dead_init:	Flag checking if 'philo dead' mutex has been initialized.
+ - mtx_stop_sim:		Mutex for synchronizing access to the `stop_sim` flag.
+ - mtx_stop_sim_init:	Flag checking if 'stop_sim' mutex has been initialized.
 */
 typedef struct s_sim
 {
@@ -139,7 +139,7 @@ typedef struct s_sim
 	int			t_think;
 	int			max_meals;
 	int			full_philos;
-	int			philo_dead;
+	int			stop_sim;
 	t_ull		t_start_sim;
 	t_fork		*forks;
 	t_philo		*philos;
@@ -148,8 +148,8 @@ typedef struct s_sim
 	int			mtx_print_init;
 	t_mtx		mtx_full_philos;
 	int			mtx_full_philos_init;
-	t_mtx		mtx_philo_dead;
-	int			mtx_philo_dead_init;
+	t_mtx		mtx_stop_sim;
+	int			mtx_stop_sim_init;
 }	t_sim;
 
 #endif

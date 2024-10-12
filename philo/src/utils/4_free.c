@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 19:47:33 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:41:25 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ void	cleanup_sim(t_sim **sim_ptr)
 		clean_philos(sim);
 	if (sim->mtx_print_init)
 		mtx_action(&sim->mtx_print, DESTROY);
-	if (sim->mtx_philo_dead_init)
-		mtx_action(&sim->mtx_philo_dead, DESTROY);
+	if (sim->mtx_stop_sim_init)
+		mtx_action(&sim->mtx_stop_sim, DESTROY);
 	free(sim);
 	*sim_ptr = NULL;
 }

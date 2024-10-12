@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 14:42:29 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:40:16 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,13 +123,13 @@ compilation) before being printed to enhance readability (default: no rounding).
 int	print_action(t_ull timestamp, t_philo *philo, t_action action,
 		int update_timestamp)
 {
-	mtx_action(&philo->sim->mtx_philo_dead, LOCK);
-	if (philo->sim->philo_dead)
+	mtx_action(&philo->sim->mtx_stop_sim, LOCK);
+	if (philo->sim->stop_sim)
 	{
-		mtx_action(&philo->sim->mtx_philo_dead, UNLOCK);
+		mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
 		return (0);
 	}
-	mtx_action(&philo->sim->mtx_philo_dead, UNLOCK);
+	mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
 	if (mtx_action(&philo->sim->mtx_print, LOCK))
 		return (1);
 	if (update_timestamp)

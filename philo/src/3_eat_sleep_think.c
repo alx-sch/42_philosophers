@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   5_eat_sleep_think.c                                :+:      :+:    :+:   */
+/*   3_eat_sleep_think.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 21:33:23 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:41:10 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,23 @@ reaches the maximum number of meals.
 void	*eat_sleep_think(void *arg);
 
 /**
-Checks whether a philo thread should stop by accessing the `philo_dead` flag.
+Checks whether a philo thread should stop by accessing the `stop_sim` flag.
 
- @param sim 	Pointer to the simulation struct containing the `philo_dead` flag.
+ @param sim 	Pointer to the simulation struct containing the `stop_sim` flag.
 
  @return		The value of the `stop_sim` flag:
 				`0` if no philo died (simulation can continue);
 				`1` if a philosopher has died (simulation should stop);
 				`2` if there is an error in mutex (un)locking.
 */
-static int	check_death(t_philo *philo)
+static int	stop_sim(t_philo *philo)
 {
 	int		dead;
 
-	if (mtx_action(&philo->sim->mtx_philo_dead, LOCK))
+	if (mtx_action(&philo->sim->mtx_stop_sim, LOCK))
 		return (2);
-	dead = philo->sim->philo_dead;
-	if (mtx_action(&philo->sim->mtx_philo_dead, UNLOCK))
+	dead = philo->sim->stop_sim;
+	if (mtx_action(&philo->sim->mtx_stop_sim, UNLOCK))
 		return (2);
 	return (dead);
 }
@@ -141,7 +141,7 @@ void	*eat_sleep_think(void *arg)
 	max_meals = philo->sim->max_meals;
 	if (handle_no_meals(philo, max_meals) == 1)
 		return (NULL);
-	while (check_death(philo) == 0)
+	while (stop_sim(philo) == 0)
 	{
 		(void)pick_forks_and_log(philo);
 		(void)eat_and_log(philo, t_eat);

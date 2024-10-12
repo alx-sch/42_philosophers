@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 17:28:17 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 22:16:56 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:39:36 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ static int	handle_death(t_sim *sim, t_philo *philo)
 	if (mtx_action(&philo->mtx_last_meal, UNLOCK)
 		|| record_time_of_death(philo)
 		|| print_action(philo->timestamp_death, philo, DIE, 0)
-		|| mtx_action(&sim->mtx_philo_dead, LOCK))
+		|| mtx_action(&sim->mtx_stop_sim, LOCK))
 		return (2);
-	sim->philo_dead = 1;
-	if (mtx_action(&sim->mtx_philo_dead, UNLOCK))
+	sim->stop_sim = 1;
+	if (mtx_action(&sim->mtx_stop_sim, UNLOCK))
 		return (2);
 	return (1);
 }
@@ -128,7 +128,7 @@ void	*monitor(void *arg)
 				return (NULL);
 			i++;
 		}
-		usleep(100);
+		(void)usleep(100);
 	}
 	return (NULL);
 }

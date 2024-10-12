@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/10 15:51:05 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:31:09 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	precise_wait(int duration_to_wait)
 			return (1);
 		if (current_time >= time_stop_waiting)
 			break ;
-		usleep((duration_to_wait * 1000) / SLEEP_INTERVALS);
+		(void)usleep((duration_to_wait * 1000) / SLEEP_INTERVALS);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 22:17:42 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/11 23:39:03 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ Sets initial values for the simulation state and initializes mutexes.
 static int	init_sim_state(t_sim *sim, int argc, char **argv)
 {
 	sim->full_philos = 0;
-	sim->philo_dead = 0;
+	sim->stop_sim = 0;
 	sim->forks = NULL;
 	sim->philos = NULL;
 	sim->mtx_print_init = 0;
-	sim->mtx_philo_dead_init = 0;
+	sim->mtx_stop_sim_init = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
 	sim->t_think = sim->t_die - sim->t_eat - sim->t_sleep;
@@ -73,9 +73,9 @@ static int	init_sim_state(t_sim *sim, int argc, char **argv)
 		return (1);
 	sim->mtx_full_philos_init = 1;
 	sim->mtx_print_init = 1;
-	if (mtx_action(&sim->mtx_philo_dead, INIT))
+	if (mtx_action(&sim->mtx_stop_sim, INIT))
 		return (1);
-	sim->mtx_philo_dead_init = 1;
+	sim->mtx_stop_sim_init = 1;
 	return (0);
 }
 
