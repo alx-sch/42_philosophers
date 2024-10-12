@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 16:23:15 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:30:19 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:45:19 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,22 +43,22 @@ static int	pick_forks(t_philo *philo)
 {
 	if (philo->odd)
 	{
-		if (mtx_action(&philo->left_fork->fork, LOCK))
+		if (mtx_action(&philo->left_fork->fork, LOCK, philo->sim))
 			return (1);
 		if (print_action(0, philo, FORK_L, 1))
 			return (1);
-		if (mtx_action(&philo->right_fork->fork, LOCK))
+		if (mtx_action(&philo->right_fork->fork, LOCK, philo->sim))
 			return (1);
 		if (print_action(0, philo, FORK_R, 1))
 			return (1);
 	}
 	else
 	{
-		if (mtx_action(&philo->right_fork->fork, LOCK))
+		if (mtx_action(&philo->right_fork->fork, LOCK, philo->sim))
 			return (1);
 		if (print_action(0, philo, FORK_R, 1))
 			return (1);
-		if (mtx_action(&philo->left_fork->fork, LOCK))
+		if (mtx_action(&philo->left_fork->fork, LOCK, philo->sim))
 			return (1);
 		if (print_action(0, philo, FORK_L, 1))
 			return (1);
@@ -106,16 +106,16 @@ static int	drop_forks(t_philo *philo)
 {
 	if (philo->odd)
 	{
-		if (mtx_action(&philo->right_fork->fork, UNLOCK))
+		if (mtx_action(&philo->right_fork->fork, UNLOCK, philo->sim))
 			return (1);
-		if (mtx_action(&philo->left_fork->fork, UNLOCK))
+		if (mtx_action(&philo->left_fork->fork, UNLOCK, philo->sim))
 			return (1);
 	}
 	else
 	{
-		if (mtx_action(&philo->left_fork->fork, UNLOCK))
+		if (mtx_action(&philo->left_fork->fork, UNLOCK, philo->sim))
 			return (1);
-		if (mtx_action(&philo->right_fork->fork, UNLOCK))
+		if (mtx_action(&philo->right_fork->fork, UNLOCK, philo->sim))
 			return (1);
 	}
 	return (0);
@@ -140,7 +140,7 @@ ensuring that resources are properly released.
 int	eat_and_log(t_philo *philo, int t_eat)
 {
 	philo->meals_eaten++;
-	if (mtx_action(&philo->mtx_last_meal, LOCK))
+	if (mtx_action(&philo->mtx_last_meal, LOCK, philo->sim))
 	{
 		drop_forks(philo);
 		return (1);
@@ -148,11 +148,11 @@ int	eat_and_log(t_philo *philo, int t_eat)
 	philo->t_last_meal = get_time();
 	if (philo->t_last_meal == 0)
 	{
-		mtx_action(&philo->mtx_last_meal, UNLOCK);
+		(void)mtx_action(&philo->mtx_last_meal, UNLOCK, philo->sim);
 		drop_forks(philo);
 		return (1);
 	}
-	if (mtx_action(&philo->mtx_last_meal, UNLOCK)
+	if (mtx_action(&philo->mtx_last_meal, UNLOCK, philo->sim)
 		|| print_action(0, philo, EAT, 1) || precise_wait(t_eat))
 	{
 		drop_forks(philo);
@@ -180,10 +180,10 @@ int	is_philo_full(t_philo *philo, int max_meals)
 {
 	if (philo->meals_eaten != max_meals)
 		return (0);
-	if (mtx_action(&philo->sim->mtx_full_philos, LOCK))
+	if (mtx_action(&philo->sim->mtx_full_philos, LOCK, philo->sim))
 		return (2);
 	philo->sim->full_philos++;
-	if (mtx_action(&philo->sim->mtx_full_philos, UNLOCK))
+	if (mtx_action(&philo->sim->mtx_full_philos, UNLOCK, philo->sim))
 		return (2);
 	if (FANCY && print_action(0, philo, STUFFED, 1))
 		return (2);

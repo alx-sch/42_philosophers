@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 13:53:20 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:39:03 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:42:41 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,18 @@ static int	init_sim_state(t_sim *sim, int argc, char **argv)
 	sim->forks = NULL;
 	sim->philos = NULL;
 	sim->mtx_print_init = 0;
+	sim->mtx_full_philos_init = 0;
 	sim->mtx_stop_sim_init = 0;
 	if (init_args(sim, argc, argv))
 		return (1);
 	sim->t_think = sim->t_die - sim->t_eat - sim->t_sleep;
-	if (mtx_action(&sim->mtx_print, INIT))
+	if (mtx_action(&sim->mtx_print, INIT, NULL))
 		return (1);
-	if (mtx_action(&sim->mtx_full_philos, INIT))
+	sim->mtx_print_init = 1;
+	if (mtx_action(&sim->mtx_full_philos, INIT, sim))
 		return (1);
 	sim->mtx_full_philos_init = 1;
-	sim->mtx_print_init = 1;
-	if (mtx_action(&sim->mtx_stop_sim, INIT))
+	if (mtx_action(&sim->mtx_stop_sim, INIT, sim))
 		return (1);
 	sim->mtx_stop_sim_init = 1;
 	return (0);
@@ -97,16 +98,16 @@ static int	init_forks(t_sim *sim)
 	sim->forks = malloc(sizeof(t_fork) * nr_philo);
 	if (!sim->forks)
 	{
-		print_err_msg(ERR_MALLOC);
+		print_err_msg(ERR_MALLOC, sim);
 		return (1);
 	}
 	i = 0;
 	while (i < nr_philo)
 	{
-		if (mtx_action(&sim->forks[i].fork, INIT))
+		if (mtx_action(&sim->forks[i].fork, INIT, sim))
 		{
 			while (i > 0)
-				mtx_action(&sim->forks[--i].fork, DESTROY);
+				(void)mtx_action(&sim->forks[--i].fork, DESTROY, sim);
 			free(sim->forks);
 			sim->forks = NULL;
 			return (1);
@@ -133,7 +134,7 @@ int	init_sim(t_sim **sim, int argc, char **argv)
 	*sim = malloc(sizeof(t_sim));
 	if (!(*sim))
 	{
-		print_err_msg(ERR_MALLOC);
+		print_err_msg(ERR_MALLOC, *sim);
 		return (1);
 	}
 	if (init_sim_state(*sim, argc, argv))

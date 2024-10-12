@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 21:38:45 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:22:40 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ correct usage.
 // IN FILE:
 
 void	print_usage(void);
-void	print_err_msg(char *msg);
+void	print_err_msg(char *msg, t_sim *sim);
 
 /**
 Prints a message to the standard error stream with optional formatting applied.
@@ -64,14 +64,24 @@ the simulation stops.", NULL, 1);
 }
 
 /**
-Prints a formatted error message to the standard error stream.
+Prints a formatted error message to the standard error stream with mutex
+protection.
+
+If the mutex `sim->mtx_print` is initialized, this function locks it before
+printing to ensure thread-safe output, and unlocks it afterward.
 
  @param msg 	Error message to be printed.
+ @param sim 	Pointer to the simulation structure containing the mutex;
+				if `NULL`, the message is printed without mutex protection.
 */
-void	print_err_msg(char *msg)
+void	print_err_msg(char *msg, t_sim *sim)
 {
+	if (sim && sim->mtx_print_init)
+		(void)mtx_action(&sim->mtx_print, LOCK, NULL);
 	ft_putstr_fd(ERR_COLOR, STDERR_FILENO);
 	ft_putstr_fd(msg, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
 	ft_putstr_fd(RESET, STDERR_FILENO);
+	if (sim && sim->mtx_print_init)
+		(void)mtx_action(&sim->mtx_print, UNLOCK, NULL);
 }

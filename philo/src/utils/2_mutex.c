@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:12:59 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/08 10:32:04 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 14:47:04 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ locking, unlocking, and destruction) with proper error checking and reporting.
 
 // IN FILE:
 
-int	mtx_action(t_mtx *mutex, t_mtx_action action);
+int	mtx_action(t_mtx *mutex, t_mtx_action action, t_sim *sim);
 
 /**
 Performs an action on a mutex based on the specified action.
@@ -63,12 +63,13 @@ Handles mutex operations with error checking and error message printing.
  @param mutex 	Pointer to a `pthread_mutex_t` mutex to operate on.
  @param action 	The action to perform on the mutex:
 				INIT, LOCK, UNLOCK, DESTROY.
- @param sim 	Pointer to a data struct to be freed in case of error.
+ @param sim 	Pointer to the data struct containing the mutex for printing
+ 				(error message).
 
  @return		`0` on success;
 				`1` if the mutex operation failed.
 */
-int	mtx_action(t_mtx *mutex, t_mtx_action action)
+int	mtx_action(t_mtx *mutex, t_mtx_action action, t_sim *sim)
 {
 	int	error;
 
@@ -76,13 +77,13 @@ int	mtx_action(t_mtx *mutex, t_mtx_action action)
 	if (error != 0)
 	{
 		if (error == INIT)
-			print_err_msg(ERR_MTX_INIT);
+			print_err_msg(ERR_MTX_INIT, sim);
 		else if (error == LOCK)
-			print_err_msg(ERR_MTX_LOCK);
+			print_err_msg(ERR_MTX_LOCK, sim);
 		else if (error == UNLOCK)
-			print_err_msg(ERR_MTX_UNLOCK);
+			print_err_msg(ERR_MTX_UNLOCK, sim);
 		else if (error == DESTROY)
-			print_err_msg(ERR_MTX_DESTR);
+			print_err_msg(ERR_MTX_DESTR, sim);
 		return (1);
 	}
 	return (0);

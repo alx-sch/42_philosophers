@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 20:44:46 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:31:09 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 14:55:28 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_ull	get_time(void)
 
 	if (gettimeofday(&tv, NULL))
 	{
-		print_err_msg(ERR_GET_TIME);
+		print_err_msg(ERR_GET_TIME, NULL);
 		return (0);
 	}
 	time_in_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
@@ -75,13 +75,17 @@ int	set_start_time(t_sim *sim)
 }
 
 /**
-Sets the starting time for the simulation in `sim->t_start_sim` by retrieving
-the current time right before the philosopher threads are created in `run_sim()`.
+Records the time of death for a philosopher.
 
- @param sim 	Pointer to the simulation structure to store the start time.
+This function retrieves the current time, calculates the philosopher's
+time of death relative to the simulation's start time, and stores it in
+`philo->timestamp_death`.
+
+ @param philo 	Pointer to the philosopher structure where the time of
+				death will be stored.
 
  @return		`0` on success;
- 				`1` if there was an error retrieving the time.
+				`1` if there was an error retrieving the current time.
 */
 int	record_time_of_death(t_philo *philo)
 {
