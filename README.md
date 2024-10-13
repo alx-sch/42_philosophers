@@ -4,6 +4,13 @@
     <img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/philosophers_badge.png" alt="philosophers_badge.png" />
 </p>
 
+## Fancy Printing
+
+Add some flair to the philosopher's dinner by enabling additional visualization and simulation details.   
+Compile with `make FANCY=1` to activate this feature.
+
+
+
 ## Comparing `usleep` with a Custom Wait Function
 I have implemented a custom wait function to address common issues with `usleep`, such as inconsistent delays. To illustrate the performance differences, I have included a test script: `test_usleep.c`.
 
@@ -15,7 +22,7 @@ cc test_usleep.c -lm -o test_usleep
 ./test_usleep
 ```
 
-<img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/usleep_test_run.png" alt="usleep_test_run.png" width="400" />
+<img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/usleep_test_run.png" alt="usleep_test_run.png" width="350" />
 
 ### Why a Custom Wait Function?
 In real-time simulations, precise timing is crucial, as even small inaccuracies can lead to undesired behavior, especially when multiple threads interact and delays accumulate. The standard `usleep()` function may introduce unexpected delays because of how the operating system handles process scheduling, resulting in less precise timing.
