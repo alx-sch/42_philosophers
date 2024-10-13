@@ -9,10 +9,10 @@
 Add some flair to the philosopher's dinner by enabling additional visualization and simulation details.   
 Compile with `make FANCY=1` to activate this feature.
 
-
+<img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/fancy_printing.png" alt="fancy_printing.png" width="450" />
 
 ## Comparing `usleep` with a Custom Wait Function
-I have implemented a custom wait function to address common issues with `usleep`, such as inconsistent delays. To illustrate the performance differences, I have included a test script: `test_usleep.c`.
+I have implemented a custom wait function to address common issues with `usleep`, such as inconsistent delays. To illustrate the performance differences, I have included a test script: [`test_usleep.c`](https://github.com/alx-sch/42_philosophers/blob/main/test_usleep.c).
 
 You can use this script to compare the performance of `usleep()` and the custom wait function. The script measures the accuracy and consistency of both functions over multiple runs.
 
