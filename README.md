@@ -48,10 +48,10 @@ int	precise_wait(int duration_to_wait)
 ### How `precise_wait` Works
 The `precise_wait` function uses a combination of high-resolution time checks and short sleep intervals to provide a more accurate waiting period:
 
-- **Time Measurement**: It starts by determining the current time using  `get_time() `, then calculates the target time ( `time_stop_waiting `) when the waiting period should end.
+- **Time Measurement**: It starts by determining the current time using  `get_time()`, then calculates the target time ( `time_stop_waiting`) when the waiting period should end.
 
-- **Short Sleep Intervals**: Instead of relying on a single long  `usleep() ` call, which may be affected by system scheduling,  `precise_wait ` uses short sleep intervals. This approach reduces the chance of oversleeping because it frequently checks the current time.   
+- **Short Sleep Intervals**: Instead of relying on a single long  `usleep()` call, which may be affected by system scheduling,  `precise_wait` uses short sleep intervals. This approach reduces the chance of oversleeping because it frequently checks the current time.   
 
-- **Continuous Checking**: The function continuously checks if the current time has reached or surpassed  `time_stop_waiting `. This ensures that the wait duration is as precise as possible. The  `SLEEP_INTERVALS` constant controls how frequently the function checks the current time, striking a balance between accuracy and CPU usage.
+- **Continuous Checking**: The function continuously checks if the current time has reached or surpassed  `time_stop_waiting`. This ensures that the wait duration is as precise as possible. The  `SLEEP_INTERVALS` constant controls how frequently the function checks the current time, striking a balance between accuracy and CPU usage.
 
   
