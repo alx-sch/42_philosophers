@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:19:12 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:38:34 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 14:21:55 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,37 @@ This header file defines custom types and data structures.
 
 typedef pthread_mutex_t		t_mtx; // Abbreviation for 'pthread_mutex_t'
 typedef unsigned long long	t_ull; // Abbreviation for 'unsigned long long'
+
+/**
+Structure representing the overall simulation state:
+ - nr_philo:	Total number of philosophers participating in the simulation.
+ - t_die:		Time in milliseconds after which a philosopher dies if they
+				haven't start eating.
+ - t_eat:		Time in milliseconds a philosopher takes to eat.
+ - t_sleep:		Time in milliseconds a philosopher sleeps after eating.
+ - t_think:		Philosophers are altruistic in this simulation, meaning they
+ 				delay taking forks and eating for as long as possible without
+				starving. This behavior helps keep every philosopher alive as
+				long as possible, especially when there's an odd number of
+				philosophers: t_think = t_die - t_eat - t_sleep.
+ - max_meals:	Max. number of meals a philosopher can eat before they stop
+ 				dining; `-1` means unlimited meals.
+ - full_philos:	The number of philosophers who have eaten their maximum number
+ 				of meals (if specified) and have stopped eating.
+ - stop_sim:	Flag indicating if to stop the simulation.
+ - t_start_sim:	Timestamp in milliseconds for when the simulation started.
+ - forks:		Array of forks available for the philosophers.
+ - philos:		Array of philosophers participating in the simulation.
+ - monitor:		Thread handle for the monitoring thread that observes the
+				state of the simulation.
+ - mtx_print:	Mutex for synchronizing output to the console (printing).
+ - mtx_print_init:	Flag checking if 'print' mutex has been initialized.
+ - mtx_full_philos:	Mutex for checking / increasing 'full_philos'.
+ - mtx_full_philos_init:	Flag checking if 'full_philos' mutex has been
+ 							initialized.
+ - mtx_stop_sim:		Mutex for synchronizing access to the `stop_sim` flag.
+ - mtx_stop_sim_init:	Flag checking if 'stop_sim' mutex has been initialized.
+*/
 typedef struct s_sim		t_sim;
 
 /**

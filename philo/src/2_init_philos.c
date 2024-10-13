@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 17:43:15 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 18:20:11 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:35:58 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	initialize_philosopher(t_philo *philo, t_sim *sim, int index,
 	philo->right_fork = &sim->forks[(index + 1) % nr_philo];
 	philo->odd = (philo->id % 2 == 1);
 	philo->mtx_last_meal_init = 0;
-	if (mtx_action(&philo->mtx_last_meal, INIT))
+	if (mtx_action(&philo->mtx_last_meal, INIT, sim))
 		return (1);
 	philo->mtx_last_meal_init = 1;
 	return (0);
@@ -65,7 +65,7 @@ int	init_philos(t_sim *sim)
 	sim->philos = malloc(sizeof(t_philo) * nr_philo);
 	if (!sim->philos)
 	{
-		print_err_msg(ERR_MALLOC);
+		print_err_msg(ERR_MALLOC, sim);
 		return (1);
 	}
 	i = 0;
@@ -74,7 +74,7 @@ int	init_philos(t_sim *sim)
 		if (initialize_philosopher(&sim->philos[i], sim, i, nr_philo))
 		{
 			while (i > 0)
-				mtx_action(&sim->philos[--i].mtx_last_meal, DESTROY);
+				(void)mtx_action(&sim->philos[--i].mtx_last_meal, DESTROY, sim);
 			free(sim->philos);
 			sim->philos = NULL;
 			return (1);

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:40:16 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:32:51 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ int	print_action(t_ull timestamp, t_philo *philo, t_action action,
 Prints the action of a philosopher in the standardized format.
 
  @param timestamp 	The timestamp of the action in milliseconds.
- @param action 		The action being performed, represented as an enum type.
  @param philo 		A pointer to the philosopher structure performing the action.
+ @param action 		The action being performed, represented as an enum type.
 */
 static void	print_standard(t_ull timestamp, t_philo *philo, t_action action)
 {
@@ -60,8 +60,8 @@ static void	print_standard(t_ull timestamp, t_philo *philo, t_action action)
 Prints the action of a philosopher with additional information and emojis.
 
  @param timestamp 	The timestamp of the action in milliseconds.
- @param action 		The action being performed, represented as an enum type.
  @param philo 		A pointer to the philosopher structure performing the action.
+ @param action 		The action being performed, represented as an enum type.
 */
 static void	print_fancy(t_ull timestamp, t_philo *philo, t_action action)
 {
@@ -105,6 +105,7 @@ The timestamp is rounded to the nearest `ROUND` milliseconds (also defined durin
 compilation) before being printed to enhance readability (default: no rounding).
 
  @param timestamp 	The timestamp of the action in milliseconds.
+ @param philo 		A pointer to the philosopher structure performing the action.
  @param action 		The action being performed, represented as an enum type:
 					- FORK_L:	Takes their left fork.
 					- FORK_R:	Takes their right fork.
@@ -113,7 +114,6 @@ compilation) before being printed to enhance readability (default: no rounding).
 					- THINK:	Starts thinking.
 					- DIE: 		Has died.
 					- STUFFED:	Has eaten all their meals.
- @param philo 		A pointer to the philosopher structure performing the action.
  @param update_timestamp 	`0`: Use the provided timestamp as is;
 							`1`: Recalculate the timestamp just before printing.
 
@@ -123,14 +123,17 @@ compilation) before being printed to enhance readability (default: no rounding).
 int	print_action(t_ull timestamp, t_philo *philo, t_action action,
 		int update_timestamp)
 {
-	mtx_action(&philo->sim->mtx_stop_sim, LOCK);
-	if (philo->sim->stop_sim)
+	if (mtx_action(&philo->sim->mtx_stop_sim, LOCK, philo->sim))
+		return (1);
+	if (philo->sim->stop_sim && action != DIE)
 	{
-		mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
+		if (mtx_action(&philo->sim->mtx_stop_sim, UNLOCK, philo->sim))
+			return (1);
 		return (0);
 	}
-	mtx_action(&philo->sim->mtx_stop_sim, UNLOCK);
-	if (mtx_action(&philo->sim->mtx_print, LOCK))
+	if (mtx_action(&philo->sim->mtx_stop_sim, UNLOCK, philo->sim))
+		return (1);
+	if (mtx_action(&philo->sim->mtx_print, LOCK, philo->sim))
 		return (1);
 	if (update_timestamp)
 		timestamp = get_time() - philo->sim->t_start_sim;
@@ -138,7 +141,7 @@ int	print_action(t_ull timestamp, t_philo *philo, t_action action,
 		print_standard(timestamp, philo, action);
 	else
 		print_fancy(timestamp, philo, action);
-	if (mtx_action(&philo->sim->mtx_print, UNLOCK))
+	if (mtx_action(&philo->sim->mtx_print, UNLOCK, philo->sim))
 		return (1);
 	return (0);
 }

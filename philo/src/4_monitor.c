@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 17:28:17 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:39:36 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:33:30 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ static int	all_philos_full(t_sim *sim, int nr_philos)
 {
 	int	full;
 
-	if (mtx_action(&sim->mtx_full_philos, LOCK))
+	if (mtx_action(&sim->mtx_full_philos, LOCK, sim))
 		return (2);
 	full = 0;
 	if (sim->full_philos == nr_philos)
 		full = 1;
-	if (mtx_action(&sim->mtx_full_philos, UNLOCK))
+	if (mtx_action(&sim->mtx_full_philos, UNLOCK, sim))
 		return (2);
 	return (full);
 }
@@ -50,13 +50,15 @@ that a philosopher has died.
 */
 static int	handle_death(t_sim *sim, t_philo *philo)
 {
-	if (mtx_action(&philo->mtx_last_meal, UNLOCK)
+	if (mtx_action(&philo->mtx_last_meal, UNLOCK, sim)
 		|| record_time_of_death(philo)
-		|| print_action(philo->timestamp_death, philo, DIE, 0)
-		|| mtx_action(&sim->mtx_stop_sim, LOCK))
+		|| mtx_action(&sim->mtx_stop_sim, LOCK, sim))
 		return (2);
 	sim->stop_sim = 1;
-	if (mtx_action(&sim->mtx_stop_sim, UNLOCK))
+	if (mtx_action(&sim->mtx_stop_sim, UNLOCK, sim))
+		return (2);
+	(void)usleep(100);
+	if (print_action(philo->timestamp_death, philo, DIE, 0))
 		return (2);
 	return (1);
 }
@@ -79,11 +81,11 @@ logging their death and updating the simulation state.
 static int	check_starvation_and_log(t_sim *sim, t_philo *philo,
 	t_ull current_time, t_ull t_die)
 {
-	if (mtx_action(&philo->mtx_last_meal, LOCK))
+	if (mtx_action(&philo->mtx_last_meal, LOCK, sim))
 		return (2);
 	if (current_time - philo->t_last_meal > t_die)
 		return (handle_death(sim, philo));
-	if (mtx_action(&philo->mtx_last_meal, UNLOCK))
+	if (mtx_action(&philo->mtx_last_meal, UNLOCK, sim))
 		return (2);
 	return (0);
 }
@@ -93,8 +95,9 @@ Monitors the state of the philosophers in the simulation to check for starvation
 and whether all philosophers are full. It runs in an infinite loop until all
 philosophers have eaten their fill or a philosopher dies.
 
-Error handling is not checked intentionally, as this falls outside the
-project's scope and can be somewhat tedious when dealing with thread routines.
+Error handling is intentionally omitted, as it falls outside the project's
+scope and would be cumbersome due to the project's limitations (cannot use
+`pthread_exit()`).
 
  @param arg 	A pointer to the simulation structure containing the global state
 				of the simulation, including the list of philosophers and their

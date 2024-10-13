@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 18:08:52 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:41:25 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:39:51 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	clean_forks(t_sim *sim)
 	nr_philo = sim->nr_philo;
 	while (i < nr_philo)
 	{
-		mtx_action(&sim->forks[i].fork, DESTROY);
+		(void)mtx_action(&sim->forks[i].fork, DESTROY, sim);
 		i++;
 	}
 	free(sim->forks);
@@ -64,7 +64,7 @@ static void	clean_philos(t_sim *sim)
 	nr_philo = sim->nr_philo;
 	while (i < nr_philo)
 	{
-		mtx_action(&sim->philos[i].mtx_last_meal, DESTROY);
+		(void)mtx_action(&sim->philos[i].mtx_last_meal, DESTROY, sim);
 		i++;
 	}
 	free(sim->philos);
@@ -93,10 +93,12 @@ void	cleanup_sim(t_sim **sim_ptr)
 		clean_forks(sim);
 	if (sim->philos)
 		clean_philos(sim);
-	if (sim->mtx_print_init)
-		mtx_action(&sim->mtx_print, DESTROY);
+	if (sim->mtx_full_philos_init)
+		(void)mtx_action(&sim->mtx_full_philos, DESTROY, sim);
 	if (sim->mtx_stop_sim_init)
-		mtx_action(&sim->mtx_stop_sim, DESTROY);
+		(void)mtx_action(&sim->mtx_stop_sim, DESTROY, sim);
+	if (sim->mtx_print_init)
+		(void)mtx_action(&sim->mtx_print, DESTROY, sim);
 	free(sim);
 	*sim_ptr = NULL;
 }

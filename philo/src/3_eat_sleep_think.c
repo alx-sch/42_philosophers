@@ -6,14 +6,14 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:47:34 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:41:10 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 14:46:18 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
 Defines the core functions involved in a philosopher's life cycle during the
 dining simulation. It includes routines for eating, sleeping, and thinking,
-as well as checks for stopping the simulation  when a philosopher dies or
+as well as checks for stopping the simulation when a philosopher dies or
 reaches the maximum number of meals.
 */
 
@@ -37,10 +37,10 @@ static int	stop_sim(t_philo *philo)
 {
 	int		dead;
 
-	if (mtx_action(&philo->sim->mtx_stop_sim, LOCK))
+	if (mtx_action(&philo->sim->mtx_stop_sim, LOCK, philo->sim))
 		return (2);
 	dead = philo->sim->stop_sim;
-	if (mtx_action(&philo->sim->mtx_stop_sim, UNLOCK))
+	if (mtx_action(&philo->sim->mtx_stop_sim, UNLOCK, philo->sim))
 		return (2);
 	return (dead);
 }
@@ -118,8 +118,9 @@ The function first checks if the philosopher has zero meals to eat.
 If not, the philosopher repeatedly attempts to eat, sleep, and think until the
 simulation detects a death or the philosopher is full.
 
-Error handling is not checked intentionally, as this falls outside the
-project's scope and can be somewhat tedious when dealing with thread routines.
+Error handling is intentionally omitted, as it falls outside the project's
+scope and would be cumbersome due to the project's limitations (cannot use
+`pthread_exit()`).
 
  @param arg 	A void pointer cast to the `t_philo` struct representing
  				the philosopher.

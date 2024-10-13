@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:26:19 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 22:30:43 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:25:38 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,14 @@ simulation has finished.
 #include "philo.h"
 
 // IN FILE:
+
 int	main(int argc, char **argv);
 
 /**
-Main function.
+Main function for running the philosopher dining simulation.
+
+This function initializes the simulation, runs it, and then
+performs cleanup before exiting.
 
  @param	argc 	The number of command-line arguments.
  @param argv 	An array of command-line argument strings.

@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 22:07:13 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:24:43 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ and usage instructions.
 // IN FILE:
 
 int	check_args(int argc, char **argv);
-int	simulate_lonely_philo(t_sim *sim);
 
 /**
 Converts a string to an integer and validates the input.
@@ -54,7 +53,7 @@ static int	check_arg_count(int argc)
 {
 	if (argc < 5 || argc > 6)
 	{
-		print_err_msg(ERR_ARGS_NR);
+		print_err_msg(ERR_ARGS_NR, NULL);
 		print_usage();
 		return (1);
 	}
@@ -76,7 +75,7 @@ static int	check_phil_nr(char *arg)
 		return (2);
 	if (ft_atoi(arg) < 1)
 	{
-		print_err_msg(ERR_ARGS_MIN_P);
+		print_err_msg(ERR_ARGS_MIN_P, NULL);
 		print_usage();
 		return (1);
 	}

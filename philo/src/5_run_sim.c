@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 22:06:38 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 23:57:52 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 15:58:05 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	start_monitoring(t_sim *sim)
 		return (0);
 	if (pthread_create(&sim->monitor, NULL, &monitor, sim))
 	{
-		print_err_msg(ERR_TR_CREATE);
+		print_err_msg(ERR_TR_CREATE, sim);
 		return (1);
 	}
 	(void)usleep(100);
@@ -65,7 +65,7 @@ static int	end_monitoring(t_sim *sim)
 		return (0);
 	if (pthread_join(sim->monitor, NULL))
 	{
-		print_err_msg(ERR_TR_JOIN);
+		print_err_msg(ERR_TR_JOIN, sim);
 		return (1);
 	}
 	return (0);
@@ -95,14 +95,14 @@ static int	start_dining(t_sim *sim)
 		if (pthread_create(&sim->philos[i].thread_id, NULL, &eat_sleep_think,
 				&sim->philos[i]))
 		{
-			mtx_action(&sim->mtx_stop_sim, LOCK);
+			(void)mtx_action(&sim->mtx_stop_sim, LOCK, sim);
 			sim->stop_sim = 1;
-			mtx_action(&sim->mtx_stop_sim, UNLOCK);
-			while (i-- >= 0)
-				pthread_join(sim->philos[i].thread_id, NULL);
+			(void)mtx_action(&sim->mtx_stop_sim, UNLOCK, sim);
+			while (i > 0)
+				pthread_join(sim->philos[--i].thread_id, NULL);
 			end_monitoring(sim);
 			(void)usleep(100);
-			print_err_msg(ERR_TR_CREATE);
+			print_err_msg(ERR_TR_CREATE, sim);
 			return (1);
 		}
 		i++;
@@ -128,12 +128,12 @@ static int	end_dining(t_sim *sim)
 	{
 		if (pthread_join(sim->philos[i].thread_id, NULL))
 		{
-			mtx_action(&sim->mtx_stop_sim, LOCK);
+			mtx_action(&sim->mtx_stop_sim, LOCK, sim);
 			sim->stop_sim = 1;
-			mtx_action(&sim->mtx_stop_sim, UNLOCK);
+			mtx_action(&sim->mtx_stop_sim, UNLOCK, sim);
 			end_monitoring(sim);
 			(void)usleep(100);
-			print_err_msg(ERR_TR_JOIN);
+			print_err_msg(ERR_TR_JOIN, sim);
 			return (1);
 		}
 		i++;

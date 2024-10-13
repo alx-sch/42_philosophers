@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 19:21:56 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/11 22:11:17 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/12 14:39:21 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ the risk of starvation among others while still prioritizing their own needs.
 // 1_check_args.c
 
 int		check_args(int argc, char **argv);
-int		simulate_single_philo(t_sim *sim);
 
 // 2_init_philos.c
 
@@ -97,14 +96,21 @@ int		pick_forks_and_log(t_philo *philo);
 int		eat_and_log(t_philo *philo, int t_eat);
 int		is_philo_full(t_philo *philo, int max_meals);
 
-// 3_run_sim.c
-
-int		run_sim(t_sim *sim);
-
-// X_dining.c
+// 3_eat_sleep_think.c
 
 void	*eat_sleep_think(void *arg);
+
+// 4_monitor.c
+
 void	*monitor(void *arg);
+
+// 5_run_sim_utils.c
+
+int		simulate_single_philo(t_sim *sim);
+
+// 5_run_sim.c
+
+int		run_sim(t_sim *sim);
 
 // utils/0_libft.c
 
@@ -119,12 +125,12 @@ int		print_action(t_ull timestamp, t_philo *philo, t_action action,
 
 // utils/1_print_error.c
 
-void	print_err_msg(char *msg);
+void	print_err_msg(char *msg, t_sim *sim);
 void	print_usage(void);
 
 // utils/2_mutex.c
 
-int		mtx_action(t_mtx *mutex, t_mtx_action action);
+int		mtx_action(t_mtx *mutex, t_mtx_action action, t_sim *sim);
 
 // utils/3_time.c
 
@@ -133,7 +139,7 @@ int		set_start_time(t_sim *sim);
 int		record_time_of_death(t_philo *philo);
 int		precise_wait(int duration_to_wait);
 
-// utils/X_free.c
+// utils/4_free.c
 
 void	cleanup_sim(t_sim **sim_ptr);
 
