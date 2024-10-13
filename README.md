@@ -14,13 +14,13 @@ Compile with `make FANCY=1` to activate this feature.
 ## Comparing `usleep` with a Custom Wait Function
 I have implemented a custom wait function to address common issues with `usleep`, such as inconsistent delays. To illustrate the performance differences, I have included a test script: [`test_usleep.c`](https://github.com/alx-sch/42_philosophers/blob/main/test_usleep.c).
 
-You can use this script to compare the performance of `usleep()` and the custom wait function. The script measures the accuracy and consistency of both functions over multiple runs.
+You can use this script to compare the performance of `usleep()` and the custom wait function on your system. The script measures the accuracy and consistency of both functions over multiple runs.
 
 To compile and run the test, use the following command:
 ```bash
 cc test_usleep.c -lm -o test_usleep
 ./test_usleep <sleep_duration_us> <sleep_intervals> <iterations>
-./test_usleep 300000 10000 100
+./test_usleep 300000 100000 100
 ```
 
 <img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/usleep_test_run.png" alt="usleep_test_run.png" width="400" />
