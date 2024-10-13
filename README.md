@@ -22,7 +22,7 @@ cc test_usleep.c -lm -o test_usleep
 ./test_usleep
 ```
 
-<img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/usleep_test_run.png" alt="usleep_test_run.png" width="350" />
+<img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/usleep_test_run.png" alt="usleep_test_run.png" width="400" />
 
 ### Why a Custom Wait Function?
 In real-time simulations, precise timing is crucial, as even small inaccuracies can lead to undesired behavior, especially when multiple threads interact and delays accumulate. The standard `usleep()` function may introduce unexpected delays because of how the operating system handles process scheduling, resulting in less precise timing.
