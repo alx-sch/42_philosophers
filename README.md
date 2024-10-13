@@ -25,8 +25,8 @@ By actively checking the current time and using short sleep intervals, a custom 
 ```C
 int	precise_wait(int duration_to_wait)
 {
-	t_ull	time_stop_waiting;
-	t_ull	current_time;
+	unsigned long long	time_stop_waiting;
+	unsigned long long	current_time;
 
 	time_stop_waiting = get_time();
 	if (time_stop_waiting == 0)
