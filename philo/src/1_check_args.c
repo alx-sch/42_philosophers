@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:27:51 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/12 15:24:43 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/13 18:31:35 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,17 @@ static int	check_arg_count(int argc)
 /**
 Checks if the number of philosophers is valid (>= 1).
 
- @param arg 	The first command-line argument (argv[1]) -> number of philos
+ @param nr_philos 	The first command-line argument (argv[1]) -> number of philos
 
- @return		`0` if the nr of philos is valid;
- 				`1` if the nr of philos is < 1;
-				`2` if argv[1] contains no digits.
+ @return			`0` if the nr of philos is valid;
+ 					`1` if the nr of philos is < 1;
+					`2` if argv[1] contains no digits.
 */
-static int	check_phil_nr(char *arg)
+static int	check_phil_nr(char *nr_philos)
 {
-	if (contains_digit(arg))
+	if (contains_digit(nr_philos))
 		return (2);
-	if (ft_atoi(arg) < 1)
+	if (ft_atoi(nr_philos) < 1)
 	{
 		print_err_msg(ERR_ARGS_MIN_P, NULL);
 		print_usage();

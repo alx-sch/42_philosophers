@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 22:05:49 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/12 15:22:40 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/13 18:32:14 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ Prints the correct usage information for the program.
 */
 void	print_usage(void)
 {
-	print_msg("Usage: './philo nr_philo t_die t_eat t_sleep (nr_meals)'\n",
-		YELLOW, 1);
+	print_msg("Usage: './philo <nr_philo> <t_die> <t_eat> <t_sleep> \
+[<nr_meals>]'\n", YELLOW, 1);
 	print_msg("- nr_philo: ", BOLD, 0);
 	print_msg("The number of philosophers and also the number of forks.",
 		NULL, 1);
