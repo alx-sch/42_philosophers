@@ -2,8 +2,7 @@
 #include <unistd.h> // usleep()
 #include <sys/time.h> // gettimeofday()
 #include <math.h> // sqrt()
-
-#define SLEEP_INTVL 100000
+#include <stdlib.h> // atoi()
 
 /**
 Get the current time in milliseconds since the epoch (January 1, 1970).
@@ -15,8 +14,8 @@ Get the current time in milliseconds since the epoch (January 1, 1970).
 */
 unsigned long long	get_time(void)
 {
-	struct timeval		tv;
-	long long	time_in_ms;
+	struct timeval	tv;
+	long long		time_in_ms;
 
 	if (gettimeofday(&tv, NULL))
 		return (0);
@@ -33,7 +32,7 @@ regular intervals (here: 1000 intervals).
  @return					`0` if the wait was successful;
 							`1` if there was an error retrieving the time.
 */
-int	precise_wait(int duration_to_wait)
+int	precise_wait(int duration_to_wait, int sleep_interval)
 {
 	unsigned long long	time_stop_waiting;
 	unsigned long long	current_time;
@@ -42,6 +41,7 @@ int	precise_wait(int duration_to_wait)
 	if (time_stop_waiting == -1)
 		return (1);
 	time_stop_waiting += duration_to_wait;
+
 	while (1)
 	{
 		current_time = get_time();
@@ -49,12 +49,12 @@ int	precise_wait(int duration_to_wait)
 			return (1);
 		if (current_time >= time_stop_waiting)
 			break ;
-		usleep((duration_to_wait) / SLEEP_INTVL);
+		usleep(duration_to_wait / sleep_interval);
 	}
 	return (0);
 }
 
-void	test_wait(void *func_ptr, int sleep_duration_us, int iterations)
+void	test_wait(void *func_ptr, int sleep_duration_us, int sleep_interval, int iterations)
 {
 	unsigned long long	total_time;
 	unsigned long long	min_time;
@@ -62,10 +62,10 @@ void	test_wait(void *func_ptr, int sleep_duration_us, int iterations)
 	unsigned long long	time_before;
 	unsigned long long	elapsed_time;
 	unsigned long long	elapsed_times[iterations];
-	double		average_time;
-	double		variance;
-	double		stddev;
-	int			i;
+	double				average_time;
+	double				variance;
+	double				stddev;
+	int					i;
 
 	total_time = 0;
 	min_time = -1;
@@ -76,7 +76,10 @@ void	test_wait(void *func_ptr, int sleep_duration_us, int iterations)
 	{
 		time_before = get_time();
 
-		((void (*)(int))func_ptr)(sleep_duration_us); // pass sleep duration in microsec to wait fct
+		if (func_ptr == (void *)precise_wait)
+			((void (*)(int, int))func_ptr)(sleep_duration_us, sleep_interval); // pass sleep duration and interval
+		else
+			((void (*)(int))func_ptr)(sleep_duration_us); // pass only sleep duration to usleep
 
 		elapsed_time = get_time() - time_before;
 		elapsed_times[i] = elapsed_time;
@@ -110,21 +113,30 @@ void	test_wait(void *func_ptr, int sleep_duration_us, int iterations)
 }
 
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	int	sleep_duration; // in microseconds
+	int	sleep_interval; // in microseconds
 	int	iterations;
 
-	sleep_duration = 300 * 1000;
-	iterations = 100;
+	if (argc != 4)
+	{
+		printf("Usage: %s <sleep_duration_us> <sleep_intervals> <iterations>\n", argv[0]);
+		return (1);
+	}
+
+	sleep_duration = atoi(argv[1]); // in microseconds
+	sleep_interval = atoi(argv[2]); // in microseconds
+	iterations = atoi(argv[3]);
 
 	printf("++ TESTING usleep ++\n");
-	test_wait((void *)usleep, sleep_duration, iterations);
+	test_wait((void *)usleep, sleep_duration, sleep_interval, iterations);
 
 	printf("\n");
 
 	printf("++ TESTING precise_wait ++\n");
-	printf("Sleep intervals: %d\n", SLEEP_INTVL);
-	test_wait((void *)precise_wait, sleep_duration, iterations);
+	printf("Sleep intervals: %d\n", sleep_interval);
+	test_wait((void *)precise_wait, sleep_duration, sleep_interval, iterations);
+
 	return (0);
 }
