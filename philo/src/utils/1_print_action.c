@@ -6,7 +6,7 @@
 /*   By: aschenk <aschenk@student.42berlin.de>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:49:37 by aschenk           #+#    #+#             */
-/*   Updated: 2024/10/12 15:32:51 by aschenk          ###   ########.fr       */
+/*   Updated: 2024/10/13 17:18:25 by aschenk          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static void	print_fancy(t_ull timestamp, t_philo *philo, t_action action)
 		(void)printf("→🥄\thas taken their fork\t(%d) right\n",
 			philo->right_fork->fork_id);
 	else if (action == EAT)
-		(void)printf("🍝\tis eating\t\t(%d. meal)\n", philo->meals_eaten + 1);
+		(void)printf("🍝\tis eating\t\t(%d. meal)\n", philo->meals_eaten);
 	else if (action == SLEEP)
 		(void)printf("💤\tis sleeping\n");
 	else if (action == THINK)
