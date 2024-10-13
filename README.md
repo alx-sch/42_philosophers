@@ -19,7 +19,8 @@ You can use this script to compare the performance of `usleep()` and the custom 
 To compile and run the test, use the following command:
 ```bash
 cc test_usleep.c -lm -o test_usleep
-./test_usleep
+./test_usleep <sleep_duration_us> <sleep_intervals> <iterations>
+./test_usleep 300000 10000 100
 ```
 
 <img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/usleep_test_run.png" alt="usleep_test_run.png" width="400" />
@@ -30,6 +31,16 @@ In real-time simulations, precise timing is crucial, as even small inaccuracies 
 By actively checking the current time and using short sleep intervals, a custom wait function can mitigate these timing issues, resulting in more consistent and reliable behavior. This approach is especially important in scenarios like the Dining Philosophers problem, where precise timing and synchronization between threads are essential to avoid deadlocks and ensure proper execution.
 
 ```C
+/**
+Halts execution for a specified duration with improved precision.
+
+ @param	duration_to_wait 	Duration in milliseconds for which to wait.
+ @param	sim 			Pointer to a data struct to be freed
+				in case of error.
+
+ @return			`0` if the wait was successful;
+				`1` if there was an error retrieving the time.
+*/
 int	precise_wait(int duration_to_wait)
 {
 	unsigned long long	time_stop_waiting;
