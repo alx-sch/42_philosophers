@@ -71,9 +71,12 @@ int	precise_wait(int duration_to_wait)
 	unsigned long long	current_time;
 
 	time_stop_waiting = get_time();
+
 	if (time_stop_waiting == 0)
 		return (1);
+
 	time_stop_waiting += duration_to_wait;
+
 	while (1)
 	{
 		current_time = get_time();
@@ -83,6 +86,7 @@ int	precise_wait(int duration_to_wait)
 			break ;
 		(void)usleep((duration_to_wait * 1000) / SLEEP_INTERVALS);
 	}
+
 	return (0);
 }
 ```
