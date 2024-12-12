@@ -35,6 +35,12 @@ float altruism_factor = 0.9;
 t_think = (t_die - t_eat - t_sleep) * altruism_factor;
 ```
 
+By applying this principle, any dining setup with an **uneven number of philosophers** where `(t_die / 2) > (t_eat + t_sleep)` plus a small buffer should theoretically prevent starvation. For example: 
+
+```C
+./philo 3 610 200 100
+```
+
 ## Comparing `usleep` with a Custom Wait Function
 I have implemented a custom wait function to address common issues with `usleep`, such as inconsistent delays. To illustrate the performance differences, I have included a test script: [`test_usleep.c`](https://github.com/alx-sch/42_philosophers/blob/main/test_usleep.c).
 
