@@ -11,6 +11,30 @@ Compile with `make FANCY=1` to activate this feature.
 
 <img src="https://github.com/alx-sch/42_philosophers/blob/main/.assets/fancy_printing.png" alt="fancy_printing.png" width="450" />
 
+## Synchronization and Thinking Time
+
+One key aspect of synchronization in this project is managing the thinking time of each philosopher. By subtracting the eating and sleeping times from the maximum time before death, the philosophers can think as long as possible without starving, ensuring fairness and reducing starvation risks for others:
+
+```C
+t_think = t_die - t_eat - t_sleep
+```
+
+This represents the theoretical maximum thinking time a philosopher can sustain without risking starvation. However, due to inherent delays, this value needs adjustment. By multiplying it with an`altruism_factor` in the range [0, 1], the thinking time can be scaled to balance individual and collective needs
+
+- **Greedy Behavior (`altruism_factor = 0`):** Philosophers immediately attempt to eat after sleeping. This maximizes individual survival but risks starvation for others, especially with an odd number of philosophers.
+
+- **Altruistic Behavior (`altruism_factor = 1`):** Philosophers wait the full thinking time before eating, prioritizing others but risking their own starvation due to delays.
+
+- **Balanced Behavior (`altruism_factor = 0.9`):** Philosophers delay eating just enough to minimize starvation risks for others while maintaining their own needs. This strikes a balance between self-interest and collective fairness, ensuring that all philosophers are kept alive as long as possible.
+
+Taken this into consideration, the thinking time is defined as:
+
+```C
+float altruism_factor = 0.9;
+
+t_think = (t_die - t_eat - t_sleep) * altruism_factor;
+```
+
 ## Comparing `usleep` with a Custom Wait Function
 I have implemented a custom wait function to address common issues with `usleep`, such as inconsistent delays. To illustrate the performance differences, I have included a test script: [`test_usleep.c`](https://github.com/alx-sch/42_philosophers/blob/main/test_usleep.c).
 
