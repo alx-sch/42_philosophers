@@ -55,15 +55,8 @@ When the synchronization is set up correctly, the following rules ensure the sur
     Again, adding a small buffer (e.g., 10 ms) to `t_die` is recommended. Examples:
   - `./philo 3 610 200 100` → All philosophers survive.
   - `./philo 3 610 210 90`→ At least one philosopher starves.
-
-
-  he survival of everyone is guraanteed when `t_eat < t_die / 3` and `(t_die / 2) > (t_eat + t_sleep)`. Add a small buffer to consider system delays (below: 10 ms added to `t_die`).
-  - `./philo 3 610 200 100 `, all philosophers survive.
-  - `./philo 3 610 210 90`, at least one philosopher starves.
-
-```C
-./philo 3 610 200 100
-```
+ 
+---
 
 ## Comparing `usleep` with a Custom Wait Function
 I have implemented a custom wait function to address common issues with `usleep`, such as inconsistent delays. To illustrate the performance differences, I have included a test script: [`test_usleep.c`](https://github.com/alx-sch/42_philosophers/blob/main/test_usleep.c).
