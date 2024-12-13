@@ -34,8 +34,32 @@ float altruism_factor = 0.9;
 
 t_think = (t_die - t_eat - t_sleep) * altruism_factor;
 ```
+---
 
-By applying this principle, any dining setup with an **uneven number of philosophers** where `(t_die / 2) > (t_eat + t_sleep)` plus a small buffer should theoretically prevent starvation. For example: 
+## Surviving the Dinner
+
+When the synchronization is set up correctly, the following rules ensure the survival of philosophers during the simulation:
+
+- **Even number** of philosophers:    
+  Philosophers can be grouped into two synchronized sets (even and odd positions). All philosophers survive if:
+  - `t_eat < t_die / 2`, and
+  - `t_die > (t_eat + t_sleep)`    
+    A small buffer (e.g., 10 ms) should be added to `t_die to` account for potential system delays. Examples:
+  - `./philo 4 610 300 300` → All philosophers survive.
+  - `./philo 4 610 310 290`→ At least one philosopher starves.
+ 
+- **Odd number** of philosophers:    
+  Philosophers are divided into three groups (two synchronized sets and one unsynchronized philosopher). All philosophers survive if:
+  - `t_eat < t_die / 3`, and
+  - `(t_die / 2) > (t_eat + t_sleep)`    
+    Again, adding a small buffer (e.g., 10 ms) to t_die is recommended. Examples:
+  - `./philo 3 610 200 100` → All philosophers survive.
+  - `./philo 3 610 210 90`→ At least one philosopher starves.
+
+
+  he survival of everyone is guraanteed when `t_eat < t_die / 3` and `(t_die / 2) > (t_eat + t_sleep)`. Add a small buffer to consider system delays (below: 10 ms added to `t_die`).
+  - `./philo 3 610 200 100 `, all philosophers survive.
+  - `./philo 3 610 210 90`, at least one philosopher starves.
 
 ```C
 ./philo 3 610 200 100
