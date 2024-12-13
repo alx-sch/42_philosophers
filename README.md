@@ -25,7 +25,7 @@ This represents the theoretical maximum thinking time a philosopher can sustain 
 
 - **Altruistic Behavior (`altruism_factor = 1`):** Philosophers wait the full thinking time before eating, prioritizing others but risking their own starvation due to delays.
 
-- **Balanced Behavior (`altruism_factor = 0.9`):** Philosophers delay eating just enough to minimize starvation risks for others while maintaining their own needs. This strikes a balance between self-interest and collective fairness, ensuring that all philosophers are kept alive as long as possible.
+- **Balanced Behavior (e.g., `altruism_factor = 0.9`):** Philosophers delay eating just enough to minimize starvation risks for others while maintaining their own needs. This strikes a balance between self-interest and collective fairness, ensuring that all philosophers are kept alive as long as possible.
 
 Taken this into consideration, the thinking time is defined as:
 
