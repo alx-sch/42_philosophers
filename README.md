@@ -44,7 +44,7 @@ When the synchronization is set up correctly, the following rules ensure the sur
   Philosophers can be grouped into two synchronized sets (even and odd positions). All philosophers survive if:
   - `t_eat < t_die / 2`, and
   - `t_die > (t_eat + t_sleep)`    
-    A small buffer (e.g., 10 ms) should be added to `t_die to` account for potential system delays. Examples:
+    A small buffer (e.g., 10 ms) should be added to `t_die` to account for potential system delays. Examples:
   - `./philo 4 610 300 300` → All philosophers survive.
   - `./philo 4 610 310 290`→ At least one philosopher starves.
  
@@ -52,7 +52,7 @@ When the synchronization is set up correctly, the following rules ensure the sur
   Philosophers are divided into three groups (two synchronized sets and one unsynchronized philosopher). All philosophers survive if:
   - `t_eat < t_die / 3`, and
   - `(t_die / 2) > (t_eat + t_sleep)`    
-    Again, adding a small buffer (e.g., 10 ms) to t_die is recommended. Examples:
+    Again, adding a small buffer (e.g., 10 ms) to `t_die` is recommended. Examples:
   - `./philo 3 610 200 100` → All philosophers survive.
   - `./philo 3 610 210 90`→ At least one philosopher starves.
 
