@@ -124,6 +124,5 @@ The `precise_wait` function uses a combination of high-resolution time checks an
 - **Continuous Checking**: The function continuously checks if the current time has reached or surpassed  `time_stop_waiting`. This ensures that the wait duration is as precise as possible. The  `SLEEP_INTERVALS` constant controls how frequently the function checks the current time, striking a balance between accuracy and CPU usage.
 
 ## Acknowledgements  
-Simulation visualizations were generated using the [Philosophers visualizer](https://nafuka11.github.io/philosophers-visualizer-v2/) by nafuka11.   
-
-The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
+- Simulation visualizations were generated using the [Philosophers visualizer](https://nafuka11.github.io/philosophers-visualizer-v2/) by nafuka11.   
+- The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
