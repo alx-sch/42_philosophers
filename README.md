@@ -125,4 +125,5 @@ The `precise_wait` function uses a combination of high-resolution time checks an
 
 ## Acknowledgements  
 Simulation visualizations were generated using the [Philosophers visualizer](https://nafuka11.github.io/philosophers-visualizer-v2/) by nafuka11.   
+
 The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
